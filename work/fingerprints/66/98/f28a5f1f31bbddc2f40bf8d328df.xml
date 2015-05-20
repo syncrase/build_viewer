@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<fingerprint>
+  <timestamp>2015-04-23 12:29:05.317 UTC</timestamp>
+  <original>
+    <name>mavenTest/utilitaires:mavenTest.artifactid</name>
+    <number>2</number>
+  </original>
+  <md5sum>6698f28a5f1f31bbddc2f40bf8d328df</md5sum>
+  <fileName>utilitaires:mavenTest.artifactid:pom.xml</fileName>
+  <usages>
+    <entry>
+      <string>mavenTest/utilitaires:mavenTest.artifactid</string>
+      <ranges>2</ranges>
+    </entry>
+    <entry>
+      <string>mavenTest</string>
+      <ranges>2</ranges>
+    </entry>
+  </usages>
+  <facets/>
+</fingerprint>

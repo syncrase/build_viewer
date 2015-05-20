@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<fingerprint>
+  <timestamp>2015-05-12 13:39:36.92 UTC</timestamp>
+  <md5sum>99bc885bb5c68be1c09ed23c997df5ac</md5sum>
+  <fileName>jfree:jcommon-1.0.12.jar</fileName>
+  <usages>
+    <entry>
+      <string>project3</string>
+      <ranges>1</ranges>
+    </entry>
+    <entry>
+      <string>project2</string>
+      <ranges>1</ranges>
+    </entry>
+    <entry>
+      <string>project3/fr.sap:appexample2</string>
+      <ranges>1</ranges>
+    </entry>
+    <entry>
+      <string>justAProject/fr.sap:appexample2</string>
+      <ranges>1</ranges>
+    </entry>
+    <entry>
+      <string>justAProject</string>
+      <ranges>1</ranges>
+    </entry>
+    <entry>
+      <string>project2/fr.sap:appexample2</string>
+      <ranges>1</ranges>
+    </entry>
+  </usages>
+  <facets/>
+</fingerprint>

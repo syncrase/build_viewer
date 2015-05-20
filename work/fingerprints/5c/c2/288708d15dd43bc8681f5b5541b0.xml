@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<fingerprint>
+  <timestamp>2015-05-12 13:39:38.990 UTC</timestamp>
+  <md5sum>5cc2288708d15dd43bc8681f5b5541b0</md5sum>
+  <fileName>org.mindrot:jbcrypt-0.3m.jar</fileName>
+  <usages>
+    <entry>
+      <string>project3</string>
+      <ranges>1</ranges>
+    </entry>
+    <entry>
+      <string>project2</string>
+      <ranges>1</ranges>
+    </entry>
+    <entry>
+      <string>project3/fr.sap:appexample2</string>
+      <ranges>1</ranges>
+    </entry>
+    <entry>
+      <string>justAProject/fr.sap:appexample2</string>
+      <ranges>1</ranges>
+    </entry>
+    <entry>
+      <string>justAProject</string>
+      <ranges>1</ranges>
+    </entry>
+    <entry>
+      <string>project2/fr.sap:appexample2</string>
+      <ranges>1</ranges>
+    </entry>
+  </usages>
+  <facets/>
+</fingerprint>

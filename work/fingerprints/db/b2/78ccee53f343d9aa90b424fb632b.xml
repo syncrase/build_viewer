@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<fingerprint>
+  <timestamp>2015-05-12 13:39:39.810 UTC</timestamp>
+  <md5sum>dbb278ccee53f343d9aa90b424fb632b</md5sum>
+  <fileName>org.jvnet.hudson:htmlunit-core-js-2.6-hudson-1.jar</fileName>
+  <usages>
+    <entry>
+      <string>project3</string>
+      <ranges>1</ranges>
+    </entry>
+    <entry>
+      <string>project2</string>
+      <ranges>1</ranges>
+    </entry>
+    <entry>
+      <string>project3/fr.sap:appexample2</string>
+      <ranges>1</ranges>
+    </entry>
+    <entry>
+      <string>justAProject/fr.sap:appexample2</string>
+      <ranges>1</ranges>
+    </entry>
+    <entry>
+      <string>justAProject</string>
+      <ranges>1</ranges>
+    </entry>
+    <entry>
+      <string>project2/fr.sap:appexample2</string>
+      <ranges>1</ranges>
+    </entry>
+  </usages>
+  <facets/>
+</fingerprint>

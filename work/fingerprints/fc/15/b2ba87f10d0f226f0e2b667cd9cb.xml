@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<fingerprint>
+  <timestamp>2015-05-12 13:39:37.774 UTC</timestamp>
+  <md5sum>fc15b2ba87f10d0f226f0e2b667cd9cb</md5sum>
+  <fileName>org.jenkins-ci:jenkins:jenkins-1.34.pom</fileName>
+  <usages>
+    <entry>
+      <string>project3</string>
+      <ranges>1</ranges>
+    </entry>
+    <entry>
+      <string>project2</string>
+      <ranges>1</ranges>
+    </entry>
+    <entry>
+      <string>project3/fr.sap:appexample2</string>
+      <ranges>1</ranges>
+    </entry>
+    <entry>
+      <string>justAProject/fr.sap:appexample2</string>
+      <ranges>1</ranges>
+    </entry>
+    <entry>
+      <string>justAProject</string>
+      <ranges>1</ranges>
+    </entry>
+    <entry>
+      <string>project2/fr.sap:appexample2</string>
+      <ranges>1</ranges>
+    </entry>
+  </usages>
+  <facets/>
+</fingerprint>

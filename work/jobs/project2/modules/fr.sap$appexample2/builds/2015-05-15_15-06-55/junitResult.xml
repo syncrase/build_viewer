@@ -1,0 +1,76 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<result plugin="junit@1.0">
+  <suites>
+    <suite>
+      <file>C:\Users\I310911\perforce\testWRKSPC\testPlugin\appexample2\target\surefire-reports\TEST-InjectedTest.xml</file>
+      <name>InjectedTest</name>
+      <stdout>Picking up existing exploded jenkins.war at C:\Users\I310911\perforce\testWRKSPC\testPlugin\appexample2\.\target\jenkins-for-test
+May 15, 2015 3:08:13 PM org.mortbay.log.Slf4jLog info&#xd;
+INFO: Logging to org.slf4j.impl.JDK14LoggerAdapter(org.mortbay.log) via org.mortbay.log.Slf4jLog&#xd;
+May 15, 2015 3:08:13 PM org.mortbay.log.Slf4jLog info&#xd;
+INFO: jetty-6.1.26&#xd;
+May 15, 2015 3:08:13 PM org.mortbay.log.Slf4jLog info&#xd;
+INFO: NO JSP Support for , did not find org.apache.jasper.servlet.JspServlet&#xd;
+May 15, 2
+...[truncated 3174 bytes]...
+10)&#xd;
+	at hudson.Util.deleteContentsRecursive(Util.java:212)&#xd;
+	at hudson.Util.deleteRecursive(Util.java:301)&#xd;
+	at hudson.Util.deleteContentsRecursive(Util.java:212)&#xd;
+	at hudson.Util.deleteRecursive(Util.java:301)&#xd;
+	at hudson.Util.deleteContentsRecursive(Util.java:212)&#xd;
+	at hudson.Util.deleteRecursive(Util.java:301)&#xd;
+	at hudson.Util.deleteContentsRecursive(Util.java:212)&#xd;
+	at hudson.Util.deleteRecursive(Util.java:301)&#xd;
+	at org.jvnet.hudson.test.TestPluginManager$1.run(TestPluginManager.java:146)&#xd;
+</stdout>
+      <duration>3.314</duration>
+      <cases>
+        <case>
+          <duration>0.322</duration>
+          <className>org.jvnet.hudson.test.JellyTestSuiteBuilder$JellyCheck</className>
+          <testName>fr\sap\appexample2\MyPlugin\config.jelly</testName>
+          <skipped>false</skipped>
+          <failedSince>0</failedSince>
+        </case>
+        <case>
+          <duration>0.099</duration>
+          <className>org.jvnet.hudson.test.JellyTestSuiteBuilder$JellyCheck</className>
+          <testName>fr\sap\appexample2\MyPlugin\global.jelly</testName>
+          <skipped>false</skipped>
+          <failedSince>0</failedSince>
+        </case>
+        <case>
+          <duration>0.017</duration>
+          <className>org.jvnet.hudson.test.JellyTestSuiteBuilder$JellyCheck</className>
+          <testName>fr\sap\appexample2\MyPlugin\newViewDetail.jelly</testName>
+          <skipped>false</skipped>
+          <failedSince>0</failedSince>
+        </case>
+        <case>
+          <duration>0.007</duration>
+          <className>org.jvnet.hudson.test.JellyTestSuiteBuilder$JellyCheck</className>
+          <testName>index.jelly</testName>
+          <skipped>false</skipped>
+          <failedSince>0</failedSince>
+        </case>
+        <case>
+          <duration>0.0</duration>
+          <className>org.jvnet.hudson.test.junit.FailedTest</className>
+          <testName>org.jvnet.hudson.test.JellyTestSuiteBuilder$JellyTestSuite</testName>
+          <skipped>false</skipped>
+          <failedSince>0</failedSince>
+        </case>
+        <case>
+          <duration>2.869</duration>
+          <className>org.jvnet.hudson.test.PluginAutomaticTestBuilder$CliSanityTest</className>
+          <testName>testCliSanity</testName>
+          <skipped>false</skipped>
+          <failedSince>0</failedSince>
+        </case>
+      </cases>
+    </suite>
+  </suites>
+  <duration>3.314</duration>
+  <keepLongStdio>false</keepLongStdio>
+</result>

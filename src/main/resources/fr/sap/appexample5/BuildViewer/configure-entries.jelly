@@ -1,0 +1,477 @@
+<!--
+The MIT License
+
+Copyright (c) 2004-2010, Sun Microsystems, Inc., Kohsuke Kawaguchi
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+-->
+<!--
+  Edit View Page
+-->
+<?jelly escape-by-default='true'?>
+<!--xmlns:g="glide"-->
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt" 
+         trim="false" xmlns:g="glide" xmlns:j2="jelly:core" xmlns:g2="null">
+
+    <style type="text/css" title="myInnerCSS">
+<!--        #widthfield{
+            background: #ff4900;
+        }-->
+        table.my,  table.my tr {
+            border: 1px solid black;
+            border-collapse: collapse;
+            font-weight:bold;
+            <!--border-spacing: 5px;-->
+            
+        }
+
+        table.my td {
+            text-align: center;
+            padding: 15px;
+        }
+        
+        table.my th {
+            border: 1px solid black;
+            padding: 5px 15px 5px 15px;
+            background: #E1E1E1;
+            <!--top - right - bottom - left -->
+        }
+    </style>
+    
+    <script type="text/javascript">
+<!--        function myFunction(){
+            alert("hello");
+            return 1920;
+        }
+        
+        var defaultScreenWidth = screen.width;
+        var defaultScreenHeight = screen.height;
+        alert("defaultWidth="+defaultWidth+"\ndefaultHeight = "+defaultHeight);
+                
+    var width = screen.width;
+        document.getElementById("p.widthfield").innerHTML = "largeur";
+        alert("tu y es");-->
+        function addRow(){
+            
+            var table = document.getElementById("stateList");
+<!--            alert(table.rows.length);-->
+            <!--alert("après get id");-->
+            <!--// Create an empty <tr> element and add it to the 1st position of the table:-->
+            var row = table.insertRow(table.rows.length);
+
+            <!--// Insert new cells (<td> elements) at the 1st and 2nd position of the "new" <tr> element:-->
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+
+            <!--// Add some text to the new cells:-->
+            cell1.innerHTML = "&lt;input type=\"text\" name=\"ve_state\" value=\"STATE_NAME\" /&gt;";
+            cell2.innerHTML = "&lt;input type=\"color\" name=\"ve_backgroundColor\" value=\"#FFFFFF\" /&gt;";
+            cell3.innerHTML = "&lt;input type=\"color\" name=\"ve_fontColor\" value=\"#FFFFFF\" /&gt;";
+        }
+        
+        function deleteRow(tableId, stateValue) {
+            <!--document.getElementById(tableId).deleteRow(index);-->
+            <!--alert(stateValue);-->
+            var table = document.getElementById(tableId);
+            <!--alert(table.rows.length);-->
+            <!--alert(table.rows[0].cells[0].innerHTML);-->
+            <!--var i;-->
+            for(var i = 0 ; i &lt; table.rows.length ; i++){
+<!--            alert(table.rows[i].cells[0].innerHTML.match(stateValue));-->
+                if(table.rows[i].cells[0].innerHTML.match(stateValue) != null){
+                    <!--alert('clicked on '+stateValue);-->
+                    document.getElementById(tableId).deleteRow(i);
+                }
+            }
+        }
+        
+        function upRow(tableId, stateValue){
+            var table = document.getElementById(tableId);
+            for(var i = 0 ; i &lt; table.rows.length ; i++){
+                if(table.rows[i].cells[0].innerHTML.match(stateValue) != null){
+                    if(i == 1){
+                        alert('This row is already the first one');
+                    }else{
+                        var rowToUp = table.rows[i].innerHTML;
+                        table.rows[i].innerHTML = table.rows[i-1].innerHTML;
+                        table.rows[i-1].innerHTML = rowToUp;
+                    }
+                    break;
+                }
+            }
+        }
+        
+        function downRow(tableId, stateValue){
+            var table = document.getElementById(tableId);
+            for(var i = 0 ; i &lt; table.rows.length ; i++){
+                if(table.rows[i].cells[0].innerHTML.match(stateValue) != null){
+                var length = table.rows.length - 1;
+                    if(i == length){
+                        alert('This row is already the last one');
+                    }else{
+                        var rowToDown = table.rows[i].innerHTML;
+                        table.rows[i].innerHTML = table.rows[i+1].innerHTML;
+                        table.rows[i+1].innerHTML = rowToDown;
+                    }
+                    break;
+                }
+            }
+        }
+    </script>
+
+        
+     <!--var="jvar_gr" object="true"-->
+<!--    <g:evaluate>
+        var width = screen.width;
+        var defaultHeight = screen.height;
+    </g:evaluate>-->
+
+    <f:section title="${%Job Filters}">
+  
+        <f:entry title="${%Status Filter}" help="/help/view-config/statusFilter.html">
+            <select name="statusFilter" class="setting-input">
+                <f:option value="" selected="${it.statusFilter==null}">${%All selected jobs}</f:option>
+                <f:option value="1" selected="${it.statusFilter==true}">${%Enabled jobs only}</f:option>
+                <f:option value="2" selected="${it.statusFilter==false}">${%Disabled jobs only}</f:option>
+            </select>
+        </f:entry>
+  
+        <f:entry title="${%Recurse in subfolders}" field="recurse">
+            <f:checkbox id="recurse"/>
+        </f:entry>
+
+        <f:entry title="${%Jobs}">
+            <div class="listview-jobs">
+                <j:forEach var="job" items="${h.getAllTopLevelItems(it.ownerItemGroup)}">
+                    <j:set var="spanClass" value=""/>
+                    <j:set var="spanStyle" value=""/>
+                    <j:if test="${job.parent!=it.ownerItemGroup}">
+                        <j:set var="spanClass" value="nested"/>
+                        <j:set var="spanStyle" value="${it.recurse?'':'display:none'}"/>
+                    </j:if>
+                    <span class="${spanClass}" style="${spanStyle}">
+                        <f:checkbox name="${job.getRelativeNameFromGroup(it.ownerItemGroup)}" checked="${it.jobNamesContains(job)}" 
+                                    title="${h.getRelativeDisplayNameFrom(job,it.ownerItemGroup)} > this is the name" tooltip="Check ${job.fullName} to include it in the view" json="true"/>
+                        <br/>
+                    </span>
+                </j:forEach>
+            </div>
+        </f:entry>
+
+        <f:optionalBlock name="useincluderegex" title="${%Use a regular expression to include jobs into the view}"
+                         checked="${it.includeRegex != null}" help="/help/view-config/includeregex.html">
+            <f:entry title="${%Regular expression}">
+                <f:textbox name="includeRegex" field="includeRegex" />
+            </f:entry>
+        </f:optionalBlock>
+        
+    </f:section>
+
+    
+
+
+
+
+
+
+
+    <f:section title="${%Build information displayed}">
+        
+<!--        <j:entry title="${%Screen width}" field="screenWidth"  help="/plugin/radiatorviewplugin/help/screenwidth.html">
+            <f:textbox name="screenWidth" field="screenWidth" clazz="required positive-number" />
+        </j:entry>
+        
+        <j:entry title="${%Screen height}" field="screenHeight"  help="/plugin/radiatorviewplugin/help/screenheight.html">
+            <f:textbox name="screenHeight" field="screenHeight" clazz="required positive-number" />
+        </j:entry>-->
+        
+        <f:optionalBlock name="displayCaption" title="${%Display a caption at the top of the view}" help="/help/view-config/includecaption.html">
+            
+            <f:entry title="${%Caption text}" field="captionText"  help="/plugin/radiatorviewplugin/help/captionText.html">
+                <f:textbox name="captionText" field="captionText" />
+            </f:entry>
+            <f:entry title="${%Caption size}" field="captionSize"  help="/plugin/appexample5/help/captionSize.html">
+                <f:textbox name="captionSize" field="captionSize" clazz="required positive-number" default="36" />
+            </f:entry>
+            
+            <f:entry title="${%Caption background color}" field="captionColor" >
+                <j:choose>
+                    <j:when test="${it.captionColor != null}">
+                        <j:set var="varCaptionColor" value="${it.captionColor}"/>
+                    </j:when>
+                    <j:otherwise>
+                        <j:set var="varCaptionColor" value="#FFFFFF"/>
+                    </j:otherwise>
+                </j:choose>
+                <input type="color" name="captionColor" value="${varCaptionColor}" />
+            </f:entry>
+            
+            <f:entry title="${%Caption text color}" field="captionTextColor" >
+                <j:choose>
+                    <j:when test="${it.captionTextColor != null}">
+                        <j:set var="varCaptionTextColor" value="${it.captionTextColor}"/>
+                    </j:when>
+                    <j:otherwise>
+                        <j:set var="varCaptionTextColor" value="#000000"/>
+                    </j:otherwise>
+                </j:choose>
+                <input type="color" name="captionTextColor" value="${varCaptionTextColor}" />
+            </f:entry>
+            
+            
+        </f:optionalBlock>
+        <br/>
+        <br/>
+        <!--        <j:set var="width" value="${from.getDEFAULT_SCREEN_WIDTH()}" />
+                <j:choose>
+                    <p id="widthfield">ici, la largeur - ${width}</p>
+                </j:choose>
+        -->
+
+        
+
+        <f:optionalBlock name="ConfigureColor" title="${%Configure colors}" help="/help/view-config/??????????????????????.html">
+            <!--        <script type="text/javascript">
+                var width = screen.width;
+    alert("aaa");
+            </script>-->
+            <f:entry title="${%Background color}" field="backgroundColor"  help="/plugin/radiatorviewplugin/help/??????????????????????.html">
+                <j:choose>
+                    <j:when test="${it.backgroundColor != null}">
+                        <j:set var="varBackgroundColor" value="${it.backgroundColor}"/>
+                    </j:when>
+                    <j:otherwise>
+                        <j:set var="varBackgroundColor" value="#FFFFFF"/>
+                    </j:otherwise>
+                </j:choose>
+                <input type="color" name="backgroundColor" value="${varBackgroundColor}" />
+            </f:entry>
+            
+            
+            
+        
+<!--            <f:entry title="${%Screen width}" field="dashboardWidth"  help="/plugin/radiatorviewplugin/help/screenwidth.html">
+                <j:choose>
+                    <j:when test="${it.dashboardWidth}">
+                        <j:set var="width" value="${it.dashboardWidth}"/>
+                    </j:when>
+                    <j:otherwise>
+                        <j:set var="width" value="${from.dashboardWidth}"/>
+                    </j:otherwise>
+                </j:choose>
+                <f:textbox name="dashboardWidth" field="dashboardWidth" clazz="required positive-number" value="${width}" />
+                value="${from.getDEFAULT_SCREEN_WIDTH()}"
+            </f:entry>
+        
+        
+            <f:entry title="${%Screen height}" field="dashboardHeight"  help="/plugin/radiatorviewplugin/help/screenheight.html">
+                <j:choose>
+                    <j:when test="${it.dashboardHeight}">
+                        <j:set var="height" value="${it.dashboardHeight}"/>
+                    </j:when>
+                    <j:otherwise>
+                        <j:set var="height" value="${from.dashboardHeight}"/>
+                    </j:otherwise>
+                </j:choose>
+                <j:if test="">
+                    
+                </j:if>
+                <f:textbox name="dashboardHeight" field="dashboardHeight" clazz="required positive-number" value="${height}" />
+                from.getDEFAULT_SCREEN_HEIGHT()
+            </f:entry>-->
+        </f:optionalBlock>
+        
+        
+        
+        
+        <!--        <f:entry title="${%Show stable builds?}" field="showStable"  help="/plugin/radiatorviewplugin/help/showstable.html">
+            <f:checkbox name="showStable" checked="${it.showStable}" value="true" field="showStable" />
+        </f:entry>-->
+	
+        <!--        <f:entry title="${%Show stable detail?}" field="showStableDetail" help="/plugin/radiatorviewplugin/help/showstabledetail.html">
+            <f:checkbox name="showStableDetail" checked="${it.showStableDetail}" value="true" field="showStableDetail" />
+        </f:entry>-->
+	
+        <f:entry title="${%Use Dark Background?}" field="highVis" help="/plugin/radiatorviewplugin/help/highVis.html">
+            <f:checkbox name="highVis" checked="${it.highVis}" value="true" field="highVis" />
+        </f:entry>
+	
+	
+        <f:entry title="${%Show as Projects?}" field="groupByPrefix" help="/plugin/radiatorviewplugin/help/groupByPrefix.html">
+            <f:checkbox name="groupByPrefix" checked="${it.groupByPrefix}" value="true" field="groupByPrefix" />
+        </f:entry>
+
+        <!--        <f:entry title="${%Show build stability?}" field="showBuildStability" help="/plugin/radiatorviewplugin/help/showbuildStability.html">
+            <f:checkbox name="showBuildStability" checked="${it.showBuildStability}" value="true" field="showBuildStability" />
+        </f:entry>-->
+    </f:section>
+  
+  
+    <!--<f:section title="${%States}">-->
+      
+<!--    <f:block>
+        <f:repeatableHeteroProperty field="COLOR_SETTINGS" hasHeader="true" addCaption="${%Add state}"/>
+    </f:block>-->
+    
+    <f:entry title="${%States}" field="COLOR_SETTINGS">
+        
+        
+        
+<!--        <div>
+            <table style="width:100%">
+                <tr>
+                    <td>${%State}</td>
+                    <td>${%Font color}</td>
+                    <td>${%Background color}</td>
+                </tr>
+                <j:forEach var="state" items="${from.COLOR_SETTINGS}">
+                    <tr>
+                        <td>${state.ve_state}</td>
+                        <td>
+                            <f:entry title="${%Background color}" field="backgroundColor"  help="/plugin/radiatorviewplugin/help/??????????????????????.html">
+                                <j:choose>
+                                    <j:when test="${it.backgroundColor != null}">
+                                        <j:set var="varBackgroundColor" value="${it.backgroundColor}"/>
+                                    </j:when>
+                                    <j:otherwise>
+                                        <j:set var="varBackgroundColor" value="#FFFFFF"/>
+                                    </j:otherwise>
+                                </j:choose>
+                                <input type="color" name="backgroundColor" value="${varBackgroundColor}" />
+                            </f:entry>
+                            <f:entry title="${%Background color}" field="backgroundColor"  help="/plugin/radiatorviewplugin/help/??????????????????????.html">
+                            <input type="color" name="backgroundColor" value="${state.ve_fontColor}" />
+                            </f:entry>
+                            
+                        </td>
+                        <td>
+                            <input type="color" name="backgroundColor" value="${state.ve_backgroundColor}" />
+                        </td>
+                    </tr>
+                </j:forEach>
+            </table>
+        </div>-->
+        <!--        test
+        ${it.COLOR_SETTINGS}
+        ${from.COLOR_SETTINGS}-->
+        
+<!--        <j:if test="${from.COLOR_SETTINGS == null}">
+            <j:invoke on="${from}" method="initializeColorSettings" />
+        </j:if>-->
+        
+        <form>
+            <div>
+                <!--style="float:center;"-->
+                <!--${imagesURL}-->
+                <table class="my" id="stateList"  >
+                    <tr>
+                        <th style="font-size:large;" >${%State}</th>
+                        <th style="font-size:large;" >${%Font color}</th>
+                        <th style="font-size:large;" >${%Background color}</th>
+                        <th style="display:none;"></th>
+                        <!--<th></th>-->
+                    </tr>
+                
+                    <j:forEach var="state" items="${from.COLOR_SETTINGS}">
+
+                        <div name="stateSettings">
+                            <tr>
+                                <td style="padding-top:27px;" >
+                                    <input type="text" name="ve_state" value="${state.ve_state}" />
+                                </td>
+                                <td style="padding-top:27px;" >
+                                    <input type="color" name="ve_backgroundColor" value="${state.ve_backgroundColor}" />
+                                </td>
+                    
+                                <!--<input type="color" name="backgroundColor" value="${state.ve_backgroundColor}" />-->
+                                <td style="padding-top:27px;" >
+                                    <input type="color" name="ve_fontColor" value="${state.ve_fontColor}" />
+                                </td>
+                                <td style="border: 1px solid black; background: #E1E1E1;">
+<!--                                    <input  type="button" value="${%Delete row}" onclick="deleteRow('stateList','${state.ve_state}')" 
+                                            style="background-image: url(${rootURL}/plugin/appexample5/images/delete.jpg); background-repeat: no-repeat;" />-->
+                                    
+                                    <div onclick="deleteRow('stateList','${state.ve_state}')" style="float:left; width:50%;">
+                                        <img src="${rootURL}/plugin/appexample5/images/delete.jpg" type="image/jpg" alt="del" height="42" width="42" />
+                                    </div>
+                                    <div style="float:left; width:50%;">
+                                        <div style="float:left; width:100%; margin: 0 0 3px 0;" onclick="upRow('stateList','${state.ve_state}')">
+                                            <img src="${rootURL}/plugin/appexample5/images/arrow_Up.svg.png" type="image/png" alt="up" height="21" width="42" />
+                                        </div>
+                                        <div style="float:left; width:100%; margin: 3px 0 0 0;" onclick="downRow('stateList','${state.ve_state}')">
+                                            <img src="${rootURL}/plugin/appexample5/images/arrow_Down.svg.png" type="image/png" alt="down" height="21" width="42" />
+                                        </div>
+                                    </div>
+                                    <!--deleteRow('stateList')-->
+                                </td>
+<!--                                <td>
+                                    
+                                        
+                                    
+                                </td>-->
+                            </tr>
+                        </div>
+
+                    </j:forEach>
+<!--                    <div name="stateSettings">
+                        <tr>
+                            <td>
+                                <input type="text" name="ve_state" value="ADD_STATE?" />
+                            </td>
+                            <td>
+                                <input type="color" name="ve_backgroundColor" value="#FFFFFF" />
+                            </td>
+                    
+                            <input type="color" name="backgroundColor" value="${state.ve_backgroundColor}" />
+                            <td>
+                                <input type="color" name="ve_fontColor" value="#FFFFFF" />
+                            </td>
+                        </tr>
+                    </div>-->
+                </table>
+                <!--style="background:red; float:center;"--> 
+                <div >
+                    <input  type="button" value="${%Add row}" onclick="addRow()" style="margin: 10px 0 0 30px; width: 150px; height: 60px; font-size: large; font-weight:bold;" />
+                    <!--<input  type="button" value="${%Restore to default}" onclick="${from.setDefaultColorSettings(true)}; window.location.reload();" />-->
+                    <!--style="float:center;"-->
+                </div>
+            </div>
+        </form>
+        
+        
+    </f:entry>
+        
+    <!--</f:section>-->
+  
+  
+    <script>
+        (function() {
+        Behaviour.specify("#recurse", 'ListView', 0, function(e) {
+        var nestedElements = $$('SPAN.nested')
+        e.onclick = function() {
+        nestedElements.each(function(el) {
+        e.checked ? el.show() : el.hide();
+        });
+        }
+        });
+        }());	
+    </script>
+
+</j:jelly>

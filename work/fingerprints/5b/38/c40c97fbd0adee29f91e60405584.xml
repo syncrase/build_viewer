@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<fingerprint>
+  <timestamp>2015-04-23 12:29:05.704 UTC</timestamp>
+  <md5sum>5b38c40c97fbd0adee29f91e60405584</md5sum>
+  <fileName>junit:junit-4.12.jar</fileName>
+  <usages>
+    <entry>
+      <string>failed_project/groupId:ArticfactId</string>
+      <ranges>2</ranges>
+    </entry>
+    <entry>
+      <string>helpers</string>
+      <ranges>1</ranges>
+    </entry>
+    <entry>
+      <string>helpers/fr.perso.cookbook:helpers</string>
+      <ranges>1</ranges>
+    </entry>
+    <entry>
+      <string>mavenTest/utilitaires:mavenTest.artifactid</string>
+      <ranges>2</ranges>
+    </entry>
+    <entry>
+      <string>failed_project</string>
+      <ranges>2</ranges>
+    </entry>
+    <entry>
+      <string>mavenTest</string>
+      <ranges>2</ranges>
+    </entry>
+  </usages>
+  <facets/>
+</fingerprint>

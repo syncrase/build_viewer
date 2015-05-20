@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<fingerprint>
+  <timestamp>2015-05-15 13:07:12.408 UTC</timestamp>
+  <original>
+    <name>helpers/fr.perso.cookbook:helpers</name>
+    <number>1</number>
+  </original>
+  <md5sum>c5b3a5d6976b1a69f73c99775f44b225</md5sum>
+  <fileName>fr.perso.cookbook:helpers:pom.xml</fileName>
+  <usages>
+    <entry>
+      <string>helpers</string>
+      <ranges>1</ranges>
+    </entry>
+    <entry>
+      <string>helpers/fr.perso.cookbook:helpers</string>
+      <ranges>1</ranges>
+    </entry>
+  </usages>
+  <facets/>
+</fingerprint>

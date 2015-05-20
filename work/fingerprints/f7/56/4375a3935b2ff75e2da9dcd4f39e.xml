@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<fingerprint>
+  <timestamp>2015-05-12 13:39:35.205 UTC</timestamp>
+  <original>
+    <name>justAProject/fr.sap:appexample2</name>
+    <number>1</number>
+  </original>
+  <md5sum>f7564375a3935b2ff75e2da9dcd4f39e</md5sum>
+  <fileName>fr.sap:appexample2.hpi</fileName>
+  <usages>
+    <entry>
+      <string>justAProject</string>
+      <ranges>1</ranges>
+    </entry>
+    <entry>
+      <string>justAProject/fr.sap:appexample2</string>
+      <ranges>1</ranges>
+    </entry>
+  </usages>
+  <facets/>
+</fingerprint>

@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<fingerprint>
+  <timestamp>2015-05-19 15:01:06.971 UTC</timestamp>
+  <original>
+    <name>failed_project/groupId:ArticfactId</name>
+    <number>2</number>
+  </original>
+  <md5sum>f95f7672ae9dbdd0c57af302c6453858</md5sum>
+  <fileName>groupId:ArticfactId-0.0.1-SNAPSHOT.jar</fileName>
+  <usages>
+    <entry>
+      <string>failed_project/groupId:ArticfactId</string>
+      <ranges>2</ranges>
+    </entry>
+    <entry>
+      <string>failed_project</string>
+      <ranges>2</ranges>
+    </entry>
+  </usages>
+  <facets/>
+</fingerprint>

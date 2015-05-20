@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<fingerprint>
+  <timestamp>2015-04-23 12:29:05.454 UTC</timestamp>
+  <md5sum>39088daf223b2df4af5b0d36071644f0</md5sum>
+  <fileName>lightstreamer:ls-proxy-adapters.jar</fileName>
+  <usages>
+    <entry>
+      <string>mavenTest/utilitaires:mavenTest.artifactid</string>
+      <ranges>2</ranges>
+    </entry>
+    <entry>
+      <string>mavenTest</string>
+      <ranges>2</ranges>
+    </entry>
+  </usages>
+  <facets/>
+</fingerprint>
