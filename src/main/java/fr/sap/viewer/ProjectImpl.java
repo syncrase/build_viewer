@@ -21,11 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package fr.sap.appexample5;
+package fr.sap.viewer;
 
 import com.google.common.io.Files;
 import hudson.model.AbstractProject;
 import hudson.model.Job;
+import hudson.model.Result;
 import hudson.model.Run;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -206,17 +207,18 @@ public class ProjectImpl {
      */
     public String getResult() {
         /*        @SuppressWarnings("unchecked")*/
-        Collection<Job> colJob = abstractProject.getAllJobs();
-        Iterator<Job> it = colJob.iterator();
-        if (it.hasNext()) {
-            Job job = it.next();
-            try {
-                return job.getLastBuild().getResult().toString();
-            } catch (java.lang.NullPointerException e) {
-                return "NOT_BUILT";
-            }
-        }
-        return null;
+        return abstractProject.getLastBuild().getResult().toString();
+//        Collection<Job> colJob = abstractProject.getAllJobs();
+//        Iterator<Job> it = colJob.iterator();
+//        if (it.hasNext()) {
+//            Job job = it.next();
+//            try {
+//                return job.getLastBuild().getResult().toString();
+//            } catch (java.lang.NullPointerException e) {
+//                return Result.NOT_BUILT.toString();
+//            }
+//        }
+//        throw new RuntimeException("no job available");
     }
 
     /**
@@ -225,21 +227,26 @@ public class ProjectImpl {
      */
     public int getBuildNumber() {
 
-        Iterator<Job> it = abstractProject.getAllJobs().iterator();
-        if (it.hasNext()) {
-            Job job = it.next();
-            try {
-                return job.getLastBuild().getNumber();
-
-            } catch (java.lang.NullPointerException e) {
-                return 0;
-            }
-        }
-        return -1;
+        return abstractProject.getLastBuild().getNumber();
+//        Iterator<Job> it = abstractProject.getAllJobs().iterator();
+//        if (it.hasNext()) {
+//            Job job = it.next();
+//            try {
+//                return job.getLastBuild().getNumber();
+//
+//            } catch (java.lang.NullPointerException e) {
+//                return 0;
+//            }
+//        }
+//        return -1;
     }
     
     public String getIconUrl(){
+        try{
+            return abstractProject.getLastCompletedBuild().getBuildStatusUrl();
+        }catch(Throwable t){
+            return "Getting the build Status throws an exception:\n"+t.getMessage();
+        }
         
-        return abstractProject.getLastCompletedBuild().getBuildStatusUrl();
     }
 }

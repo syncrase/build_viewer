@@ -1,24 +1,16 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <fingerprint>
-  <timestamp>2015-04-23 12:29:05.685 UTC</timestamp>
+  <timestamp>2015-05-20 09:52:15.585 UTC</timestamp>
   <md5sum>3e473766c65d0f19bfeceaf810ef2f07</md5sum>
   <fileName>org.jsoup:jsoup-1.8.1.jar</fileName>
   <usages>
     <entry>
-      <string>helpers</string>
+      <string>passed_project</string>
       <ranges>1</ranges>
     </entry>
     <entry>
-      <string>helpers/fr.perso.cookbook:helpers</string>
+      <string>passed_project/utilitaires:mavenTest.artifactid</string>
       <ranges>1</ranges>
-    </entry>
-    <entry>
-      <string>mavenTest/utilitaires:mavenTest.artifactid</string>
-      <ranges>2</ranges>
-    </entry>
-    <entry>
-      <string>mavenTest</string>
-      <ranges>2</ranges>
     </entry>
   </usages>
   <facets/>

@@ -7,10 +7,10 @@ import java.util.*;
 public class InjectedTest extends junit.framework.TestCase {
   public static junit.framework.Test suite() throws Exception {
     Map parameters = new HashMap();
-    parameters.put("basedir","C:\\Users\\I310911\\perforce\\testWRKSPC\\testPlugin\\appexample5");
-    parameters.put("artifactId","appexample5");
-    parameters.put("outputDirectory","C:\\Users\\I310911\\perforce\\testWRKSPC\\testPlugin\\appexample5\\target\\classes");
-    parameters.put("testOutputDirectory","C:\\Users\\I310911\\perforce\\testWRKSPC\\testPlugin\\appexample5\\target\\test-classes");
+    parameters.put("basedir","C:\\Users\\I310911\\perforce\\testWRKSPC\\testPlugin\\viewer");
+    parameters.put("artifactId","viewer");
+    parameters.put("outputDirectory","C:\\Users\\I310911\\perforce\\testWRKSPC\\testPlugin\\viewer\\target\\classes");
+    parameters.put("testOutputDirectory","C:\\Users\\I310911\\perforce\\testWRKSPC\\testPlugin\\viewer\\target\\test-classes");
     parameters.put("requirePI","false");
     return new org.jvnet.hudson.test.PluginAutomaticTestBuilder().build(parameters);
   }

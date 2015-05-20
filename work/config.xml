@@ -9,7 +9,7 @@
   <securityRealm class="hudson.security.SecurityRealm$None"/>
   <disableRememberMe>false</disableRememberMe>
   <projectNamingStrategy class="jenkins.model.ProjectNamingStrategy$DefaultProjectNamingStrategy"/>
-  <workspaceDir>${ITEM_ROOTDIR}/workspace</workspaceDir>
+  <workspaceDir>${JENKINS_HOME}/workspace/${ITEM_FULLNAME}</workspaceDir>
   <buildsDir>${ITEM_ROOTDIR}/builds</buildsDir>
   <jdks>
     <jdk>
@@ -32,9 +32,9 @@
       <filterQueue>false</filterQueue>
       <properties class="hudson.model.View$PropertyList"/>
     </hudson.model.AllView>
-    <fr.sap.appexample5.BuildViewer plugin="appexample5@1.0-SNAPSHOT">
+    <fr.sap.viewer.BuildViewer plugin="viewer@0.1">
       <owner class="hudson" reference="../../.."/>
-      <name>customizedView</name>
+      <name>myTestView</name>
       <filterExecutors>false</filterExecutors>
       <filterQueue>false</filterQueue>
       <properties class="hudson.model.View$PropertyList"/>
@@ -42,54 +42,150 @@
         <comparator class="hudson.util.CaseInsensitiveComparator"/>
         <string>error_project</string>
         <string>failed_project</string>
-        <string>helpers</string>
-        <string>justAProject</string>
-        <string>mavenTest</string>
-        <string>project2</string>
-        <string>project3</string>
+        <string>passed_project</string>
       </jobNames>
       <jobFilters/>
       <columns/>
       <recurse>false</recurse>
-      <backgroundColor>#81a386</backgroundColor>
-      <captionColor>#606086</captionColor>
-      <captionTextColor>#916095</captionTextColor>
-      <COLOR__SETTINGS>
-        <fr.sap.appexample5.ViewEntryColors>
-          <ve__state>STATE_NAMESDF</ve__state>
-          <ve__backgroundColor>#89bddc</ve__backgroundColor>
-          <ve__fontColor>#ffffff</ve__fontColor>
-        </fr.sap.appexample5.ViewEntryColors>
-        <fr.sap.appexample5.ViewEntryColors>
-          <ve__state>SUCCESS</ve__state>
-          <ve__backgroundColor>#1eaa00</ve__backgroundColor>
-          <ve__fontColor>#000000</ve__fontColor>
-        </fr.sap.appexample5.ViewEntryColors>
-        <fr.sap.appexample5.ViewEntryColors>
-          <ve__state>UNSTABLE</ve__state>
-          <ve__backgroundColor>#ffff00</ve__backgroundColor>
-          <ve__fontColor>#000000</ve__fontColor>
-        </fr.sap.appexample5.ViewEntryColors>
-        <fr.sap.appexample5.ViewEntryColors>
-          <ve__state>FAILURE</ve__state>
-          <ve__backgroundColor>#ff0000</ve__backgroundColor>
-          <ve__fontColor>#000000</ve__fontColor>
-        </fr.sap.appexample5.ViewEntryColors>
-        <fr.sap.appexample5.ViewEntryColors>
-          <ve__state>NOT_BUILT</ve__state>
-          <ve__backgroundColor>#737373</ve__backgroundColor>
-          <ve__fontColor>#000000</ve__fontColor>
-        </fr.sap.appexample5.ViewEntryColors>
-        <fr.sap.appexample5.ViewEntryColors>
-          <ve__state>ABORTED</ve__state>
-          <ve__backgroundColor>#000000</ve__backgroundColor>
-          <ve__fontColor>#000000</ve__fontColor>
-        </fr.sap.appexample5.ViewEntryColors>
-      </COLOR__SETTINGS>
+      <backgroundColor>#e7d7cf</backgroundColor>
+      <captionColor>#baa585</captionColor>
+      <captionTextColor>#814a88</captionTextColor>
+      <groupedByPrefix>false</groupedByPrefix>
+      <captionText>Dashboard</captionText>
+      <captionSize>40</captionSize>
+    </fr.sap.viewer.BuildViewer>
+    <fr.sap.viewer.BuildViewer plugin="viewer@0.1">
+      <owner class="hudson" reference="../../.."/>
+      <name>myTestView2</name>
+      <filterExecutors>false</filterExecutors>
+      <filterQueue>false</filterQueue>
+      <properties class="hudson.model.View$PropertyList"/>
+      <jobNames>
+        <comparator class="hudson.util.CaseInsensitiveComparator"/>
+        <string>error_project</string>
+        <string>failed_project</string>
+        <string>passed_project</string>
+      </jobNames>
+      <jobFilters/>
+      <columns/>
+      <recurse>false</recurse>
+      <backgroundColor>#b4b8a5</backgroundColor>
+      <captionColor>#ffffff</captionColor>
+      <captionTextColor>#000000</captionTextColor>
+      <groupedByPrefix>false</groupedByPrefix>
+      <captionText>qsdf</captionText>
+      <captionSize>50</captionSize>
+    </fr.sap.viewer.BuildViewer>
+    <fr.sap.viewer.BuildViewer plugin="viewer@0.1">
+      <owner class="hudson" reference="../../.."/>
+      <name>myTestView3</name>
+      <filterExecutors>false</filterExecutors>
+      <filterQueue>false</filterQueue>
+      <properties class="hudson.model.View$PropertyList"/>
+      <jobNames>
+        <comparator class="hudson.util.CaseInsensitiveComparator" reference="../../../fr.sap.viewer.BuildViewer[2]/jobNames/comparator"/>
+        <string>error_project</string>
+        <string>failed_project</string>
+        <string>passed_project</string>
+      </jobNames>
+      <jobFilters/>
+      <columns/>
+      <recurse>false</recurse>
+      <backgroundColor>#ffffff</backgroundColor>
+      <captionColor>#ffffff</captionColor>
+      <captionTextColor>#000000</captionTextColor>
+      <groupedByPrefix>false</groupedByPrefix>
+      <captionText>Dashboard</captionText>
+      <captionSize>36</captionSize>
+    </fr.sap.viewer.BuildViewer>
+    <fr.sap.viewer.BuildViewer plugin="viewer@0.1">
+      <owner class="hudson" reference="../../.."/>
+      <name>testView4</name>
+      <filterExecutors>false</filterExecutors>
+      <filterQueue>false</filterQueue>
+      <properties class="hudson.model.View$PropertyList"/>
+      <jobNames>
+        <comparator class="hudson.util.CaseInsensitiveComparator"/>
+        <string>error_project</string>
+        <string>failed_project</string>
+        <string>passed_project</string>
+      </jobNames>
+      <jobFilters/>
+      <columns/>
+      <recurse>false</recurse>
+      <backgroundColor>#413a50</backgroundColor>
+      <captionColor>#929472</captionColor>
+      <captionTextColor>#474835</captionTextColor>
       <groupedByPrefix>false</groupedByPrefix>
       <captionText>Dashboard</captionText>
       <captionSize>50</captionSize>
-    </fr.sap.appexample5.BuildViewer>
+    </fr.sap.viewer.BuildViewer>
+    <fr.sap.viewer.BuildViewer plugin="viewer@0.1">
+      <owner class="hudson" reference="../../.."/>
+      <name>myTestView4</name>
+      <filterExecutors>false</filterExecutors>
+      <filterQueue>false</filterQueue>
+      <properties class="hudson.model.View$PropertyList"/>
+      <jobNames>
+        <comparator class="hudson.util.CaseInsensitiveComparator"/>
+        <string>error_project</string>
+        <string>failed_project</string>
+        <string>passed_project</string>
+      </jobNames>
+      <jobFilters/>
+      <columns/>
+      <recurse>false</recurse>
+      <backgroundColor>#ffffff</backgroundColor>
+      <captionColor>#ffffff</captionColor>
+      <captionTextColor>#000000</captionTextColor>
+      <groupedByPrefix>false</groupedByPrefix>
+      <captionText>Dashboard</captionText>
+      <captionSize>40</captionSize>
+    </fr.sap.viewer.BuildViewer>
+    <fr.sap.viewer.BuildViewer plugin="viewer@0.1">
+      <owner class="hudson" reference="../../.."/>
+      <name>myTestView5</name>
+      <filterExecutors>false</filterExecutors>
+      <filterQueue>false</filterQueue>
+      <properties class="hudson.model.View$PropertyList"/>
+      <jobNames>
+        <comparator class="hudson.util.CaseInsensitiveComparator"/>
+        <string>error_project</string>
+        <string>failed_project</string>
+        <string>passed_project</string>
+      </jobNames>
+      <jobFilters/>
+      <columns/>
+      <recurse>false</recurse>
+      <backgroundColor>#ffffff</backgroundColor>
+      <captionColor>#ffffff</captionColor>
+      <captionTextColor>#000000</captionTextColor>
+      <groupedByPrefix>false</groupedByPrefix>
+      <captionText>Dashboard</captionText>
+      <captionSize>50</captionSize>
+    </fr.sap.viewer.BuildViewer>
+    <fr.sap.viewer.BuildViewer plugin="viewer@0.1">
+      <owner class="hudson" reference="../../.."/>
+      <name>myTestView6</name>
+      <filterExecutors>false</filterExecutors>
+      <filterQueue>false</filterQueue>
+      <properties class="hudson.model.View$PropertyList"/>
+      <jobNames>
+        <comparator class="hudson.util.CaseInsensitiveComparator"/>
+        <string>error_project</string>
+        <string>failed_project</string>
+        <string>passed_project</string>
+      </jobNames>
+      <jobFilters/>
+      <columns/>
+      <recurse>false</recurse>
+      <backgroundColor>#ffffff</backgroundColor>
+      <captionColor>#ffffff</captionColor>
+      <captionTextColor>#000000</captionTextColor>
+      <groupedByPrefix>false</groupedByPrefix>
+      <captionText></captionText>
+      <captionSize>0</captionSize>
+    </fr.sap.viewer.BuildViewer>
   </views>
   <primaryView>All</primaryView>
   <slaveAgentPort>0</slaveAgentPort>

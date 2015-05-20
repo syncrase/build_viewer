@@ -1,16 +1,16 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <fingerprint>
-  <timestamp>2015-04-23 12:29:05.454 UTC</timestamp>
+  <timestamp>2015-05-20 09:52:15.329 UTC</timestamp>
   <md5sum>39088daf223b2df4af5b0d36071644f0</md5sum>
   <fileName>lightstreamer:ls-proxy-adapters.jar</fileName>
   <usages>
     <entry>
-      <string>mavenTest/utilitaires:mavenTest.artifactid</string>
-      <ranges>2</ranges>
+      <string>passed_project</string>
+      <ranges>1</ranges>
     </entry>
     <entry>
-      <string>mavenTest</string>
-      <ranges>2</ranges>
+      <string>passed_project/utilitaires:mavenTest.artifactid</string>
+      <ranges>1</ranges>
     </entry>
   </usages>
   <facets/>

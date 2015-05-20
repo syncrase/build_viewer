@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package fr.sap.appexample5;
+package fr.sap.viewer;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -138,14 +138,7 @@ public class DashboardUtils {
         return columnCount - ((totalViews > 2 * columnCount) ? 0 : 1);
     }
 
-    static Collection<ViewEntry> toViewList(List<ProjectImpl> contents) {
-        Collection<ViewEntry> views = new ArrayList<ViewEntry>();
-
-        for ( ProjectImpl proj : contents ) {
-            views.add(new ViewEntry(proj));
-        }
-        return views;
-    }
+    
 
     public static int getCountOfViews(Collection<Collection<ViewEntry>> rows) {
         int count = 0;

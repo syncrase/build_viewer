@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package fr.sap.appexample5;
+package fr.sap.viewer;
 
 import java.net.URISyntaxException;
 import java.util.HashSet;
@@ -37,15 +37,19 @@ public class ViewEntry {
     // Constructs a new, empty tree set, sorted according to the specified comparator.
 //    private TreeSet<IViewEntry> jobs = new TreeSet<IViewEntry>(new TreeSetComparatorOverride());
     //private TreeSet<AbstractProject> projects = new TreeSet<AbstractProject>();
-    HashSet<ProjectImpl> projects;
+    HashSet<ProjectImpl> projects = new HashSet<ProjectImpl>();
 
     ViewEntry(ProjectImpl proj) {
-        projects = new HashSet<ProjectImpl>();
+//        projects = new HashSet<ProjectImpl>();
         projects.add(proj);
     }
 
 
     public String getProjectsNames() {
+        for(ProjectImpl project:projects) {
+            
+        }
+        
         Iterator<ProjectImpl> it = projects.iterator();
         ProjectImpl p;
         String returnedStr = "";

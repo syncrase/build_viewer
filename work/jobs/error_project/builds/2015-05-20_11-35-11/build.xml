@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<hudson.maven.MavenModuleSetBuild plugin="maven-plugin@2.5">
+  <actions>
+    <hudson.model.CauseAction>
+      <causes>
+        <hudson.model.Cause_-UserIdCause/>
+      </causes>
+    </hudson.model.CauseAction>
+    <hudson.maven.reporters.MavenAggregatedArtifactRecord>
+      <records/>
+      <parent reference="../../.."/>
+    </hudson.maven.reporters.MavenAggregatedArtifactRecord>
+    <hudson.tasks.Fingerprinter_-FingerprintAction>
+      <record>
+        <entry>
+          <string>groupid:artifactid_error:pom.xml</string>
+          <string>e066a8eddc027c70c2dbf6ac08b219a6</string>
+        </entry>
+      </record>
+    </hudson.tasks.Fingerprinter_-FingerprintAction>
+  </actions>
+  <number>1</number>
+  <startTime>1432114511885</startTime>
+  <result>FAILURE</result>
+  <duration>8081</duration>
+  <charset>windows-1252</charset>
+  <keepLog>false</keepLog>
+  <builtOn></builtOn>
+  <workspace>C:\Users\I310911\perforce\testWRKSPC\testPlugin\viewer\work\workspace\error_project</workspace>
+  <hudsonVersion>1.580.1</hudsonVersion>
+  <scm class="hudson.scm.NullChangeLogParser"/>
+  <culprits class="com.google.common.collect.EmptyImmutableSortedSet"/>
+  <mavenVersionUsed>3.2.5</mavenVersionUsed>
+</hudson.maven.MavenModuleSetBuild>

@@ -10,13 +10,13 @@
         <relativePath />
     </parent>
     <groupId>fr.sap</groupId>
-    <artifactId>appexample5</artifactId>
+    <artifactId>viewer</artifactId>
     <version>0.1</version>
     <packaging>hpi</packaging>
 
     <name>Build Viewer</name>
     <description>TODO</description>
-    <url>https://wiki.jenkins-ci.org/display/JENKINS/TODO+Plugin</url>
+    <url>https://github.com/syncrase/build_viewer/wiki</url>
     <licenses>
         <license>
             <name>MIT License</name>
@@ -24,14 +24,15 @@
         </license>
     </licenses>
     <!-- If you want this to appear on the wiki page:
+    -->    
     <developers>
-      <developer>
-        <id>bhacker</id>
-        <name>Bob Q. Hacker</name>
-        <email>bhacker@nowhere.net</email>
-      </developer>
+        <developer>
+            <id>pierretaquet</id>
+            <name>Pierre TAQUET</name>
+            <email>p.taquet@groupe-esigelec.fr</email>
+        </developer>
     </developers>
-    -->
+
     <!-- Assuming you want to host on @jenkinsci:
    <scm>
      <connection>scm:git:git://github.com/jenkinsci/${project.artifactId}-plugin.git</connection>
@@ -82,9 +83,9 @@
         </plugins>
     </build>
 
-  <scm>
-    <connection>scm:svn:https://svn.jenkins-ci.org/tags/whatisscmreleasetag</connection>
-    <developerConnection>scm:svn:https://svn.jenkins-ci.org/tags/whatisscmreleasetag</developerConnection>
-    <url>https://svn.jenkins-ci.org/tags/whatisscmreleasetag</url>
-  </scm>
+    <scm>
+        <connection>scm:svn:https://svn.jenkins-ci.org/tags/whatisscmreleasetag</connection>
+        <developerConnection>scm:svn:https://svn.jenkins-ci.org/tags/whatisscmreleasetag</developerConnection>
+        <url>https://svn.jenkins-ci.org/tags/whatisscmreleasetag</url>
+    </scm>
 </project>

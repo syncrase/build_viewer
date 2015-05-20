@@ -1,16 +1,16 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <fingerprint>
-  <timestamp>2015-04-23 12:29:05.487 UTC</timestamp>
+  <timestamp>2015-05-20 09:52:15.469 UTC</timestamp>
   <md5sum>34d3f9c2d7e1b1669e33f9bc530adecf</md5sum>
   <fileName>lightstreamer:lightstreamer.jar</fileName>
   <usages>
     <entry>
-      <string>mavenTest/utilitaires:mavenTest.artifactid</string>
-      <ranges>2</ranges>
+      <string>passed_project</string>
+      <ranges>1</ranges>
     </entry>
     <entry>
-      <string>mavenTest</string>
-      <ranges>2</ranges>
+      <string>passed_project/utilitaires:mavenTest.artifactid</string>
+      <ranges>1</ranges>
     </entry>
   </usages>
   <facets/>

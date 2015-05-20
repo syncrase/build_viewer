@@ -21,26 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package fr.sap.appexample5;
+package fr.sap.viewer;
 
 import hudson.Extension;
 import hudson.model.AbstractProject;
 import hudson.model.Descriptor.FormException;
 import hudson.model.Hudson;
 import hudson.model.ListView;
+import hudson.model.Result;
 import hudson.model.TopLevelItem;
 import hudson.model.ViewDescriptor;
 import java.awt.Toolkit;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.ServletException;
-import net.sf.json.JSONArray;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
 
@@ -51,6 +50,8 @@ import org.kohsuke.stapler.StaplerRequest;
 public class BuildViewer extends ListView {
 
     private static final int DEFAULT_CAPTION_SIZE = 36;
+    public static final String DEFAULT_STATE_NAME = "STATE_NAME";
+    
 //    private static final int DEFAULT_SCREEN_HEIGHT = Toolkit.getDefaultToolkit().getScreenSize().height;
 //    private static final int DEFAULT_SCREEN_WIDTH = Toolkit.getDefaultToolkit().getScreenSize().width;
 
@@ -61,7 +62,8 @@ public class BuildViewer extends ListView {
     private String captionTextColor;
 
 //    public static final String[] BUILD_STATE = {"SUCCESS", "UNSTABLE", "FAILURE", "NOT_BUILT", "ABORTED"};
-    private LinkedHashSet<ViewEntryColors> COLOR_SETTINGS;
+    private static LinkedHashSet<ViewEntryColors> COLOR_SETTINGS;
+    private static HashSet<String> prefixes;
 //    private DescribableList<ListViewColumn, Descriptor<ListViewColumn>> columns;
 
     private boolean groupedByPrefix = false;
@@ -79,7 +81,7 @@ public class BuildViewer extends ListView {
 //
 //    }
     @DataBoundConstructor
-    public BuildViewer(String name, String backgroundColor, String captionColor, String captionTextColor, LinkedHashSet<ViewEntryColors> COLOR_SETTINGS, String captionText, int captionSize) {
+    public BuildViewer(String name, String backgroundColor, String captionColor, String captionTextColor, LinkedHashSet<ViewEntryColors> COLOR_SETTINGS, String captionText, int captionSize, HashSet<String> prefixes) {
         super(name);
         this.backgroundColor = backgroundColor;
         this.captionColor = captionColor;
@@ -87,12 +89,41 @@ public class BuildViewer extends ListView {
         this.COLOR_SETTINGS = COLOR_SETTINGS;
         this.captionText = captionText;
         this.captionSize = captionSize;
+//        if(prefixes == null){
+//            this.prefixes = new HashSet<String>();
+//        }
+        this.prefixes = prefixes;
     }
+
+    public static LinkedHashSet<ViewEntryColors> getCOLOR_SETTINGS() {
+//        if (COLOR_SETTINGS == null) {
+//            initializeColorSettings();
+//        }
+        return COLOR_SETTINGS;
+    }
+
+    public static void setDefaultColorSettings(boolean b) {
+        if (b == true) {
+            COLOR_SETTINGS = new LinkedHashSet<ViewEntryColors>();
+            COLOR_SETTINGS.add(new ViewEntryColors(Result.SUCCESS.toString(), "#2BFF00", "#000000"));//green
+            COLOR_SETTINGS.add(new ViewEntryColors(Result.UNSTABLE.toString(), "#FFFF00", "#000000"));//yellow
+            COLOR_SETTINGS.add(new ViewEntryColors(Result.FAILURE.toString(), "#FF0000", "#000000"));//red
+            COLOR_SETTINGS.add(new ViewEntryColors(Result.NOT_BUILT.toString(), "#737373", "#000000"));//grey
+            COLOR_SETTINGS.add(new ViewEntryColors(Result.ABORTED.toString(), "#000000", "#000000"));//dark
+        }
+
+    }
+
+    public static HashSet<String> getPrefixes() {
+        return prefixes;
+    }
+   
 
     //public BuildViewer(String name, ViewGroup owner) {
     //    this(name);
     //    this.owner = owner;
     //}
+
     public String getCaptionText() {
         return captionText;
     }
@@ -128,26 +159,6 @@ public class BuildViewer extends ListView {
 
     public String getCaptionTextColor() {
         return captionTextColor;
-    }
-
-    public LinkedHashSet<ViewEntryColors> getCOLOR_SETTINGS() {
-//        if (COLOR_SETTINGS == null) {
-//            initializeColorSettings();
-//        }
-        return COLOR_SETTINGS;
-    }
-
-    public void setDefaultColorSettings(boolean b) {
-        if (b == true) {
-            COLOR_SETTINGS = new LinkedHashSet<ViewEntryColors>();
-//        , "", "", "", ""
-            COLOR_SETTINGS.add(new ViewEntryColors("SUCCESS", "#2BFF00", "#000000"));//green
-            COLOR_SETTINGS.add(new ViewEntryColors("UNSTABLE", "#FFFF00", "#000000"));//yellow
-            COLOR_SETTINGS.add(new ViewEntryColors("FAILURE", "#FF0000", "#000000"));//red
-            COLOR_SETTINGS.add(new ViewEntryColors("NOT_BUILT", "#737373", "#000000"));//grey
-            COLOR_SETTINGS.add(new ViewEntryColors("ABORTED", "#000000", "#000000"));//dark
-        }
-
     }
 
     /**
@@ -196,7 +207,7 @@ public class BuildViewer extends ListView {
         for ( hudson.model.Queue.Item i : Hudson.getInstance().getQueue().getItems() ) {
             placeInQueue.put(i, j++);
         }
-
+//super.
         ProjectImpl project;
         for ( TopLevelItem item : super.getItems() ) {
 
@@ -220,7 +231,7 @@ public class BuildViewer extends ListView {
         List<ProjectImpl> contents = getContents();
 //
 //        dashboard = new Dashboard(DashboardUtils.computeTheBestSquareRepartition(contents.size()));
-        dashboard = new Dashboard(toRows(DashboardUtils.toViewList(contents)), getDEFAULT_SCREEN_HEIGHT() - this.captionSize, getDEFAULT_SCREEN_WIDTH());
+        dashboard = new Dashboard(contents, getDEFAULT_SCREEN_HEIGHT() - this.captionSize, getDEFAULT_SCREEN_WIDTH());
         if (!groupedByPrefix) {
 //            dashboard = new Dashboard(toRows(DashboardUtils.toViewList(contents)));
             // TODO debug this point => verify which project are contained in this Map
@@ -253,37 +264,6 @@ public class BuildViewer extends ListView {
         }
 
         return dashboard;
-    }
-
-    /**
-     * Converts a list of jobs to a list of list of jobs, suitable for display
-     * as rows in a table.
-     * <p>
-     * @param views
-     *              the jobs to include.
-     * <p>
-     * @return a list of fixed size view entry lists.
-     */
-    public Collection<Collection<ViewEntry>> toRows(Collection<ViewEntry> views) {
-        int jobsPerRow = 0;
-
-        jobsPerRow = DashboardUtils.getCountOfViewsPerRow(views.size());
-
-        Collection<Collection<ViewEntry>> rows = new ArrayList<Collection<ViewEntry>>();
-        Collection<ViewEntry> current = null;
-        int i = 0;
-        for ( ViewEntry view : views ) {
-            if (i == 0) {
-                current = new ArrayList<ViewEntry>();
-                rows.add(current);
-            }
-            current.add(view);
-            i++;
-            if (i >= jobsPerRow) {
-                i = 0;
-            }
-        }
-        return rows;
     }
 
     /**
@@ -397,12 +377,16 @@ public class BuildViewer extends ListView {
 
         COLOR_SETTINGS = new LinkedHashSet<ViewEntryColors>();
         for ( int i = 0; i < ves_states.length; i++ ) {
-            if (!((String) ves_states[i]).equals("ADD_STATE?")) {
+            if (!((String) ves_states[i]).equals(DEFAULT_STATE_NAME)) {
                 COLOR_SETTINGS.add(new ViewEntryColors(ves_states[i].toUpperCase(), ves_backgroundColors[i], ves_fontColors[i]));
             }
 
         }
 
+//        String[] test = req.getParameterValues("prefixes");
+        String s6548 = req.getParameter("prefixes");
+        prefixes = new HashSet<String>();
+        prefixes.add(s6548!=null?s6548:"oups");
 //        Enumeration en2 = req.getAttributeNames();
 //        String test2;
 //        String[] strarr2;

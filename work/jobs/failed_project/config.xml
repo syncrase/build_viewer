@@ -16,6 +16,7 @@
     <artifactId>ArticfactId</artifactId>
   </rootModule>
   <rootPOM>C:\Users\I310911\perforce\testWRKSPC\ArticfactId_failed\pom.xml</rootPOM>
+  <goals>package install</goals>
   <aggregatorStyleBuild>true</aggregatorStyleBuild>
   <incrementalBuild>false</incrementalBuild>
   <ignoreUpstremChanges>false</ignoreUpstremChanges>

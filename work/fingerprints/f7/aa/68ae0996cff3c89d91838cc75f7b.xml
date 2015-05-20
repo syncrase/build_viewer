@@ -1,20 +1,20 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <fingerprint>
-  <timestamp>2015-05-19 15:01:07.30 UTC</timestamp>
+  <timestamp>2015-05-20 09:35:06.487 UTC</timestamp>
   <original>
     <name>failed_project/groupId:ArticfactId</name>
-    <number>2</number>
+    <number>1</number>
   </original>
   <md5sum>f7aa68ae0996cff3c89d91838cc75f7b</md5sum>
   <fileName>groupId:ArticfactId:pom.xml</fileName>
   <usages>
     <entry>
       <string>failed_project/groupId:ArticfactId</string>
-      <ranges>2</ranges>
+      <ranges>1</ranges>
     </entry>
     <entry>
       <string>failed_project</string>
-      <ranges>2</ranges>
+      <ranges>1</ranges>
     </entry>
   </usages>
   <facets/>
