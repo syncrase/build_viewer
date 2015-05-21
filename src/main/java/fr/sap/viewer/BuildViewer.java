@@ -51,6 +51,11 @@ public class BuildViewer extends ListView {
 
     private static final int DEFAULT_CAPTION_SIZE = 36;
     public static final String DEFAULT_STATE_NAME = "STATE_NAME";
+    public static final String DEFAULT_VE_BACKGROUND_COLOR = "#FFFFFF";
+    public static final String DEFAULT_VE_FONT_COLOR = "#FFFFFF";
+    public static final String DEFAULT_CAPTION_FONT_COLOR = "#000000";
+    public static final String DEFAULT_CAPTION_BACKGROUND_COLOR = "#FFFFFF";
+    public static final String DEFAULT_BACKGROUND_COLOR = "#FFFFFF";
     
 //    private static final int DEFAULT_SCREEN_HEIGHT = Toolkit.getDefaultToolkit().getScreenSize().height;
 //    private static final int DEFAULT_SCREEN_WIDTH = Toolkit.getDefaultToolkit().getScreenSize().width;

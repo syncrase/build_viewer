@@ -28,7 +28,11 @@ THE SOFTWARE.
 <!--xmlns:g="glide"-->
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt" 
          trim="false" xmlns:g="glide" xmlns:j2="jelly:core" xmlns:g2="null">
-
+    
+    <!--jQuery-->
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<!--Sortable-->
+<script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
     <style type="text/css" title="myInnerCSS">
 <!--        #widthfield{
             background: #ff4900;
@@ -52,6 +56,36 @@ THE SOFTWARE.
             background: #E1E1E1;
             <!--top - right - bottom - left -->
         }
+        
+        
+        
+        		#sortableStatesList{
+			list-style-type: none;
+			float:left;
+		}
+		#sortableStatesList li{
+			background:grey;
+			margin:5px;
+
+		}
+		#sortableStatesList li div.selector{
+
+			float:left;
+			width : 30px;
+
+		}
+		
+		#sortableStatesList li div.index{
+
+			float:left;
+		}
+		
+		#sortableStatesList li input{
+
+			float:left;
+			margin:3px;
+			padding:3px;
+		}
     </style>
     
     <script type="text/javascript">
@@ -59,6 +93,11 @@ THE SOFTWARE.
             alert("hello");
             return 1920;
         }
+        
+        
+-->        	
+        <!--
+        
         
         var defaultScreenWidth = screen.width;
         var defaultScreenHeight = screen.height;
@@ -82,8 +121,8 @@ THE SOFTWARE.
 
             <!--// Add some text to the new cells:-->
             cell1.innerHTML = "&lt;input type=\"text\" name=\"ve_state\" value=\"${from.DEFAULT_STATE_NAME}\" /&gt;";
-            cell2.innerHTML = "&lt;input type=\"color\" name=\"ve_backgroundColor\" value=\"#FFFFFF\" /&gt;";
-            cell3.innerHTML = "&lt;input type=\"color\" name=\"ve_fontColor\" value=\"#FFFFFF\" /&gt;";
+            cell2.innerHTML = "&lt;input type=\"color\" name=\"ve_backgroundColor\" value=\"${from.DEFAULT_VE_BACKGROUND_COLOR}\" /&gt;";
+            cell3.innerHTML = "&lt;input type=\"color\" name=\"ve_fontColor\" value=\"${from.DEFAULT_VE_BACKGROUND_COLOR}\" /&gt;";
         }
         
         function deleteRow(tableId, stateValue) {
@@ -134,6 +173,8 @@ THE SOFTWARE.
                 }
             }
         }
+        
+        
     </script>
 
         
@@ -232,7 +273,7 @@ THE SOFTWARE.
                         <j:set var="varCaptionColor" value="${it.captionColor}"/>
                     </j:when>
                     <j:otherwise>
-                        <j:set var="varCaptionColor" value="#FFFFFF"/>
+                        <j:set var="varCaptionColor" value="${from.DEFAULT_CAPTION_BACKGROUND_COLOR}"/>
                     </j:otherwise>
                 </j:choose>
                 <input type="color" name="captionColor" value="${varCaptionColor}" />
@@ -244,7 +285,7 @@ THE SOFTWARE.
                         <j:set var="varCaptionTextColor" value="${it.captionTextColor}"/>
                     </j:when>
                     <j:otherwise>
-                        <j:set var="varCaptionTextColor" value="#000000"/>
+                        <j:set var="varCaptionTextColor" value="${from.DEFAULT_CAPTION_FONT_COLOR}"/>
                     </j:otherwise>
                 </j:choose>
                 <input type="color" name="captionTextColor" value="${varCaptionTextColor}" />
@@ -273,7 +314,7 @@ THE SOFTWARE.
                         <j:set var="varBackgroundColor" value="${it.backgroundColor}"/>
                     </j:when>
                     <j:otherwise>
-                        <j:set var="varBackgroundColor" value="#FFFFFF"/>
+                        <j:set var="varBackgroundColor" value="${from.DEFAULT_BACKGROUND_COLOR}"/>
                     </j:otherwise>
                 </j:choose>
                 <input type="color" name="backgroundColor" value="${varBackgroundColor}" />
@@ -452,10 +493,32 @@ THE SOFTWARE.
                 </div>
             </form>
         </f:entry>
+    
+    
+        <f:entry title="${%States}" field="COLOR_SETTINGS">
+            <ul id="sortableStatesList">
+                <j:forEach var="state" items="${from.COLOR_SETTINGS}">
+                    <li>
+                        <div style="display:inline-block;">
+                            <!-- <div class="index">1</div> -->
+                            <input type="text" name="ve_state" value="${state.ve_state}" />
+                            <input type="color" name="ve_backgroundColor" value="${state.ve_backgroundColor}" />
+                            <input type="color" name="ve_fontColor" value="${state.ve_fontColor}" />
+                            <div class="selector"></div>
+                        </div>
+                    </li>
+                </j:forEach>
+		
+		
+            </ul>
+        </f:entry>
+    
+        
+        
     </f:section>
     
     <f:section title="${%Job gathering}">
-<!--        <script type="text/javascript">
+        <!--        <script type="text/javascript">
             alert("${from.prefixes}");
         </script>-->
         
@@ -469,6 +532,20 @@ THE SOFTWARE.
     </f:section>
   
   
+    <script type="text/javascript">
+        
+        <!--$('table#stateList').animate({'margin-left': '300px'},1000);-->
+        
+        $(document).ready(function() {
+		
+		
+		
+        $('ul#sortableStatesList').sortable({ items: '> li' });
+		
+        $('table#stateList').animate({'margin-left': '300px'},1000);
+		
+        });
+    </script>
     <script>
         (function() {
         Behaviour.specify("#recurse", 'ListView', 0, function(e) {
