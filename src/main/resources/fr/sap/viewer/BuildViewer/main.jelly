@@ -373,7 +373,19 @@ var ruleName;
                 <st:include page="noPrefix/jobs.jelly" />-->
                 <!--</j:otherwise>-->
                 <j:invoke var="dashboard" on="${from}" method="getDashboard" />
-                <st:include page="noPrefix/jobs.jelly" />
+                <!--                <st:include page="noPrefix/jobs.jelly" />-->
+                <j:invoke var="viewsRows" on="${dashboard}" method="getRows" />
+                
+                
+                <j:forEach var="row" items="${viewsRows}">
+                    <j:forEach var="view" items="${row}">
+                        <st:include page="viewEntry.jelly" />
+                    </j:forEach>
+                </j:forEach>
+    
+    
+    
+    
                 
             </j:choose>	
         </div>

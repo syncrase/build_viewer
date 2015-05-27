@@ -32,7 +32,7 @@ public class ViewEntryColors {
     /**
      * These values are in the hudson.model.Result Object
      */
-    public static final String[] DEFAULT_BUILD_STATE = {"SUCCESS", "UNSTABLE", "FAILURE", "NOT_BUILT", "ABORTED"};
+    public static String[] BUILD_STATE = {"SUCCESS", "UNSTABLE", "FAILURE", "NOT_BUILT", "ABORTED"};
 
     private String ve_state;
     private String ve_backgroundColor;

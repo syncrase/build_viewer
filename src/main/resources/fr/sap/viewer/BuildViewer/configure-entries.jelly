@@ -186,7 +186,7 @@ THE SOFTWARE.
                     </j:if>
                     <span class="${spanClass}" style="${spanStyle}">
                         <f:checkbox name="${job.getRelativeNameFromGroup(it.ownerItemGroup)}" checked="${it.jobNamesContains(job)}" 
-                                    title="${h.getRelativeDisplayNameFrom(job,it.ownerItemGroup)} > this is the name" tooltip="Check ${job.fullName} to include it in the view" json="true"/>
+                                    title="${h.getRelativeDisplayNameFrom(job,it.ownerItemGroup)}" tooltip="Check ${job.fullName} to include it in the view" json="true"/>
                         <br/>
                     </span>
                 </j:forEach>
@@ -304,7 +304,7 @@ THE SOFTWARE.
                                 <td class="redips-mark" style="height:50px;background:#FFFFFF"></td>
                             </tr>
                             <tr>
-                                <td class="redips-trash"  title="Trash">Drag &amp; drop here to delete the line</td>
+                                <td class="redips-trash"  title="Trash">Drag &amp; drop here to delete the row</td>
                             </tr>
                         </table>
                     </div>		
@@ -320,13 +320,20 @@ THE SOFTWARE.
     
     <!--Job gathering-->
     <f:section title="${%Job gathering}">
-        <j:forEach var="prefix" items="${from.prefixes}">
-            prefix : ${prefix}
+        <!--<j:set var="content" value=""/>-->
+
+        <j:forEach var="prefix" items="${from.prefixesSeparators}">
+
+
+            <j:set var="content" value="${content} ${prefix}"/>
         </j:forEach>
+        <!--prefixes : ${content}-->
         
-        <f:entry title="${%Prefixes used}" field="prefixes"  help="${helpURL}?.html">
-            <f:textbox name="prefixes" field="prefixes" />
+        <f:entry title="${%Prefixes used}" field="prefixesSeparators"  help="${helpURL}?.html">
+            <f:textbox name="prefixesSeparators" tooltip="Set separators values separate per spaces" value="${content}"/>
+            <!--field="prefixesSeparators"-->
         </f:entry>
+        
     </f:section>
   
 <!--    <script type="text/javascript">

@@ -40,6 +40,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.ServletException;
+import net.sf.json.JSONObject;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
 
@@ -67,14 +68,17 @@ public class BuildViewer extends ListView {
     private String captionTextColor;
 
 //    public static final String[] BUILD_STATE = {"SUCCESS", "UNSTABLE", "FAILURE", "NOT_BUILT", "ABORTED"};
-    private static LinkedHashSet<ViewEntryColors> COLOR_SETTINGS;
-    private static HashSet<String> prefixes;
+    private LinkedHashSet<ViewEntryColors> COLOR_SETTINGS;
+    private HashSet<String> prefixesSeparators;
 //    private DescribableList<ListViewColumn, Descriptor<ListViewColumn>> columns;
 
     private boolean groupedByPrefix = false;
     private String captionText;
 
     private int captionSize;
+    
+    
+    
 
 //    @DataBoundConstructor
 //    public BuildViewer(String name, int captionSize, String captionText) {
@@ -86,7 +90,8 @@ public class BuildViewer extends ListView {
 //
 //    }
     @DataBoundConstructor
-    public BuildViewer(String name, String backgroundColor, String captionColor, String captionTextColor, LinkedHashSet<ViewEntryColors> COLOR_SETTINGS, String captionText, int captionSize, HashSet<String> prefixes) {
+    public BuildViewer(String name, String backgroundColor, String captionColor, String captionTextColor, 
+                        LinkedHashSet<ViewEntryColors> COLOR_SETTINGS, String captionText, int captionSize, HashSet<String> prefixesSeparators) {
         super(name);
         this.backgroundColor = backgroundColor;
         this.captionColor = captionColor;
@@ -94,20 +99,25 @@ public class BuildViewer extends ListView {
         this.COLOR_SETTINGS = COLOR_SETTINGS;
         this.captionText = captionText;
         this.captionSize = captionSize;
-//        if(prefixes == null){
-//            this.prefixes = new HashSet<String>();
+//        if(prefixesSeparators == null){
+//            this.prefixesSeparators = new HashSet<String>();
 //        }
-        this.prefixes = prefixes;
+        this.prefixesSeparators = prefixesSeparators;
     }
+    
+//    @DataBoundConstructor
+//    public BuildViewer(String name) {
+//        super(name);
+//    }
 
-    public static LinkedHashSet<ViewEntryColors> getCOLOR_SETTINGS() {
+    public LinkedHashSet<ViewEntryColors> getCOLOR_SETTINGS() {
 //        if (COLOR_SETTINGS == null) {
 //            initializeColorSettings();
 //        }
         return COLOR_SETTINGS;
     }
 
-    public static void setDefaultColorSettings(boolean b) {
+    public void setDefaultColorSettings(boolean b) {
         if (b == true) {
             COLOR_SETTINGS = new LinkedHashSet<ViewEntryColors>();
             COLOR_SETTINGS.add(new ViewEntryColors(Result.SUCCESS.toString(), "#2BFF00", "#000000"));//green
@@ -119,8 +129,8 @@ public class BuildViewer extends ListView {
 
     }
 
-    public static HashSet<String> getPrefixes() {
-        return prefixes;
+    public HashSet<String> getPrefixesSeparators() {
+        return prefixesSeparators;
     }
    
 
@@ -219,7 +229,7 @@ public class BuildViewer extends ListView {
             if (item instanceof AbstractProject) {
                 //AbstractProject project = (AbstractProject) item;
 
-                project = new ProjectImpl((AbstractProject) item);
+                project = new ProjectImpl(this, (AbstractProject) item);
                 if (!project.getAbstractProject().isDisabled()) {
 ////                    IViewEntry entry = new JobViewEntry(this, project);
 ////                    contents.addBuild(entry);
@@ -232,38 +242,13 @@ public class BuildViewer extends ListView {
     }
 
     public Dashboard getDashboard() {
-        Dashboard dashboard = null;
+        Dashboard dashboard;
         List<ProjectImpl> contents = getContents();
 //
 //        dashboard = new Dashboard(DashboardUtils.computeTheBestSquareRepartition(contents.size()));
-        dashboard = new Dashboard(contents, getDEFAULT_SCREEN_HEIGHT() - this.captionSize, getDEFAULT_SCREEN_WIDTH());
+        dashboard = new Dashboard(this, contents, getDEFAULT_SCREEN_HEIGHT() - this.captionSize, getDEFAULT_SCREEN_WIDTH());
         if (!groupedByPrefix) {
-//            dashboard = new Dashboard(toRows(DashboardUtils.toViewList(contents)));
-            // TODO debug this point => verify which project are contained in this Map
-            //Get available items (projects, ....)
-//            Map<hudson.model.Queue.Item, Integer> placeInQueue = new HashMap<hudson.model.Queue.Item, Integer>();
-//            int j = 1;
-//            for ( hudson.model.Queue.Item i : Hudson.getInstance().getQueue().getItems() ) {
-//                placeInQueue.put(i, j++);
-//            }
-//
-//        ProjectImpl project;
-//            for ( TopLevelItem item : super.getItems() ) {
-//
-//                if (item instanceof AbstractProject) {
-//                AbstractProject project = (AbstractProject) item;
-//
-//                project = new ProjectImpl((AbstractProject) item);
-//                if (!project.getAbstractProject().isDisabled()) {
-//////                    IViewEntry entry = new JobViewEntry(this, project);
-//////                    contents.addBuild(entry);
-//                    contents.addBuild(project);
-//                }
-//                }
-//            }
-//            for ( int w = 0; w < contents.size(); w++ ) {
-//                dashboard.addDashboardEntity(new DashboardEntity(contents.get(w)), w);
-//            }
+
         } else {
 
         }
@@ -271,64 +256,7 @@ public class BuildViewer extends ListView {
         return dashboard;
     }
 
-    /**
-     * Used in the case where project are grouped by prefix
-     * <p>
-     * @param req
-     *            <p>
-     * @throws ServletException
-     * @throws IOException
-     * @throws hudson.model.Descriptor.FormException
-     * @return A collection of collection of DashboardEntity
-     */
-//    public Collection<Collection<ViewEntry>> toRows(Collection<ViewEntry> jobs, Boolean failingJobs) {
-//
-//        int jobsPerRow = 1;
-//        if (failingJobs) {
-//            if (jobs.size() > 3) {
-//                jobsPerRow = 2;
-//            }
-//            if (jobs.size() > 9) {
-//                jobsPerRow = 3;
-//            }
-//            if (jobs.size() > 15) {
-//                jobsPerRow = 4;
-//            }
-//        } else {
-//            // don't mind having more rows as much for passing jobs.
-//            jobsPerRow = (int) Math.floor(Math.sqrt(jobs.size()) / 1.5);
-//        }
-//        Collection<Collection<ViewEntry>> rows = new ArrayList<Collection<ViewEntry>>();
-//        Collection<ViewEntry> current = null;
-//        int i = 0;
-//        for ( ViewEntry job : jobs ) {
-//            if (i == 0) {
-//                current = new ArrayList<ViewEntry>();
-//                //rows.add(current);// De base c'est ici
-//            }
-//            current.add(job);
-//            i++;
-//            if (i >= jobsPerRow) {
-//                rows.add(current);//Je le vois mieux lÃƒÂ !
-//                i = 0;
-//            }
-//        }
-//        return rows;
-//    }
-//    /**
-//     * Colours to use in the view.
-//     */
-//    transient ViewEntryColors colors;
-//
-//    /**
-//     * @return the colors to use
-//     */
-//    public ViewEntryColors getColors() {
-//        if (this.colors == null) {
-//            this.colors = ViewEntryColors.DEFAULT;
-//        }
-//        return this.colors;
-//    }
+
     /**
      * Method called when the user click on submit
      * <p>
@@ -382,16 +310,29 @@ public class BuildViewer extends ListView {
 
         COLOR_SETTINGS = new LinkedHashSet<ViewEntryColors>();
         for ( int i = 0; i < ves_states.length; i++ ) {
-            if (!((String) ves_states[i]).equals(DEFAULT_STATE_NAME)) {
+            if (!ves_states[i].equals(DEFAULT_STATE_NAME)) {
                 COLOR_SETTINGS.add(new ViewEntryColors(ves_states[i].toUpperCase(), ves_backgroundColors[i], ves_fontColors[i]));
             }
 
         }
 
-//        String[] test = req.getParameterValues("prefixes");
-        String s6548 = req.getParameter("prefixes");
-        prefixes = new HashSet<String>();
-        prefixes.add(s6548!=null?s6548:"oups");
+//        String[] test = req.getParameterValues("prefixesSeparators");
+ 
+        
+        String[] separatos = req.getParameter("prefixesSeparators").split(" ");
+        if(separatos.length >= 1){
+            prefixesSeparators = new HashSet<String>();
+            for(String s : separatos){
+                if(!s.equals("")){
+                    prefixesSeparators.add(s);
+                }
+            }
+        }
+        
+//        dashboard = new Dashboard(getContents(), getDEFAULT_SCREEN_HEIGHT() - this.captionSize, getDEFAULT_SCREEN_WIDTH());
+        
+        
+//        prefixesSeparators.add(s6548!=null?s6548:"oups");
 //        Enumeration en2 = req.getAttributeNames();
 //        String test2;
 //        String[] strarr2;
@@ -468,22 +409,22 @@ public class BuildViewer extends ListView {
             return "Displayed name of my view";
         }
 
-//        /**
-//         * 
-//         * @param sr
-//         * @param jsono
-//         * @return 
-//         */
-//        @Override
-//        public boolean configure(StaplerRequest sr, JSONObject jsono){
-//            
+        /**
+         * 
+         * @param sr
+         * @param jsono
+         * @return 
+         */
+        @Override
+        public boolean configure(StaplerRequest sr, JSONObject jsono) throws FormException{
+            sr.bindJSON(this, jsono);
 //            String a = "d";
 //            a+="b";
 //            int i = jsono.optInt("dashboardWidth");
-//            // serializing
-//            save();
-//            return false;
-//        }
+            // serializing
+            save();
+            return super.configure(sr,jsono);
+        }
 //
 //        @Override
 //        public List<Descriptor<ViewJobFilter>> getJobFiltersDescriptors() {
@@ -534,12 +475,12 @@ public class BuildViewer extends ListView {
 //            return super.getConfigFile(); //To change body of generated methods, choose Tools | Templates.
 //        }
 //
-//        @Override
-//        public synchronized void load() {
+        @Override
+        public synchronized void load() {
 //            String a = "d";
 //            a+="b";
-//            super.load(); //To change body of generated methods, choose Tools | Templates.
-//        }
+            super.load(); //To change body of generated methods, choose Tools | Templates.
+        }
 //
 //        @Override
 //        public synchronized void save() {

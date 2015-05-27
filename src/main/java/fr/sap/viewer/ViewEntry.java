@@ -30,6 +30,7 @@ import org.apache.commons.lang.Validate;
 
 /**
  * Represent a set of jobs (ProjectImpl)
+ * <p>
  * @author I310911
  */
 public class ViewEntry {
@@ -39,82 +40,128 @@ public class ViewEntry {
     //private TreeSet<AbstractProject> projects = new TreeSet<AbstractProject>();
     HashSet<ProjectImpl> projects = new HashSet<ProjectImpl>();
 
-    ViewEntry(ProjectImpl proj) {
+    private final String prefixe;
+    private ViewEntryColors currentState;
+
+    ViewEntry(BuildViewer bv, ProjectImpl proj) {
 //        projects = new HashSet<ProjectImpl>();
         projects.add(proj);
-    }
-
-
-    public String getProjectsNames() {
-        for(ProjectImpl project:projects) {
-            
-        }
-        
-        Iterator<ProjectImpl> it = projects.iterator();
-        ProjectImpl p;
-        String returnedStr = "";
-
-        while (it.hasNext()) {
-            p = it.next();
-//            returnedStr += p.getName();
-            //returnedStr += p.abstractProject_Info();
-            //returnedStr += p.run_Info();
-            //returnedStr += p.build_Info();
-            returnedStr += p.test();
-        }
-
-        return returnedStr;
-    }
-
-
-
-    public String getDefect() throws URISyntaxException {
-        String defect = "";
-
-//        try {
-//            //XmlFile xmlFile = new XmlFile(XSTREAM, getDataFile("junitResult.xml"));
-//            hudson.FilePath.getHomeDirectory(null);
-//            
-//        } catch (InterruptedException ex) {
-//            Logger.getLogger(ViewEntry.class.getName()).log(Level.SEVERE, null, ex);
-//        } catch (IOException ex) {
-//            Logger.getLogger(ViewEntry.class.getName()).log(Level.SEVERE, null, ex);
+//        if (prefixUSed()) {
+//            this.prefixe = proj.getPrefixe();
+//        } else {
+//            this.prefixe = "NO_PREFIX";
 //        }
-        
-        
-        return "no bug";
+this.prefixe ="";
+        this.refreshState(bv);
     }
 
-    void addBuild(ProjectImpl entry) {
-        Validate.notNull(entry);
-        projects.add(entry);
-    }
-
-
-//    public Job<?, ?> getJob() {
-//        // Used in the TreeSetComparatorOverride
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//    }
-
-
-//    public String getName() {
-//        // Used in the TreeSetComparatorOverride and in job.jelly
-//        return "MyName";
-//    }
-    
     /**
-     * 
+     * Add project only if it has the same prefix of the view
+     * <p>
+     * @param entry
+     */
+    void addProject(ProjectImpl entry) {
+        Validate.notNull(entry);
+        if (entry.getPrefixe().equals(this.prefixe)) {
+            projects.add(entry);
+        }
+
+    }
+
+    /**
+     *
      * @return The first job, if it exists
      */
-    public ProjectImpl getMyJob(){
+    public ProjectImpl getMyJob() {
         Iterator<ProjectImpl> it = projects.iterator();
-        if(it.hasNext()){
+        if (it.hasNext()) {
             return it.next();
         }
         return null;
     }
 
-    public String getBackgroundColor(){
-        return "#CCCCCC";
+    public String getPrefixe() {
+        return this.prefixe;
     }
+
+    public String getBackgroundColor() {
+
+        return currentState.getVe_backgroundColor();
+
+    }
+
+    public int getCount() {
+        return projects.size();
+    }
+
+    public HashSet<ProjectImpl> getProjects() {
+        return projects;
+    }
+
+//    /**
+//     * Return the state of the Entry, representative of a group of projects or a
+//     * single project
+//     * <p>
+//     * @return
+//     */
+//    public String getResult() {
+//
+//        int maxRank = 0;
+//        int index = 0;
+//        String result = "";
+//
+//        for ( ProjectImpl p : projects ) {// Go trough projects
+//
+//            for ( ViewEntryColors state : BuildViewer.getCOLOR_SETTINGS() ) {// Find the corresponding status
+//                if (p.getResult().equals(state.getVe_state())) {
+//
+//                    
+//                    if (index >= maxRank) {
+//                        maxRank = index;// Keep the index of the highest priority state. Highest it is, highest the priority is
+//                        result = state.getVe_state();
+//                    }
+//                }
+//                index++;
+//            }
+//            index = 0;
+//        }
+//        return result;
+//    }
+    /**
+     * Refresh values of the ViewEntryColor field
+     * <p>
+     * @return
+     */
+    private void refreshState(BuildViewer bv ) {
+
+        int maxRank = 0;
+        int index = 0;
+        String result = "";
+
+        for ( ProjectImpl p : projects ) {// Go trough projects
+
+            for ( ViewEntryColors state : bv.getCOLOR_SETTINGS() ) {// Find the corresponding status
+                if (p.getResult().equals(state.getVe_state())) {
+
+                    if (index >= maxRank) {
+                        maxRank = index;// Keep the index of the highest priority state. Highest it is, highest the priority is
+//                        result = state.getVe_state();
+                        currentState = state;
+                    }
+                }
+                index++;
+            }
+            index = 0;
+        }
+    }
+
+//    private boolean prefixUSed() {
+//
+////        if(BuildViewer.getPrefixesSeparators()==null){
+////            return false;
+////        }else{
+////            return BuildViewer.getPrefixesSeparators().size()>0;
+////        }
+//        return (BuildViewer.getPrefixesSeparators() == null) ? false : (BuildViewer.getPrefixesSeparators().size() > 0);
+//    }
 }

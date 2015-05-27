@@ -48,14 +48,8 @@ public class Dashboard {
     private double multiplier;
     private double viewsWidth;
 
-    private final String NO_PREFIX_FOUND = "NO_PREFIX_FOUND";
-    private final String NO_PREFIX_AVAILABLE = "NO_PREFIX_AVAILABLE";
-
-    Dashboard(List<ProjectImpl> contents, double dashboardHeightInPixels, double dashboardWidthInPixels) {
-//        this.rows = toRows;
-
-        rows = toRows(this.toViewList(contents));
-//        this.margin = 0.2;
+    Dashboard(BuildViewer bv, List<ProjectImpl> contents, double dashboardHeightInPixels, double dashboardWidthInPixels) {
+        rows = toRows(this.toViewList(bv, contents));
         this.dashboardHeightInPixel = dashboardHeightInPixels;
         double[] a = DashboardUtils.getCountOfRows(DashboardUtils.getCountOfViews(rows));
         this.viewsHeight = dashboardHeightInPixels / a[0];
@@ -127,7 +121,8 @@ public class Dashboard {
     }
 
     /**
-     * Converts a list of jobs to a list of list of jobs, suitable for display
+     * Converts a list of ViewEntries to a list of list of jobs, suitable for
+     * display
      * as rows in a table.
      * <p>
      * @param views
@@ -157,7 +152,14 @@ public class Dashboard {
         return rows;
     }
 
-    private Collection<ViewEntry> toViewList(List<ProjectImpl> contents) {
+    /**
+     * Gather projects in ViewEntry based on theirs prefixes
+     * <p>
+     * @param contents
+     * <p>
+     * @return
+     */
+    private Collection<ViewEntry> toViewList(BuildViewer bv, List<ProjectImpl> contents) {
         Collection<ViewEntry> views = new ArrayList<ViewEntry>();
 
         //Rassemblement des projets portant les mêmes préfixes dans les views entry
@@ -165,37 +167,28 @@ public class Dashboard {
         // plusieurs séparateurs possibles (- | . | * | ... ) ceux-ci sont définis dans l'écran de configuration
         // 
         //
-        //
-        //      StringUtils.substringBefore(name, separator)
+        // 
+        projectsLoop:
         for ( ProjectImpl proj : contents ) {
-            views.add(new ViewEntry(proj));
-        }
-        return views;
-    }
 
-    /**
-     *
-     * @param name The name of the job
-     * <p>
-     * @return the prefix use for this job<br/>null if no prefix has been found
-     *         in the project name
-     */
-    private String getPrefix(String name) {
-        HashSet<String> prefixes = BuildViewer.getPrefixes();
-        if (prefixes != null) {
-            if (prefixes.size() > 0) {
-                for ( String prefix : prefixes ) {
-                    if (name.contains(prefix)) {
-                        return StringUtils.substringBefore(name, prefix);
+            if (proj.getPrefixe() != null) {
+                for ( ViewEntry view : views ) {
+                    if (proj.getPrefixe().equals(view.getPrefixe())) {//A viewEntry with this prefix already exists
+                        view.addProject(proj);
+                        continue projectsLoop;
                     }
                 }
-                return this.NO_PREFIX_FOUND;
-            } else {
-                return this.NO_PREFIX_AVAILABLE;
+                //No ViewEntry with this prefix, instantiate it
+//                views.add(new ViewEntry(proj));
             }
-        }
-        throw new RuntimeException("There's no prefixes list. Initialization issue.");
+            views.add(new ViewEntry(bv, proj));//Set the project in just one view
 
+        }
+        //      StringUtils.substringBefore(name, separator)
+//        for ( ProjectImpl proj : contents ) {
+//            views.add(new ViewEntry(proj));
+//        }
+        return views;
     }
 
 }
