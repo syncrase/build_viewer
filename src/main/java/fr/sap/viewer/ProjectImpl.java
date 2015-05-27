@@ -33,14 +33,14 @@ import org.apache.commons.lang.StringUtils;
  */
 public class ProjectImpl {
 
-    private static final String NO_PREFIX_FOUND = "NO_PREFIX_FOUND";
-    private static final String NO_PREFIX_AVAILABLE = "NO_PREFIX_AVAILABLE";
+//    public static final String NO_PREFIX_FOUND = "NO_PREFIX_FOUND";
+    public static final String NO_PREFIX_AVAILABLE = "NO_PREFIX_AVAILABLE";
 
     private final AbstractProject abstractProject;
 
     private final String prefixe;
     private BuildViewer bv;
-    
+
     public ProjectImpl(BuildViewer bv, AbstractProject abstractProject) {
         this.abstractProject = abstractProject;
         this.bv = bv;
@@ -60,7 +60,6 @@ public class ProjectImpl {
         return abstractProject.getName();
     }
 
-    
 //    public String getFontColor() {
 //        //Used in job.jelly
 //        // retourne une couleur en fonction du résultat
@@ -126,7 +125,6 @@ public class ProjectImpl {
         return prefixe;
     }
 
-    
     /**
      *
      * @param name The name of the job
@@ -134,7 +132,7 @@ public class ProjectImpl {
      * @return the prefix use for this job<br/>null if no prefix has been found
      *         in the project name
      */
-    private static String computePrefix(String name) {
+    private String computePrefix(String name) {
         HashSet<String> prefixes = bv.getPrefixesSeparators();
         if (prefixes != null) {
             if (prefixes.size() > 0) {
@@ -153,8 +151,6 @@ public class ProjectImpl {
 
     }
 
-    
-    
 //    public String abstractProject_Info() {
 //        String s = "";
 //        s += "getAbsoluteUrl : " + abstractProject.getAbsoluteUrl();

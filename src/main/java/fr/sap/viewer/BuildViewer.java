@@ -54,10 +54,9 @@ public class BuildViewer extends ListView {
     public static final String DEFAULT_CAPTION_FONT_COLOR = "#000000";
     public static final String DEFAULT_CAPTION_BACKGROUND_COLOR = "#FFFFFF";
     public static final String DEFAULT_BACKGROUND_COLOR = "#FFFFFF";
-    
+
 //    private static final int DEFAULT_SCREEN_HEIGHT = Toolkit.getDefaultToolkit().getScreenSize().height;
 //    private static final int DEFAULT_SCREEN_WIDTH = Toolkit.getDefaultToolkit().getScreenSize().width;
-
     // Here, a list of objects that contains colors of background and font depending of the group status
     // ...
     private String backgroundColor;
@@ -73,9 +72,6 @@ public class BuildViewer extends ListView {
     private String captionText;
 
     private int captionSize;
-    
-    
-    
 
 //    @DataBoundConstructor
 //    public BuildViewer(String name, int captionSize, String captionText) {
@@ -87,8 +83,8 @@ public class BuildViewer extends ListView {
 //
 //    }
     @DataBoundConstructor
-    public BuildViewer(String name, String backgroundColor, String captionColor, String captionTextColor, 
-                        LinkedHashSet<ViewEntryColors> COLOR_SETTINGS, String captionText, int captionSize, HashSet<String> prefixesSeparators) {
+    public BuildViewer(String name, String backgroundColor, String captionColor, String captionTextColor,
+                       LinkedHashSet<ViewEntryColors> COLOR_SETTINGS, String captionText, int captionSize, HashSet<String> prefixesSeparators) {
         super(name);
         this.backgroundColor = backgroundColor;
         this.captionColor = captionColor;
@@ -102,12 +98,11 @@ public class BuildViewer extends ListView {
         this.prefixesSeparators = prefixesSeparators;
 
     }
-    
+
 //    @DataBoundConstructor
 //    public BuildViewer(String name) {
 //        super(name);
 //    }
-
     public LinkedHashSet<ViewEntryColors> getCOLOR_SETTINGS() {
 //        if (COLOR_SETTINGS == null) {
 //            initializeColorSettings();
@@ -130,13 +125,11 @@ public class BuildViewer extends ListView {
     public HashSet<String> getPrefixesSeparators() {
         return prefixesSeparators;
     }
-   
 
     //public BuildViewer(String name, ViewGroup owner) {
     //    this(name);
     //    this.owner = owner;
     //}
-
     public String getCaptionText() {
         return captionText;
     }
@@ -255,7 +248,6 @@ public class BuildViewer extends ListView {
         return dashboard;
     }
 
-
     /**
      * Method called when the user click on submit
      * <p>
@@ -316,21 +308,17 @@ public class BuildViewer extends ListView {
         }
 
 //        String[] test = req.getParameterValues("prefixesSeparators");
- 
-        
         String[] separatos = req.getParameter("prefixesSeparators").split(" ");
-        if(separatos.length >= 1){
+        if (separatos.length >= 1) {
             prefixesSeparators = new HashSet<String>();
-            for(String s : separatos){
-                if(!s.equals("")){
+            for ( String s : separatos ) {
+                if (!s.equals("")) {
                     prefixesSeparators.add(s);
                 }
             }
         }
-        
+
 //        dashboard = new Dashboard(getContents(), getDEFAULT_SCREEN_HEIGHT() - this.captionSize, getDEFAULT_SCREEN_WIDTH());
-        
-        
 //        prefixesSeparators.add(s6548!=null?s6548:"oups");
 //        Enumeration en2 = req.getAttributeNames();
 //        String test2;
@@ -409,20 +397,21 @@ public class BuildViewer extends ListView {
         }
 
         /**
-         * 
+         *
          * @param sr
          * @param jsono
-         * @return 
+         * <p>
+         * @return
          */
         @Override
-        public boolean configure(StaplerRequest sr, JSONObject jsono) throws FormException{
+        public boolean configure(StaplerRequest sr, JSONObject jsono) throws FormException {
             sr.bindJSON(this, jsono);
 //            String a = "d";
 //            a+="b";
 //            int i = jsono.optInt("dashboardWidth");
             // serializing
             save();
-            return super.configure(sr,jsono);
+            return super.configure(sr, jsono);
         }
 //
 //        @Override
@@ -474,6 +463,7 @@ public class BuildViewer extends ListView {
 //            return super.getConfigFile(); //To change body of generated methods, choose Tools | Templates.
 //        }
 //
+
         @Override
         public synchronized void load() {
 //            String a = "d";

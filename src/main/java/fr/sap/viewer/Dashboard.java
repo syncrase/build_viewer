@@ -46,7 +46,6 @@ public class Dashboard {
     private double multiplier;
     private double viewsWidth;
     private BuildViewer bv;
-    
 
     Dashboard(BuildViewer bv, List<ProjectImpl> contents) {
         this.bv = bv;
@@ -59,7 +58,7 @@ public class Dashboard {
         this.margin = Math.ceil(viewsHeight / 100);
         this.viewsHeight -= this.margin * 2 * a[0];
         this.viewsWidth -= this.margin * 2 * DashboardUtils.getCountOfViewsPerRow(DashboardUtils.getCountOfViews(rows));
-        
+
     }
 
 //    private final List<DashboardEntity[]> dashboardEntityMatrix;
@@ -158,7 +157,7 @@ public class Dashboard {
      * Gather projects in ViewEntry based on theirs prefixes
      * <p>
      * @param contents
-     * <p>
+     *                 <p>
      * @return
      */
     private Collection<ViewEntry> toViewList(List<ProjectImpl> contents) {

@@ -42,16 +42,19 @@ public class ViewEntry {
     private final String prefixe;
     private ViewEntryColors currentState;
 
+    private BuildViewer bv;
+
     ViewEntry(BuildViewer bv, ProjectImpl proj) {
 //        projects = new HashSet<ProjectImpl>();
+        this.bv = bv;
         projects.add(proj);
-//        if (prefixUSed()) {
-//            this.prefixe = proj.getPrefixe();
-//        } else {
-//            this.prefixe = "NO_PREFIX";
-//        }
-this.prefixe ="";
-        this.refreshState(bv);
+        if (prefixUSed()) {
+            this.prefixe = proj.getPrefixe();
+        } else {
+            this.prefixe = ProjectImpl.NO_PREFIX_AVAILABLE;
+        }
+
+        this.refreshState();
     }
 
     /**
@@ -63,6 +66,7 @@ this.prefixe ="";
         Validate.notNull(entry);
         if (entry.getPrefixe().equals(this.prefixe)) {
             projects.add(entry);
+            this.refreshState();
         }
 
     }
@@ -126,18 +130,19 @@ this.prefixe ="";
 //        }
 //        return result;
 //    }
+    
     /**
      * Refresh values of the ViewEntryColor field
      * <p>
      * @return
      */
-    private void refreshState(BuildViewer bv ) {
+    private void refreshState() {
 
         int maxRank = 0;
         int index = 0;
         String result = "";
 
-        for ( ProjectImpl p : projects ) {// Go trough projects
+        loop1:for ( ProjectImpl p : projects ) {// Go trough projects in this view
 
             for ( ViewEntryColors state : bv.getCOLOR_SETTINGS() ) {// Find the corresponding status
                 if (p.getResult().equals(state.getVe_state())) {
@@ -146,6 +151,7 @@ this.prefixe ="";
                         maxRank = index;// Keep the index of the highest priority state. Highest it is, highest the priority is
 //                        result = state.getVe_state();
                         currentState = state;
+                        continue loop1;
                     }
                 }
                 index++;
@@ -154,13 +160,18 @@ this.prefixe ="";
         }
     }
 
-//    private boolean prefixUSed() {
-//
-////        if(BuildViewer.getPrefixesSeparators()==null){
-////            return false;
-////        }else{
-////            return BuildViewer.getPrefixesSeparators().size()>0;
-////        }
-//        return (BuildViewer.getPrefixesSeparators() == null) ? false : (BuildViewer.getPrefixesSeparators().size() > 0);
-//    }
+    /**
+     *
+     * @return false if no separator exists or if there's only one<br/>
+     * true if there's prefix in the BuildViewerList
+     */
+    private boolean prefixUSed() {
+
+        if (bv.getPrefixesSeparators() == null || bv.getPrefixesSeparators().size() < 1) {
+            return false;
+        } else {
+            return true;
+        }
+//        return (bv.getPrefixesSeparators() == null) ? false : (bv.getPrefixesSeparators().size() > 0);
+    }
 }

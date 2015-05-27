@@ -25,6 +25,7 @@ package fr.sap.viewer;
 
 /**
  * Representative of the displaying of the ViewEntry
+ * <p>
  * @author I310911
  */
 public class ViewEntryColors {
