@@ -26,7 +26,6 @@ package fr.sap.viewer;
 import hudson.Extension;
 import hudson.model.AbstractProject;
 import hudson.model.Descriptor.FormException;
-import hudson.model.Hudson;
 import hudson.model.ListView;
 import hudson.model.Result;
 import hudson.model.TopLevelItem;
@@ -34,11 +33,9 @@ import hudson.model.ViewDescriptor;
 import java.awt.Toolkit;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 import javax.servlet.ServletException;
 import net.sf.json.JSONObject;
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -103,6 +100,7 @@ public class BuildViewer extends ListView {
 //            this.prefixesSeparators = new HashSet<String>();
 //        }
         this.prefixesSeparators = prefixesSeparators;
+
     }
     
 //    @DataBoundConstructor
@@ -217,11 +215,11 @@ public class BuildViewer extends ListView {
         List<ProjectImpl> contents;
         contents = new ArrayList<ProjectImpl>();
 
-        Map<hudson.model.Queue.Item, Integer> placeInQueue = new HashMap<hudson.model.Queue.Item, Integer>();
-        int j = 1;
-        for ( hudson.model.Queue.Item i : Hudson.getInstance().getQueue().getItems() ) {
-            placeInQueue.put(i, j++);
-        }
+//        Map<hudson.model.Queue.Item, Integer> placeInQueue = new HashMap<hudson.model.Queue.Item, Integer>();
+//        int j = 1;
+//        for ( hudson.model.Queue.Item i : Hudson.getInstance().getQueue().getItems() ) {
+//            placeInQueue.put(i, j++);
+//        }
 //super.
         ProjectImpl project;
         for ( TopLevelItem item : super.getItems() ) {
@@ -246,7 +244,8 @@ public class BuildViewer extends ListView {
         List<ProjectImpl> contents = getContents();
 //
 //        dashboard = new Dashboard(DashboardUtils.computeTheBestSquareRepartition(contents.size()));
-        dashboard = new Dashboard(this, contents, getDEFAULT_SCREEN_HEIGHT() - this.captionSize, getDEFAULT_SCREEN_WIDTH());
+        dashboard = new Dashboard(this, contents);
+//        , getDEFAULT_SCREEN_HEIGHT() - this.captionSize, getDEFAULT_SCREEN_WIDTH()
         if (!groupedByPrefix) {
 
         } else {

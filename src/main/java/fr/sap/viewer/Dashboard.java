@@ -25,9 +25,7 @@ package fr.sap.viewer;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import org.apache.commons.lang.StringUtils;
 
 /**
  * This represents the container of the Dashboard (under the caption) which
@@ -47,17 +45,21 @@ public class Dashboard {
     private double viewsHeight;
     private double multiplier;
     private double viewsWidth;
+    private BuildViewer bv;
+    
 
-    Dashboard(BuildViewer bv, List<ProjectImpl> contents, double dashboardHeightInPixels, double dashboardWidthInPixels) {
-        rows = toRows(this.toViewList(bv, contents));
-        this.dashboardHeightInPixel = dashboardHeightInPixels;
+    Dashboard(BuildViewer bv, List<ProjectImpl> contents) {
+        this.bv = bv;
+        rows = toRows(this.toViewList(contents));
+        this.dashboardHeightInPixel = this.bv.getDEFAULT_SCREEN_HEIGHT() - this.bv.getCaptionSize();
         double[] a = DashboardUtils.getCountOfRows(DashboardUtils.getCountOfViews(rows));
-        this.viewsHeight = dashboardHeightInPixels / a[0];
+        this.viewsHeight = dashboardHeightInPixel / a[0];
         this.multiplier = a[1];
-        this.viewsWidth = dashboardWidthInPixels / DashboardUtils.getCountOfViewsPerRow(DashboardUtils.getCountOfViews(rows));
+        this.viewsWidth = this.bv.getDEFAULT_SCREEN_WIDTH() / DashboardUtils.getCountOfViewsPerRow(DashboardUtils.getCountOfViews(rows));
         this.margin = Math.ceil(viewsHeight / 100);
         this.viewsHeight -= this.margin * 2 * a[0];
         this.viewsWidth -= this.margin * 2 * DashboardUtils.getCountOfViewsPerRow(DashboardUtils.getCountOfViews(rows));
+        
     }
 
 //    private final List<DashboardEntity[]> dashboardEntityMatrix;
@@ -159,7 +161,7 @@ public class Dashboard {
      * <p>
      * @return
      */
-    private Collection<ViewEntry> toViewList(BuildViewer bv, List<ProjectImpl> contents) {
+    private Collection<ViewEntry> toViewList(List<ProjectImpl> contents) {
         Collection<ViewEntry> views = new ArrayList<ViewEntry>();
 
         //Rassemblement des projets portant les mêmes préfixes dans les views entry

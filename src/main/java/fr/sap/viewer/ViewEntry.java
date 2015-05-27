@@ -23,7 +23,6 @@
  */
 package fr.sap.viewer;
 
-import java.net.URISyntaxException;
 import java.util.HashSet;
 import java.util.Iterator;
 import org.apache.commons.lang.Validate;

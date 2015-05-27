@@ -23,23 +23,8 @@
  */
 package fr.sap.viewer;
 
-import com.google.common.io.Files;
 import hudson.model.AbstractProject;
-import hudson.model.Job;
-import hudson.model.Result;
-import hudson.model.Run;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Collection;
-import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.apache.commons.codec.Charsets;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -54,10 +39,12 @@ public class ProjectImpl {
     private final AbstractProject abstractProject;
 
     private final String prefixe;
+    private BuildViewer bv;
     
     public ProjectImpl(BuildViewer bv, AbstractProject abstractProject) {
         this.abstractProject = abstractProject;
-        this.prefixe = computePrefix(bv, this.getName());
+        this.bv = bv;
+        this.prefixe = computePrefix(this.getName());
     }
 
     /**
@@ -147,7 +134,7 @@ public class ProjectImpl {
      * @return the prefix use for this job<br/>null if no prefix has been found
      *         in the project name
      */
-    private static String computePrefix(BuildViewer bv, String name) {
+    private static String computePrefix(String name) {
         HashSet<String> prefixes = bv.getPrefixesSeparators();
         if (prefixes != null) {
             if (prefixes.size() > 0) {
