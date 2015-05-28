@@ -138,7 +138,7 @@ public class Dashboard {
      * @return
      */
     private Collection<ViewEntry> toViewList(List<ProjectImpl> contents) {
-        
+
         Collection<ViewEntry> views = new ArrayList<ViewEntry>();
         goThroughProjects:
         for ( ProjectImpl proj : contents ) {
@@ -159,10 +159,12 @@ public class Dashboard {
 
 }
 
-class Utils{
-      /**
-     * 
+class Utils {
+
+    /**
+     *
      * @param totalViews Number of ViewEntry contained in the dashboard
+     * <p>
      * @return the number with the square directly superior or equal
      */
     public static int getCountOfViewsPerRow(int totalViews) {
@@ -172,31 +174,33 @@ class Utils{
         }
         return i;
     }
-    
+
     /**
      * @param countOfViews
-     * @return the number of rows {0} and the multiplier coefficient for each view in the last row {1}. -1 if the rate countOfViews/countOfViewsPerRows is a whole integer
+     * <p>
+     * @return the number of rows {0} and the multiplier coefficient for each
+     *         view in the last row {1}. -1 if the rate
+     *         countOfViews/countOfViewsPerRows is a whole integer
      */
-    public static double[] getCountOfRows(int countOfViews){
+    public static double[] getCountOfRows(int countOfViews) {
         double[] returnedTab = new double[2];
-        
-        
-        double rate = (double)countOfViews/getCountOfViewsPerRow(countOfViews);
+
+        double rate = (double) countOfViews / getCountOfViewsPerRow(countOfViews);
         returnedTab[0] = Math.floor(rate);
-        
-        if(rate != returnedTab[0]){
+
+        if (rate != returnedTab[0]) {
             // if there's a decimal part
-            
+
             returnedTab[1] = rate - returnedTab[0];
-            returnedTab[0] += 1 ;
-        }else{
+            returnedTab[0] += 1;
+        } else {
             returnedTab[1] = -1;
         }
-        
+
         // For instance, fi there's 7 views => 3 views per rows
         // 7/3 = 3.5
         // The width of the last views will divided per 0.5
-         return returnedTab;
+        return returnedTab;
     }
 
     public static int getViewsPerColumn(int totalViews) {
@@ -208,8 +212,6 @@ class Utils{
 //        }
         return columnCount - ((totalViews > 2 * columnCount) ? 0 : 1);
     }
-
-    
 
     public static int getCountOfViews(Collection<Collection<ViewEntry>> rows) {
         int count = 0;

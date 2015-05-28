@@ -33,6 +33,9 @@ import org.apache.commons.lang.StringUtils;
  */
 public class ProjectImpl {
 
+    /**
+     * This value is used when there's no prefix set up
+     */
     public static final String NO_PREFIX_AVAILABLE = "NO_PREFIX_AVAILABLE";
 
     private final AbstractProject abstractProject;

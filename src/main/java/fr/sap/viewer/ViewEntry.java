@@ -34,9 +34,6 @@ import org.apache.commons.lang.Validate;
  */
 public class ViewEntry {
 
-    // Constructs a new, empty tree set, sorted according to the specified comparator.
-//    private TreeSet<IViewEntry> jobs = new TreeSet<IViewEntry>(new TreeSetComparatorOverride());
-    //private TreeSet<AbstractProject> projects = new TreeSet<AbstractProject>();
     HashSet<ProjectImpl> projects = new HashSet<ProjectImpl>();
 
     private final String prefixe;
@@ -47,7 +44,7 @@ public class ViewEntry {
     ViewEntry(BuildViewer bv, ProjectImpl proj) {
         this.bv = bv;
         projects.add(proj);
-        if (prefixUSed()) {
+        if (prefixUSed()) {// If prefixs were configured
             this.prefixe = proj.getPrefix();
         } else {
             this.prefixe = ProjectImpl.NO_PREFIX_AVAILABLE;
@@ -72,12 +69,13 @@ public class ViewEntry {
      *
      * @return The first job, if it exists
      */
-    public ProjectImpl getMyJob() {
+    public ProjectImpl getFirstJob() {
         Iterator<ProjectImpl> it = projects.iterator();
         if (it.hasNext()) {
             return it.next();
         }
         return null;
+//        return ((ProjectImpl[])projects.toArray())[0];
     }
 
     public String getPrefix() {
@@ -85,9 +83,7 @@ public class ViewEntry {
     }
 
     public String getBackgroundColor() {
-
         return currentState.getVe_backgroundColor();
-
     }
 
     public int getCount() {
@@ -98,8 +94,6 @@ public class ViewEntry {
         return projects;
     }
 
-
-    
     /**
      * Refresh values of the ViewEntryColor field
      * <p>
@@ -111,11 +105,11 @@ public class ViewEntry {
         int index = 0;
 
         for ( ProjectImpl p : projects ) {// Go trough projects in this view
-            
+
             lookForFavoriteColor:
             for ( ViewEntryColors state : bv.getCOLOR_SETTINGS() ) {// Find the corresponding status
                 if (p.getResult().equals(state.getVe_state())) {
-                    
+
                     if (index >= maxRank) {
                         maxRank = index;// Keep the index of the highest priority state. Highest it is, highest the priority is
                         currentState = state;
@@ -134,12 +128,6 @@ public class ViewEntry {
      * true if there's prefix in the BuildViewerList
      */
     private boolean prefixUSed() {
-
-//        if (bv.getPrefixesSeparators() == null || bv.getPrefixesSeparators().size() < 1) {
-//            return false;
-//        } else {
-//            return true;
-//        }
         return (bv.getPrefixesSeparators() != null && bv.getPrefixesSeparators().size() >= 1);
     }
 }

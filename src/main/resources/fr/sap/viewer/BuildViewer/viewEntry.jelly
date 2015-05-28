@@ -49,8 +49,8 @@ THE SOFTWARE.
 
         </j:when>
     </j:forEach>-->
-       <j:set var="thisJobStyle" value="${jobStyle}  background:${view.backgroundColor};" />
-            <j:set var="jobNameStyle" value="text-decoration: none; color:#000000; font-size: 20; font-weight:bold;" />
+    <j:set var="thisJobStyle" value="${jobStyle}  background:${view.backgroundColor};" />
+    <j:set var="jobNameStyle" value="text-decoration: none; color:#000000; font-size: 20; font-weight:bold;" />
             
     <div style="${thisJobStyle} "  >
         <!--${thisJobStyle}-->
@@ -58,14 +58,31 @@ THE SOFTWARE.
         <!--                            <p>
             <a style="${jobNameStyle}" href="${rootURL}/${myProjectImpl.lastBuildUrl}">${myProjectImpl.name}</a> 
         </p>-->
-        <p style="font-size:15xp;" >
-            <!--Build no ${myProjectImpl.buildNumber}-->
-            <br/>
-            count : ${view.count} jobs in this view<br/><br/>
-            <j:forEach var="proj" items="${view.projects}">
-                ${proj.name}#${proj.buildNumber} -- ${proj.result}<br/>
-            </j:forEach>
-        </p>
+        
+        <j:choose>
+            <j:when test="${view.count == 1}">
+                <p>
+                    <a style="${jobNameStyle}" href="${rootURL}/${view.firstJob.lastBuildUrl}">${view.firstJob.name}</a> 
+                </p>
+            </j:when>
+            <j:otherwise> 
+            
+                <p style="font-size:15xp;" >
+                    <!--Build no ${myProjectImpl.buildNumber}-->
+                    <br/>
+                    count : ${view.count} jobs in this view<br/>
+                    <br/>
+                    <j:forEach var="proj" items="${view.projects}">
+                        ${proj.name}#${proj.buildNumber} -- ${proj.result}<br/>
+                    </j:forEach>
+                </p>
+            </j:otherwise>
+                
+        </j:choose>
+        
+        
+        
+        
       
     </div>
                         

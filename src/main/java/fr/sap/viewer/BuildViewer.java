@@ -126,10 +126,6 @@ public class BuildViewer extends ListView {
         return prefixesSeparators;
     }
 
-    //public BuildViewer(String name, ViewGroup owner) {
-    //    this(name);
-    //    this.owner = owner;
-    //}
     public String getCaptionText() {
         return captionText;
     }
@@ -138,15 +134,6 @@ public class BuildViewer extends ListView {
         return captionSize;
     }
 
-//    public int getDashboardHeight() {
-//        return dashboardHeight;
-////        return 979;
-//    }
-//    public int getDashboardWidth() {
-////        Toolkit.getDefaultToolkit().getScreenSize();
-//        return dashboardWidth;
-////        return 1920;
-//    }
     public static int getDEFAULT_SCREEN_HEIGHT() {
         return Toolkit.getDefaultToolkit().getScreenSize().height;
     }
@@ -167,43 +154,6 @@ public class BuildViewer extends ListView {
         return captionTextColor;
     }
 
-    /**
-     * Cache of location of jobs in the build queue.
-     * <p>
-     * @return
-     */
-    //transient Map<hudson.model.Queue.Item, Integer> placeInQueue = new HashMap<hudson.model.Queue.Item, Integer>();
-    /**
-     *
-     * @return The list of jobs available in this view
-     */
-//    public ViewEntry getContents() {
-//        ViewEntry contents;
-//        contents = new ViewEntry();
-//
-//        Map<hudson.model.Queue.Item, Integer> placeInQueue = new HashMap<hudson.model.Queue.Item, Integer>();
-//        int j = 1;
-//        for ( hudson.model.Queue.Item i : Hudson.getInstance().getQueue().getItems() ) {
-//            placeInQueue.put(i, j++);
-//        }
-//
-//        ProjectImpl project;
-//        for ( TopLevelItem item : super.getItems() ) {
-//
-//            if (item instanceof AbstractProject) {
-//                //AbstractProject project = (AbstractProject) item;
-//
-//                project = new ProjectImpl((AbstractProject) item);
-//                if (!project.getAbstractProject().isDisabled()) {
-//////                    IViewEntry entry = new JobViewEntry(this, project);
-//////                    contents.addBuild(entry);
-//                    contents.addBuild(project);
-//                }
-//            }
-//        }
-//
-//        return contents;
-//    }
     public List<ProjectImpl> getContents() {
         List<ProjectImpl> contents;
         contents = new ArrayList<ProjectImpl>();
@@ -259,42 +209,23 @@ public class BuildViewer extends ListView {
      */
     @Override
     protected void submit(StaplerRequest req) throws ServletException, IOException, FormException {
+
         super.submit(req);
 
-//        try {
-//            this.dashboardHeight = Integer.parseInt(req.getParameter("dashboardHeight"));
-//        } catch (NumberFormatException e) {
-//            this.dashboardHeight = getDEFAULT_SCREEN_HEIGHT();
-//        }
-//        try {
-//            this.dashboardWidth = Integer.parseInt(req.getParameter("dashboardWidth"));
-//        } catch (NumberFormatException e) {
-//            this.dashboardHeight = getDEFAULT_SCREEN_WIDTH();
-//        }
+        // Caption parameters
         this.captionText = req.getParameter("captionText");
+        this.captionColor = req.getParameter("captionColor");
+        this.captionTextColor = req.getParameter("captionTextColor");
         try {
-            // Get formers values
-//            int height = this.captionSize + this.dashboardHeight;
-            // Get new value of caption size
             this.captionSize = Integer.parseInt(req.getParameter("captionSize"));
-            // Set news values
-//            this.dashboardHeight = height - this.captionSize;
         } catch (NumberFormatException e) {
             this.captionSize = DEFAULT_CAPTION_SIZE;
         }
-        this.captionColor = req.getParameter("captionColor");
-        this.captionTextColor = req.getParameter("captionTextColor");
 
+        // Background color parameter
         this.backgroundColor = req.getParameter("backgroundColor");
 
-//        Enumeration en = req.getParameterNames();
-//        String test;
-//        String[] strarr;
-//        while (en.hasMoreElements()) {
-//            test = (String) en.nextElement();
-//            strarr = req.getParameterValues(test);
-//            strarr[0] = strarr[0];
-//        }
+        // States configuration
         String[] ves_states = req.getParameterValues("ve_state");
         String[] ves_backgroundColors = req.getParameterValues("ve_backgroundColor");
         String[] ves_fontColors = req.getParameterValues("ve_fontColor");
@@ -304,10 +235,9 @@ public class BuildViewer extends ListView {
             if (!ves_states[i].equals(DEFAULT_STATE_NAME)) {
                 COLOR_SETTINGS.add(new ViewEntryColors(ves_states[i].toUpperCase(), ves_backgroundColors[i], ves_fontColors[i]));
             }
-
         }
 
-//        String[] test = req.getParameterValues("prefixesSeparators");
+        // Desired prefixs
         String[] separatos = req.getParameter("prefixesSeparators").split(" ");
         if (separatos.length >= 1) {
             prefixesSeparators = new HashSet<String>();
@@ -318,21 +248,14 @@ public class BuildViewer extends ListView {
             }
         }
 
-//        dashboard = new Dashboard(getContents(), getDEFAULT_SCREEN_HEIGHT() - this.captionSize, getDEFAULT_SCREEN_WIDTH());
-//        prefixesSeparators.add(s6548!=null?s6548:"oups");
-//        Enumeration en2 = req.getAttributeNames();
-//        String test2;
-//        String[] strarr2;
+        //        Enumeration en = req.getParameterNames();
+//        String test;
+//        String[] strarr;
 //        while (en.hasMoreElements()) {
-//            test2 = (String) en.nextElement();
-//            test2 = (String) req.getAttribute(test2);
-//            test2 = test2;
-////            strarr2[0] = strarr2[0];
+//            test = (String) en.nextElement();
+//            strarr = req.getParameterValues(test);
+//            strarr[0] = strarr[0];
 //        }
-//        String test = req.getParameter("stateSettings");
-//        
-//        test = req.getParameter("COLOR_SETTINGS");
-//        test += test;
     }
 
     /*
@@ -400,7 +323,7 @@ public class BuildViewer extends ListView {
          *
          * @param sr
          * @param jsono
-         * <p>
+         *              <p>
          * @return
          */
         @Override
