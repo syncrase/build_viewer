@@ -45,15 +45,13 @@ public class ViewEntry {
     private BuildViewer bv;
 
     ViewEntry(BuildViewer bv, ProjectImpl proj) {
-//        projects = new HashSet<ProjectImpl>();
         this.bv = bv;
         projects.add(proj);
         if (prefixUSed()) {
-            this.prefixe = proj.getPrefixe();
+            this.prefixe = proj.getPrefix();
         } else {
             this.prefixe = ProjectImpl.NO_PREFIX_AVAILABLE;
         }
-
         this.refreshState();
     }
 
@@ -64,11 +62,10 @@ public class ViewEntry {
      */
     void addProject(ProjectImpl entry) {
         Validate.notNull(entry);
-        if (entry.getPrefixe().equals(this.prefixe)) {
+        if (entry.getPrefix().equals(this.prefixe)) {
             projects.add(entry);
             this.refreshState();
         }
-
     }
 
     /**
@@ -83,7 +80,7 @@ public class ViewEntry {
         return null;
     }
 
-    public String getPrefixe() {
+    public String getPrefix() {
         return this.prefixe;
     }
 
@@ -101,57 +98,28 @@ public class ViewEntry {
         return projects;
     }
 
-//    /**
-//     * Return the state of the Entry, representative of a group of projects or a
-//     * single project
-//     * <p>
-//     * @return
-//     */
-//    public String getResult() {
-//
-//        int maxRank = 0;
-//        int index = 0;
-//        String result = "";
-//
-//        for ( ProjectImpl p : projects ) {// Go trough projects
-//
-//            for ( ViewEntryColors state : BuildViewer.getCOLOR_SETTINGS() ) {// Find the corresponding status
-//                if (p.getResult().equals(state.getVe_state())) {
-//
-//                    
-//                    if (index >= maxRank) {
-//                        maxRank = index;// Keep the index of the highest priority state. Highest it is, highest the priority is
-//                        result = state.getVe_state();
-//                    }
-//                }
-//                index++;
-//            }
-//            index = 0;
-//        }
-//        return result;
-//    }
+
     
     /**
      * Refresh values of the ViewEntryColor field
      * <p>
      * @return
      */
-    private void refreshState() {
+    public void refreshState() {
 
         int maxRank = 0;
         int index = 0;
-        String result = "";
 
-        loop1:for ( ProjectImpl p : projects ) {// Go trough projects in this view
-
+        for ( ProjectImpl p : projects ) {// Go trough projects in this view
+            
+            lookForFavoriteColor:
             for ( ViewEntryColors state : bv.getCOLOR_SETTINGS() ) {// Find the corresponding status
                 if (p.getResult().equals(state.getVe_state())) {
-
+                    
                     if (index >= maxRank) {
                         maxRank = index;// Keep the index of the highest priority state. Highest it is, highest the priority is
-//                        result = state.getVe_state();
                         currentState = state;
-                        continue loop1;
+                        break lookForFavoriteColor;
                     }
                 }
                 index++;
@@ -167,11 +135,11 @@ public class ViewEntry {
      */
     private boolean prefixUSed() {
 
-        if (bv.getPrefixesSeparators() == null || bv.getPrefixesSeparators().size() < 1) {
-            return false;
-        } else {
-            return true;
-        }
-//        return (bv.getPrefixesSeparators() == null) ? false : (bv.getPrefixesSeparators().size() > 0);
+//        if (bv.getPrefixesSeparators() == null || bv.getPrefixesSeparators().size() < 1) {
+//            return false;
+//        } else {
+//            return true;
+//        }
+        return (bv.getPrefixesSeparators() != null && bv.getPrefixesSeparators().size() >= 1);
     }
 }

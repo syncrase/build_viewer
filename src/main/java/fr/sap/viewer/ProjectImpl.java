@@ -33,11 +33,9 @@ import org.apache.commons.lang.StringUtils;
  */
 public class ProjectImpl {
 
-//    public static final String NO_PREFIX_FOUND = "NO_PREFIX_FOUND";
     public static final String NO_PREFIX_AVAILABLE = "NO_PREFIX_AVAILABLE";
 
     private final AbstractProject abstractProject;
-
     private final String prefixe;
     private BuildViewer bv;
 
@@ -56,17 +54,9 @@ public class ProjectImpl {
     }
 
     public String getName() {
-        //Used in job.jelly
         return abstractProject.getName();
     }
 
-//    public String getFontColor() {
-//        //Used in job.jelly
-//        // retourne une couleur en fonction du résultat
-//        // Les différents résultats possibles sont stockés dans la liste
-//
-//        return "#88ff88";
-//    }
     public String getLastBuildUrl() {
         return abstractProject.getSearchUrl();
     }
@@ -121,7 +111,11 @@ public class ProjectImpl {
 
     }
 
-    public String getPrefixe() {
+    /**
+     * 
+     * @return 
+     */
+    public String getPrefix() {
         return prefixe;
     }
 
@@ -133,7 +127,11 @@ public class ProjectImpl {
      *         in the project name
      */
     private String computePrefix(String name) {
-        HashSet<String> prefixes = bv.getPrefixesSeparators();
+//        try{
+            HashSet<String> prefixes = bv.getPrefixesSeparators();
+//        }catch(Throwable t){
+//            throw new RuntimeException("Unable to get the");
+//        }
         if (prefixes != null) {
             if (prefixes.size() > 0) {
                 for ( String prefix : prefixes ) {
@@ -147,8 +145,6 @@ public class ProjectImpl {
             }
         }
         return null;
-//        throw new RuntimeException("There's no prefixes list. Initialization issue.");
-
     }
 
 //    public String abstractProject_Info() {

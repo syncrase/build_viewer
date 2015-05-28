@@ -51,39 +51,16 @@ public class Dashboard {
         this.bv = bv;
         rows = toRows(this.toViewList(contents));
         this.dashboardHeightInPixel = this.bv.getDEFAULT_SCREEN_HEIGHT() - this.bv.getCaptionSize();
-        double[] a = DashboardUtils.getCountOfRows(DashboardUtils.getCountOfViews(rows));
+        double[] a = Utils.getCountOfRows(Utils.getCountOfViews(rows));
         this.viewsHeight = dashboardHeightInPixel / a[0];
         this.multiplier = a[1];
-        this.viewsWidth = this.bv.getDEFAULT_SCREEN_WIDTH() / DashboardUtils.getCountOfViewsPerRow(DashboardUtils.getCountOfViews(rows));
+        this.viewsWidth = this.bv.getDEFAULT_SCREEN_WIDTH() / Utils.getCountOfViewsPerRow(Utils.getCountOfViews(rows));
         this.margin = Math.ceil(viewsHeight / 100);
         this.viewsHeight -= this.margin * 2 * a[0];
-        this.viewsWidth -= this.margin * 2 * DashboardUtils.getCountOfViewsPerRow(DashboardUtils.getCountOfViews(rows));
+        this.viewsWidth -= this.margin * 2 * Utils.getCountOfViewsPerRow(Utils.getCountOfViews(rows));
 
     }
 
-//    private final List<DashboardEntity[]> dashboardEntityMatrix;
-//    Dashboard(List<Integer> repartitionComputed) {
-//        //Create the dashboard pattern
-//        dashboardEntityMatrix = new ArrayList<DashboardEntity[]>();
-//
-//        for ( Integer i : repartitionComputed ) {
-//            dashboardEntityMatrix.add(new DashboardEntity[i]);
-//        }
-//    }
-//    void addDashboardEntity(DashboardEntity dashboardEntity, int index) {
-//        
-//        int[] coord = DashboardUtils.getPosition(index);
-//        dashboardEntityMatrix.get(coord[0])[coord[1]] = dashboardEntity;
-//        
-//        
-//    }
-//    public int getCountOfEntities() {
-//        int count = 0;
-//        for ( DashboardEntity[] tab : dashboardEntityMatrix ) {
-//            count += tab.length;
-//        }
-//        return count;
-//    }
     public Collection<Collection<ViewEntry>> getRows() {
         return rows;
     }
@@ -95,19 +72,19 @@ public class Dashboard {
 
         // Default : 90%
 //        double mawWidthMinusMargin = ((100 - 2 * margin) / (double)100);
-//        int countOfViews = DashboardUtils.getCountOfViews(rows);
-//        double maxWidth = 100 / DashboardUtils.getViewsPerColumn(countOfViews);
+//        int countOfViews = Utils.getCountOfViews(rows);
+//        double maxWidth = 100 / Utils.getViewsPerColumn(countOfViews);
 //        
 //        double computedWidth = maxWidth * mawWidthMinusMargin;
-//        int countOfViews = DashboardUtils.getCountOfViews(rows);
-//        int viewsPerColumn = DashboardUtils.getViewsPerColumn(countOfViews);
+//        int countOfViews = Utils.getCountOfViews(rows);
+//        int viewsPerColumn = Utils.getViewsPerColumn(countOfViews);
 //        double heightPercentage = (100 / viewsPerColumn );
 //        return heightPercentage-2*margin;
     }
 
     public double getViewsWidth() {
 //        double mawWidthMinusMargin = ((100 - 2 * margin) / 100);
-//        int countOfViews = DashboardUtils.getCountOfViews(rows);
+//        int countOfViews = Utils.getCountOfViews(rows);
 
         return viewsWidth;
     }
@@ -134,7 +111,7 @@ public class Dashboard {
     private Collection<Collection<ViewEntry>> toRows(Collection<ViewEntry> views) {
         int jobsPerRow = 0;
 
-        jobsPerRow = DashboardUtils.getCountOfViewsPerRow(views.size());
+        jobsPerRow = Utils.getCountOfViewsPerRow(views.size());
 
         Collection<Collection<ViewEntry>> rows = new ArrayList<Collection<ViewEntry>>();
         Collection<ViewEntry> current = null;
@@ -161,35 +138,87 @@ public class Dashboard {
      * @return
      */
     private Collection<ViewEntry> toViewList(List<ProjectImpl> contents) {
+        
         Collection<ViewEntry> views = new ArrayList<ViewEntry>();
-
-        //Rassemblement des projets portant les mêmes préfixes dans les views entry
-        // deux cas le nom du projet possède, ou pas, un préfixe
-        // plusieurs séparateurs possibles (- | . | * | ... ) ceux-ci sont définis dans l'écran de configuration
-        // 
-        //
-        // 
-        projectsLoop:
+        goThroughProjects:
         for ( ProjectImpl proj : contents ) {
 
-            if (proj.getPrefixe() != null) {
+            if (proj.getPrefix() != null) {// If the project has a prefix
                 for ( ViewEntry view : views ) {
-                    if (proj.getPrefixe().equals(view.getPrefixe())) {//A viewEntry with this prefix already exists
+                    if (proj.getPrefix().equals(view.getPrefix())) {// If a viewEntry with the same prefix already exists
                         view.addProject(proj);
-                        continue projectsLoop;
+                        continue goThroughProjects;
                     }
                 }
-                //No ViewEntry with this prefix, instantiate it
-//                views.add(new ViewEntry(proj));
+                //No ViewEntry with no one of these prefixs
             }
-            views.add(new ViewEntry(bv, proj));//Set the project in just one view
-
+            views.add(new ViewEntry(bv, proj));//Set the project (either the prefix is not yet available or it doesn't exists) in just one view
         }
-        //      StringUtils.substringBefore(name, separator)
-//        for ( ProjectImpl proj : contents ) {
-//            views.add(new ViewEntry(proj));
-//        }
         return views;
+    }
+
+}
+
+class Utils{
+      /**
+     * 
+     * @param totalViews Number of ViewEntry contained in the dashboard
+     * @return the number with the square directly superior or equal
+     */
+    public static int getCountOfViewsPerRow(int totalViews) {
+        int i = 0;
+        while (totalViews > i * i) {
+            i++;
+        }
+        return i;
+    }
+    
+    /**
+     * @param countOfViews
+     * @return the number of rows {0} and the multiplier coefficient for each view in the last row {1}. -1 if the rate countOfViews/countOfViewsPerRows is a whole integer
+     */
+    public static double[] getCountOfRows(int countOfViews){
+        double[] returnedTab = new double[2];
+        
+        
+        double rate = (double)countOfViews/getCountOfViewsPerRow(countOfViews);
+        returnedTab[0] = Math.floor(rate);
+        
+        if(rate != returnedTab[0]){
+            // if there's a decimal part
+            
+            returnedTab[1] = rate - returnedTab[0];
+            returnedTab[0] += 1 ;
+        }else{
+            returnedTab[1] = -1;
+        }
+        
+        // For instance, fi there's 7 views => 3 views per rows
+        // 7/3 = 3.5
+        // The width of the last views will divided per 0.5
+         return returnedTab;
+    }
+
+    public static int getViewsPerColumn(int totalViews) {
+        int columnCount = getCountOfViewsPerRow(totalViews);
+//        if(totalViews > 2*columnCount){
+//            return columnCount;
+//        }else{
+//            return columnCount-1;
+//        }
+        return columnCount - ((totalViews > 2 * columnCount) ? 0 : 1);
+    }
+
+    
+
+    public static int getCountOfViews(Collection<Collection<ViewEntry>> rows) {
+        int count = 0;
+        for ( Collection<ViewEntry> col : rows ) {
+            for ( ViewEntry ve : col ) {
+                count++;
+            }
+        }
+        return count;
     }
 
 }
