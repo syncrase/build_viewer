@@ -23,16 +23,42 @@
  */
 
 alert("hello");
-        document.getElementsByTagName('body').defineProperties();
-        var table = document.getElementById(tableId);
+document.getElementsByTagName('body').defineProperties();
+var table = document.getElementById(tableId);
 //        <!--// Create an empty <tr> element and add it to the 1st position of the table:-->
-        var row = table.insertRow(table.rows.length - 2);
+var row = table.insertRow(table.rows.length - 2);
 //        <!--// Insert new cells (<td> elements) at the 1st and 2nd position of the "new" <tr> element:-->
 var cell = row.insertCell(0);
+function resize() {
 
-cell.ins
+    var i = 0, j = 0;
+    var length = document.styleSheets.length;
+    var tab = [""];
+    var returnedStr = "";
+    var styleSheet;
+    for (i = 0; i < length; i++) {
+        styleSheet = document.styleSheets[i];
+        var ruleName;
+        if (styleSheet.title == "myInnerCSS") {
+            length = styleSheet.cssRules.length;
+            for (j = 0; j < length; j++) {
+                var ruleName = styleSheet.cssRules[j].selectorText;
+                if (ruleName == "#main-panel-content") {
+                    alert(styleSheet.cssRules[j].cssText);
+                    styleSheet.insertRule(styleSheet.cssRules[j].cssText + "{height:979px;}", 0);
+                    alert(styleSheet.cssRules[j].cssText);
+                }
+            }
+        }
+    }
+    alert(returnedStr);
+}
 
+function addCSSRule() {
+    alert("test 658472");
+    var styleEl = document.createElement('style');
+    document.head.appendChild(styleEl);
+    styleEl.sheet.insertRule("#main-panel-content{height:979px;}", 0);
+}
 
-
-        
 

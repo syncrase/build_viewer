@@ -67,42 +67,18 @@ public class ProjectImpl {
     /**
      *
      * @return "SUCCESS", "UNSTABLE", "FAILURE", "NOT_BUILT", "ABORTED"<br/>
-     * null if the job cannot be accessed
+     * 
      */
     public String getResult() {
-        /*        @SuppressWarnings("unchecked")*/
         return abstractProject.getLastBuild().getResult().toString();
-//        Collection<Job> colJob = abstractProject.getAllJobs();
-//        Iterator<Job> it = colJob.iterator();
-//        if (it.hasNext()) {
-//            Job job = it.next();
-//            try {
-//                return job.getLastBuild().getResult().toString();
-//            } catch (java.lang.NullPointerException e) {
-//                return Result.NOT_BUILT.toString();
-//            }
-//        }
-//        throw new RuntimeException("no job available");
     }
 
     /**
      *
-     * @return The build number. 0 if there's no build. -1 if there's no job
+     * @return The build number.
      */
     public int getBuildNumber() {
-
         return abstractProject.getLastBuild().getNumber();
-//        Iterator<Job> it = abstractProject.getAllJobs().iterator();
-//        if (it.hasNext()) {
-//            Job job = it.next();
-//            try {
-//                return job.getLastBuild().getNumber();
-//
-//            } catch (java.lang.NullPointerException e) {
-//                return 0;
-//            }
-//        }
-//        return -1;
     }
 
     public String getIconUrl() {
@@ -115,8 +91,8 @@ public class ProjectImpl {
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return The found prefix of this job
      */
     public String getPrefix() {
         return prefixe;
@@ -130,11 +106,7 @@ public class ProjectImpl {
      *         in the project name
      */
     private String computePrefix(String name) {
-//        try{
-            HashSet<String> prefixes = bv.getPrefixesSeparators();
-//        }catch(Throwable t){
-//            throw new RuntimeException("Unable to get the");
-//        }
+        HashSet<String> prefixes = bv.getPrefixesSeparators();
         if (prefixes != null) {
             if (prefixes.size() > 0) {
                 for ( String prefix : prefixes ) {

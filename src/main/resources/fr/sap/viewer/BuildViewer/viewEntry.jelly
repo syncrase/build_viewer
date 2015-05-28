@@ -26,39 +26,12 @@ THE SOFTWARE.
 <?jelly escape-by-default='true'?>
 <!-- TODO add taglibs such as: xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" -->
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:i="jelly:fmt">
-    <!-- TODO -->
     
-    
-    <j:set var="jobStyle" value="float: left; width:${dashboard.viewsWidth}px; height:${dashboard.viewsHeight}px; 
-                            margin:${dashboard.margin}px; padding: 1%; border-radius: 5px;" />
-            
-    <!--<j:set var="myProjectImpl" value="${view.myJob}" />-->
-    <!--                        test(${it.COLOR_SETTINGS} )-->
 
-<!--    <j:forEach var="stateSettings" items="${from.COLOR_SETTINGS}">
-        test
-                                    <j:when test="${stateSettings.ve_state == myProjectImpl.getResult()}">
-        (${view.getResult()}) vs (${stateSettings.ve_state})
-        <j:when test="${stateSettings.ve_state == view.getResult()}">
-            it's equal
-            background:${stateSettings.ve_backgroundColor}; &amp;&amp; result : ${myProjectImpl.getResult()}
-            <j:set var="thisJobStyle" value="${jobStyle} 
-                                    background:${stateSettings.ve_backgroundColor}; 
-                                    text-indent: 50px;" />
-            <j:set var="jobNameStyle" value="text-decoration: none; color:${stateSettings.ve_fontColor}; font-size: ${jobFontSize}; font-weight:bold;" />
-
-        </j:when>
-    </j:forEach>-->
     <j:set var="thisJobStyle" value="${jobStyle}  background:${view.backgroundColor};" />
     <j:set var="jobNameStyle" value="text-decoration: none; color:#000000; font-size: 20; font-weight:bold;" />
             
     <div style="${thisJobStyle} "  >
-        <!--${thisJobStyle}-->
-        <!--tooltip="${myProjectImpl.name}"-->
-        <!--                            <p>
-            <a style="${jobNameStyle}" href="${rootURL}/${myProjectImpl.lastBuildUrl}">${myProjectImpl.name}</a> 
-        </p>-->
-        
         <j:choose>
             <j:when test="${view.count == 1}">
                 <p>
@@ -68,9 +41,8 @@ THE SOFTWARE.
             <j:otherwise> 
             
                 <p style="font-size:15xp;" >
-                    <!--Build no ${myProjectImpl.buildNumber}-->
                     <br/>
-                    count : ${view.count} jobs in this view<br/>
+                    ${view.count} jobs with the '${view.prefix}' prefix in this view<br/>
                     <br/>
                     <j:forEach var="proj" items="${view.projects}">
                         ${proj.name}#${proj.buildNumber} -- ${proj.result}<br/>

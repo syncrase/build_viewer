@@ -36,14 +36,11 @@ import java.util.List;
 public class Dashboard {
 
     private Collection<Collection<ViewEntry>> rows;
-    /**
-     * Margin of a view in this dashboard, expressed in percentage
-     */
-    private double margin;
-    private double dashboardHeightInPixel;
+    private final double margin;
+    private final double dashboardHeightInPixel;
 
     private double viewsHeight;
-    private double multiplier;
+//    private final double multiplier;
     private double viewsWidth;
     private BuildViewer bv;
 
@@ -53,7 +50,7 @@ public class Dashboard {
         this.dashboardHeightInPixel = this.bv.getDEFAULT_SCREEN_HEIGHT() - this.bv.getCaptionSize();
         double[] a = Utils.getCountOfRows(Utils.getCountOfViews(rows));
         this.viewsHeight = dashboardHeightInPixel / a[0];
-        this.multiplier = a[1];
+//        this.multiplier = a[1];
         this.viewsWidth = this.bv.getDEFAULT_SCREEN_WIDTH() / Utils.getCountOfViewsPerRow(Utils.getCountOfViews(rows));
         this.margin = Math.ceil(viewsHeight / 100);
         this.viewsHeight -= this.margin * 2 * a[0];
@@ -177,7 +174,7 @@ class Utils {
 
     /**
      * @param countOfViews
-     * <p>
+     *                     <p>
      * @return the number of rows {0} and the multiplier coefficient for each
      *         view in the last row {1}. -1 if the rate
      *         countOfViews/countOfViewsPerRows is a whole integer

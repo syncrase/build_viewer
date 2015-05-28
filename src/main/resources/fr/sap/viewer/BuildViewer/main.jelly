@@ -27,367 +27,88 @@ THE SOFTWARE.
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
     
     <style type="text/css" title="myInnerCSS">
-        <!--Supprime le bandeau noir avec logo et champ de recherche-->
-<!--        #page-head{
-            display:none;
-        }-->
-<!--        * {
-            margin:0px;
-            padding:0px;
-            width: 100%;
-            height: 100%;
-        }-->
+
         #header{
-            display:none;
+        display:none;
         }
         <!--Supprime le bordereau de naviguation-->
-<!--        #breadcrumbBar{
+        <!--        #breadcrumbBar{
             display: none;
         }-->
         <!--Supprime le panel de config de la view-->
         #side-panel{
-            display:none;
+        display:none;
         }
         <!--Supprime le lien 'Ajouter une description-->
         #view-message{
-            display:none;
+        display:none;
         }
         <!--Supprime le bordereau de footer-->
         #footer-container {
-            display:none;
+        display:none;
         }	
         
         html{
         overflow: hidden;
-<!--            height:100%;
-            width: 100%;-->
-<!--            margin:0px;
-            padding:0px;
-            display: block;
-            line-height:50px;-->
         }
-        body{
-        <!--position:fixed;-->
-<!--            display: block;
-            line-height:50px;-->
-            <!--width: 100%;-->
-            <!--margin:0px;-->
-            <!--padding:0px;-->
-        }
+
         #page-body {
-<!--background: #000000;-->
-            <!--background: #FF4900;-->
-            <!--height:100%;-->
-            <!--width: 100%;-->
-            <!--display : table;-->
-            margin:0px;
-            padding:0px;
-<!--            height:100%;
-            width: 100%;-->
-            <!--background: #ff4900;-->
+        margin:0px;
+        padding:0px;
         }
-        
-<!--        .row{
-        background: #00FF2B;
-            height:100%;
-            display: none ;
-        }-->
-        
-<!--        .row-set-end { 
-        display: inline-block ;
-        height:100%; 
-        }-->
-        
-        <!--#main-panel {-->
-            <!--padding: 0px;-->
-            <!--margin: 0px;-->
-<!--            width: 100%;
-            height:100%;-->
-        <!-- Si je modifie cette taille, cela fait sortir le job du main-panel-->
-            <!--background-color:#DACDAC;-->
-        
-<!--            top:0px;
-            left:0px;
-            right:0px;
-            bottom:0px;-->
-        <!--}-->
-                
-<!--Quand j'enlève -> main-panel s'étends à toute la page
-        Contient tout (caption et dashboard-->
-        <!--#main-panel-content {-->
-            <!--height:100%;--> 
-        <!--Le job est entièrement inclue dans le main-panel-->
-            <!--background-color:#FFFFFF;-->
-<!--            margin: 0;
-            padding: 0;-->
-        <!--}-->
-        
 
-        
-        
-<!--        #jenkins {
-            height:100%;
-        }-->
-        
-        
-        
-
-<!--        #main{
-            height: 100%;
-        }-->
-        
-
-        
-        
-        
-        <!--qsdfghjklm-->
-        
-        
-        
-<!--        #top-panel{
-            display:none;
-        }-->
-<!--        #footer-container {
-            display:none;
-        }-->
-        
 
 
         #caption {
-        <!--float: left;-->
-        <!--position: absolute; devient moins large-->
-        <!--position:fixed;-->
-            position:relative;<!-- Autorise la marge entre dashboard et jobgroup -->
-        <!--top: 0px;-->
-        <!--left: 0px;-->
-        <!--right: 0px;-->
-            width: 100%;
-            <!--height: 100%;-->
-        <!--margin: 0%;-->
-            font-weight: bold;
-            text-align: center;
-            text-shadow: 2px 2px 5px #909090;
-            <!--display : table-cell;-->
-            <!--background-color: #123456;-->
-            
+        position:relative;<!-- Autorise la marge entre dashboard et jobgroup -->
+        width: 100%;
+        font-weight: bold;
+        text-align: center;
+        text-shadow: 2px 2px 5px #909090;
         }
         #dashboard{
-            width: 100%;
-            height: 100%;
-            <!--position:relative;-->
-            <!--background: #ff4900;-->
-<!--            background-color: #CCCCCC;-->
-<!--        layer-background: #CCCCCC;-->
-            <!--z-index:65535;-->
-        <!--float: left;-->
-        <!--position:fixed;-->
-        <!--right:0px; top:0px;-->
-        <!--z-index:65535;-->
-        <!--display : table-cell;-->
-        
+        width: 100%;
+        height: 100%;
         }
-        #container{
-<!--            margin: 0%;
-            padding: 0%;-->
-        <!--padding: 0.5%;-->
-            <!--width: 100%;-->
-<!--            height:979px;-->
-            <!--display : table-column;--> 
-            
-        }
+
         
     </style>
         
-    <script>
-        function resize(){
-<!--        alert("azerty");
-        alert(headerSize);-->
-                    <!--main-panel.style.height = screen.height;-->	
-            <!--document.write("You're visiting tutorialspoint!"+screen.height+"px")-->
-
-    <!--function addCSSRule(sheet, selector, rules, index) {
-            if(sheet.insertRule) {
-                    sheet.insertRule(selector + "{" + rules + "}", index);
-            }
-            else {
-                    sheet.addRule(selector, rules, index);
-            }
-    }
-    addCSSRule(document.styleSheets[0], "main-panel", "height: "+screen.height+"px");-->
-
-    <!--	var styleEl = document.createElement('style');
-
-            document.head.appendChild(styleEl);
-
-
-            var w = window.innerWidth
-            || document.documentElement.clientWidth
-            || document.body.clientWidth;
-
-            var h = window.innerHeight
-            || document.documentElement.clientHeight
-            || document.body.clientHeight;
-
-            styleEl.sheet.insertRule("#main-panel" + "{" + "height:"+h +"px;}", 1);-->
-            var i=0, j=0;
-
-            var length = document.styleSheets.length;
-
-            var tab = [""];
-
-            var returnedStr = "";
-            var styleSheet;
-            <!--alert("length = ("+i+")");-->
-    <!--alert("avant");-->
-            for ( i = 0 ; i &lt; length ; i++ ) {
-            <!--tab[i] = document.styleSheets[i];-->
-                <!--j=i;-->
-                styleSheet = document.styleSheets[i];
-                <!--returnedStr = returnedStr + i.toString()+") "+styleSheet.cssRules.length+"; "+styleSheet.title+"\n";  returnedStr += i.toString(); doesn't work -->
-
-var ruleName;
-                if( styleSheet.title == "myInnerCSS"){
-                    <!--returnedStr = returnedStr + "BJ";-->
-                    <!--alert("length = "+length);-->
-                    length = styleSheet.cssRules.length;
-                    <!--alert("length = "+length);-->
-                    for ( j = 0 ; j &lt; length ; j++ ) {
-                        <!--returnedStr = returnedStr + styleSheet.cssRules[j].selectorText+"\n";-->
-                        var ruleName = styleSheet.cssRules[j].selectorText;
-<!--                        alert("ruleName = "+ruleName);-->
-                        if( ruleName == "#main-panel-content"){
-                            <!--returnedStr = returnedStr + "XXXXXXXXXXXXX";-->
-                            <!--styleSheet.cssRules[j].insertRule("#main-panel" + "{" + "height:"+window.innerHeight +"px;}",0);-->
-                            alert(styleSheet.cssRules[j].cssText);
-                            styleSheet.insertRule(styleSheet.cssRules[j].cssText+"{height:979px;}", 0);<!-- "+window.innerHeight +" -->
-                            alert(styleSheet.cssRules[j].cssText);
-                            <!--returnedStr = "success, set height "+window.innerHeight;-->
-                            <!--alert("wtf : set new height to "+ruleName);-->
-                        }
-                    }
-                }
-
-                <!--alert("success");-->
-            }
-            <!--for(i=0; i<--> 
-            <!--document.styleSheets[0].cssRules[9].height="1920px";-->
-            alert(returnedStr);
-        }
-        
-        <!--resize();-->
-<!--window.setInterval(function () {resize()}, 10000);-->
-<!--       doesn't work
- function(){
-            alert("salut");
-	}-->
-        
-    function addCSSRule(){
-	alert("test 658472");
-	<!--document.write("You're visiting tutorialspoint!"+screen.height+"px");-->
-	var styleEl = document.createElement('style');
-	// Append style element to head
-	document.head.appendChild(styleEl);
-	styleEl.sheet.insertRule("#main-panel-content{height:979px;}", 0);
-
-    }
-    <!--addCSSRule();-->
-    
-
-    </script>
-    
-    
-
-
 
     <j:choose>
-        <!-- <j:when test="${empty from.getCaptionSize()}">
-            <j:set var="captionSize" value="36" />
+        <j:when test="${empty(items)}">
+            <st:include page="noJob.jelly" />
         </j:when>
-        <j:otherwise>-->
-        <!-- Est-il nécessaire de mettre une condition vu que la valeur de captionSize est initialisée à 36?! -->
-        <j:set var="captionSize" value="${from.getCaptionSize()}" />
-        <j:set var="dashboardHeight" value="${from.getDashboardHeight()}" />
-        <j:set var="dashboardWidth" value="${from.getDashboardWidth()}" />
-        
-<!--        ${from.getCaptionSize()}
-            ${from.getDashboardHeight()}
-            ${from.getDashboardWidth()}-->
-            
-<!--        <script></script>-->
-        <!--<j:set var="margin" value=".2" />-->
-        <!--</j:otherwise>-->
+        <j:otherwise>
+            <j:set var="captionSize" value="${from.getCaptionSize()}" />
+            <j:set var="dashboardHeight" value="${from.getDashboardHeight()}" />
+            <j:set var="dashboardWidth" value="${from.getDashboardWidth()}" />
+    
+            <div id="container" style="width:${from.DEFAULT_SCREEN_WIDTH}px;height:${from.DEFAULT_SCREEN_HEIGHT}px;background:${from.backgroundColor}">
+                <j:choose>
+                    <j:when test="${from.getCaptionText() != ''}">
+                        <j:set var="captionStyle" value="font-size: ${captionSize*0.5}pt;max-height:${captionSize}px;background:${from.captionColor};" />
+                        <div id="caption" style="${captionStyle}">
+                            <a style="text-decoration:none; color:${from.captionTextColor};" href="configure">${from.getCaptionText()}</a>
+                        </div>
+                    </j:when>
+                    <j:otherwise>
+                    </j:otherwise>
+                </j:choose>
+                <div id="dashboard">
+                    <j:choose>
+                        <j:invoke var="dashboard" on="${from}" method="getDashboard" />
+                        <j:invoke var="viewsRows" on="${dashboard}" method="getRows" />
+                        <j:forEach var="row" items="${viewsRows}">
+                            <j:forEach var="view" items="${row}">
+                                <j:set var="jobStyle" value="float: left; width:${dashboard.viewsWidth}px; height:${dashboard.viewsHeight}px; 
+                            margin:${dashboard.margin}px; padding: 1%; border-radius: 5px;" />
+                                <st:include page="viewEntry.jelly" />
+                            </j:forEach>
+                        </j:forEach>
+                    </j:choose>	
+                </div>
+            </div>
+        </j:otherwise>
     </j:choose>
-    <j:choose>
-<!--        <j:when test="${empty from.getCaptionText()}">
-            salut, je suis dans le when
-            <j:set var="captionStyle" value="font-size: 0px;" />
-        </j:when>
-        <j:otherwise>-->
-            <!--salut, je suis dans le otherwise-->
-<!--            <j:set var="captionStyle" value="font-size: ${captionSize*0.5}pt;max-height:${captionSize}px;" />-->
-        <!--</j:otherwise>-->
-    </j:choose>
-
-<!-- <j:if test="${it.COLOR_SETTINGS != null}">
-     color_settings exists
-            <j:invoke on="${from}" method="setPersistentsData">
-                <j:arg type="java.util.LinkedHashSet" value="${it.COLOR_SETTINGS}" />
-            </j:invoke>
-        </j:if>-->
-        
-<!--   ${captionSize}   resize()  <a href="configure">Configure View</a>-->
-         <!--- captionSize-->
-        <div id="container" style="width:${from.DEFAULT_SCREEN_WIDTH}px;height:${from.DEFAULT_SCREEN_HEIGHT}px;background:${from.backgroundColor}">
-            <j:choose>
-                <j:when test="${from.getCaptionText() != ''}">
-                    <j:set var="captionStyle" value="font-size: ${captionSize*0.5}pt;max-height:${captionSize}px;background:${from.captionColor};" />
-                    <div id="caption" style="${captionStyle}">
-
-                        <a style="text-decoration:none; color:${from.captionTextColor};" href="configure">${from.getCaptionText()}</a>
-                    </div>
-                </j:when>
-                <j:otherwise>
-
-                </j:otherwise>
-            </j:choose>
-            
-        
-        
-            <div id="dashboard">
-				
-<!--            <j:choose>
-
-
-                <j:invoke var="contents" on="${from}" method="getContents" />
-                <st:include page="jobs.jelly" />
-
-            </j:choose>-->
-            
-            <j:choose>
-                <!--                <j:when test="${from.getGroupByPrefix()}">
-                    <j:invoke var="projects" on="${from}" method="getContentsByPrefix" />
-                    <st:include page="projects.jelly" />
-                </j:when>
-                <j:otherwise>-->
-                <!--                <j:invoke var="contents" on="${from}" method="getContents" />
-                <st:include page="noPrefix/jobs.jelly" />-->
-                <!--</j:otherwise>-->
-                <j:invoke var="dashboard" on="${from}" method="getDashboard" />
-                <!--                <st:include page="noPrefix/jobs.jelly" />-->
-                <j:invoke var="viewsRows" on="${dashboard}" method="getRows" />
-                
-                
-                <j:forEach var="row" items="${viewsRows}">
-                    <j:forEach var="view" items="${row}">
-                        <st:include page="viewEntry.jelly" />
-                    </j:forEach>
-                </j:forEach>
-    
-    
-    
-    
-                
-            </j:choose>	
-        </div>
-    </div>
 </j:jelly>

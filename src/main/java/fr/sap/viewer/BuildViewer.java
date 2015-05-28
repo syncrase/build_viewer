@@ -55,33 +55,18 @@ public class BuildViewer extends ListView {
     public static final String DEFAULT_CAPTION_BACKGROUND_COLOR = "#FFFFFF";
     public static final String DEFAULT_BACKGROUND_COLOR = "#FFFFFF";
 
-//    private static final int DEFAULT_SCREEN_HEIGHT = Toolkit.getDefaultToolkit().getScreenSize().height;
-//    private static final int DEFAULT_SCREEN_WIDTH = Toolkit.getDefaultToolkit().getScreenSize().width;
-    // Here, a list of objects that contains colors of background and font depending of the group status
-    // ...
     private String backgroundColor;
     private String captionColor;
     private String captionTextColor;
 
-//    public static final String[] BUILD_STATE = {"SUCCESS", "UNSTABLE", "FAILURE", "NOT_BUILT", "ABORTED"};
     private LinkedHashSet<ViewEntryColors> COLOR_SETTINGS;
     private HashSet<String> prefixesSeparators;
-//    private DescribableList<ListViewColumn, Descriptor<ListViewColumn>> columns;
 
     private boolean groupedByPrefix = false;
     private String captionText;
 
     private int captionSize;
 
-//    @DataBoundConstructor
-//    public BuildViewer(String name, int captionSize, String captionText) {
-//        super(name);
-//        this.captionSize = captionSize;
-//        this.captionText = captionText;
-////        this.dashboardHeight = dashboardHeight-captionSize;
-////        this.dashboardWidth = dashboardWidth;
-//
-//    }
     @DataBoundConstructor
     public BuildViewer(String name, String backgroundColor, String captionColor, String captionTextColor,
                        LinkedHashSet<ViewEntryColors> COLOR_SETTINGS, String captionText, int captionSize, HashSet<String> prefixesSeparators) {
@@ -99,10 +84,6 @@ public class BuildViewer extends ListView {
 
     }
 
-//    @DataBoundConstructor
-//    public BuildViewer(String name) {
-//        super(name);
-//    }
     public LinkedHashSet<ViewEntryColors> getCOLOR_SETTINGS() {
 //        if (COLOR_SETTINGS == null) {
 //            initializeColorSettings();
