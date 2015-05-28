@@ -23,7 +23,12 @@
  */
 package fr.sap.viewer;
 
+import hudson.matrix.MatrixBuild;
+import hudson.matrix.MatrixRun;
 import hudson.model.AbstractProject;
+import hudson.model.Hudson;
+import hudson.model.Result;
+import hudson.model.Run;
 import java.util.HashSet;
 import org.apache.commons.lang.StringUtils;
 
@@ -67,7 +72,7 @@ public class ProjectImpl {
     /**
      *
      * @return "SUCCESS", "UNSTABLE", "FAILURE", "NOT_BUILT", "ABORTED"<br/>
-     * 
+     * <p>
      */
     public String getResult() {
         return abstractProject.getLastBuild().getResult().toString();
@@ -120,6 +125,87 @@ public class ProjectImpl {
             }
         }
         return null;
+    }
+
+    public String getClaim() {
+        // check we have claim plugin
+        if (Hudson.getInstance().getPlugin("claim") == null) {
+            return null;
+        }
+        Run<?, ?> lastBuild = getLastCompletedRun();
+        if (lastBuild == null) {
+            return null;
+        }
+        // find the claim
+        String claim = "";
+        if (lastBuild instanceof hudson.matrix.MatrixBuild) {
+            MatrixBuild matrixBuild = (hudson.matrix.MatrixBuild) lastBuild;
+            claim = buildMatrixClaimString(matrixBuild, true);
+        } else {
+            ClaimWrapper claimWrapper = ClaimWrapper.builder(lastBuild);
+            if (claimWrapper != null && claimWrapper.isClaimed()) {
+                StringBuilder sb = new StringBuilder();
+                if (claimWrapper.getReason() != null) {
+                    sb.append(claimWrapper.getReason()).append(" ");
+                }
+                sb.append("(");
+                sb.append(claimWrapper.getClaimedByName());
+                sb.append(").");
+                claim = sb.toString();
+            } else {
+                claim = "NOT_CLAIMED";
+            }
+        }
+        return claim;
+    }
+
+    private Run<?, ?> getLastCompletedRun() {
+        Run<?, ?> run = abstractProject.getLastBuild();
+        while (run != null && run.isBuilding()) {
+            // claims can only be made against builds once they've finished,
+            // so check the previous build if currently building.
+            run = run.getPreviousBuild();
+        }
+        return run;
+    }
+
+    private String buildMatrixClaimString(MatrixBuild matrixBuild, boolean includeClaimed) {
+        StringBuilder claimed = new StringBuilder();
+        StringBuilder unclaimed = new StringBuilder();
+        for ( MatrixRun combination : matrixBuild.getRuns() ) {
+            if (matrixBuild.getNumber() != combination.getNumber()) {
+                continue;
+            }
+            Result result = combination.getResult();
+            if (!(Result.FAILURE.equals(result) || Result.UNSTABLE.equals(result))) {
+                continue;
+            }
+            ClaimWrapper claimWrapper = ClaimWrapper.builder(combination);
+            if (claimWrapper != null && claimWrapper.isClaimed()) {
+                claimed.append(combination.getParent().getCombination()
+                        .toString());
+                claimed.append(": ");
+                if (claimWrapper.getReason() != null) {
+                    claimed.append(claimWrapper.getReason()).append(" ");
+                }
+                claimed.append("(");
+                claimed.append(claimWrapper.getClaimedByName());
+                claimed.append(").<br/>");
+            } else {
+                unclaimed.append(combination.getParent().getCombination().toString());
+                unclaimed.append(": ").append("NOT_CLAIMED").append("<br/>");
+            }
+        }
+
+        String claims = unclaimed.toString();
+        if (includeClaimed) {
+            claims += claimed.toString();
+        }
+        return claims;
+    }
+
+    public boolean isClaimed() {
+        return !"NOT_CLAIMED".equals(getClaim());
     }
 
 //    public String abstractProject_Info() {

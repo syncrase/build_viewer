@@ -33,6 +33,9 @@ THE SOFTWARE.
             
     <div style="${thisJobStyle} "  >
         <j:choose>
+            <j:if test="${view.firstJob.isClaimed()}">
+                <p>${view.firstJob.getClaim()}</p>
+            </j:if>
             <j:when test="${view.count == 1}">
                 <p>
                     <a style="${jobNameStyle}" href="${rootURL}/${view.firstJob.lastBuildUrl}">${view.firstJob.name}</a> 

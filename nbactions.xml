@@ -10,6 +10,7 @@
             </goals>
             <properties>
                 <jetty.port>5555</jetty.port>
+                
             </properties>
         </action>
         <action>

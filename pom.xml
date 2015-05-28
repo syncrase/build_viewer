@@ -68,6 +68,12 @@
             <version>1.533</version>
             <type>jar</type>
         </dependency>
+        <dependency>
+            <groupId>org.jvnet.hudson.plugins</groupId>
+            <artifactId>claim</artifactId>
+            <version>1.7</version>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
