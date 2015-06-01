@@ -29,8 +29,11 @@ import hudson.model.AbstractProject;
 import hudson.model.Hudson;
 import hudson.model.Result;
 import hudson.model.Run;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.TreeMap;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -269,16 +272,18 @@ public class ProjectImpl {
                 previousRun = firstFailedRun.getPreviousBuild();
             } while (previousRun != null && validateRunState(previousRun, Result.FAILURE.toString()));
 //            firstFailedRun = firstFailedRun.getNextBuild();
-            long timeEllapse=latestRun.getTimeInMillis() - firstFailedRun.getTimeInMillis();
-            return " duration : "+firstFailedRun.getDurationString() +
-                   " <br/>estimate duration : " + firstFailedRun.getEstimatedDuration() + 
-                   " <br/>time : " + firstFailedRun.getTime() + 
-                   " <br/>time in milli : "+firstFailedRun.getTimeInMillis() + 
-                   " <br/>time stamp"+firstFailedRun.getTimestamp().toString()+
-                   " \n#### datetoString : "+(new Date(firstFailedRun.getTimeInMillis()*1000)).toString()+
-                   " \n#### date: "+(new Date(firstFailedRun.getTimeInMillis()*1000)).getYear();
-//            errorDuration = latestBuildTime - firstCrashedBuildTime
-//            return "";
+            long timeEllapse = latestRun.getTimeInMillis() - firstFailedRun.getTimeInMillis();
+            Map<String, String> timeEllapseMap = convertMilliToEquivalentDuration(new BigDecimal(String.valueOf(timeEllapse)));
+            
+            return 
+//                    " duration : " + firstFailedRun.getDurationString()
+//                   + " <br/>estimate duration : " + firstFailedRun.getEstimatedDuration() + "  ::  "+latestRun.getEstimatedDuration()
+//                   + " <br/>time : " + firstFailedRun.getTime()+ "  ::  "+latestRun.getTime()
+//                   + " <br/>time in milli : " + firstFailedRun.getTimeInMillis()+ "  ::  "+latestRun.getTimeInMillis()
+//                   + " <br/>time stamp" + firstFailedRun.getTimestamp().toString()+ "  ::  "+latestRun.getTimestamp().toString()
+//                   + " \n#### datetoString : " + (new Date(firstFailedRun.getTimeInMillis() / 1000)).toString()+ "  ::  "+(new Date(latestRun.getTimeInMillis() / 1000)).toString()
+//                   + " \n#### date: " + (new Date(firstFailedRun.getTimeInMillis() / 1000)).getYear()+ "  ::  "+(new Date(latestRun.getTimeInMillis() / 1000)).toString()+
+                   "Failed since "+timeEllapseMap.get("days")+" days"+timeEllapseMap.get("hours")+" hours"+timeEllapseMap.get("minutes")+" minutes"+timeEllapseMap.get("seconds")+" seconds";
         }
         return null;
     }
@@ -297,18 +302,33 @@ public class ProjectImpl {
         return run.getResult().toString().equals(state);
 
     }
-    
-    
-    private int[] convertMilliToDate(long timeInMilli){
-        long seconds = timeInMilli/1000;
-        long minutes = seconds / 60;
-        long hours = minutes / 60;
-        long days = hours / 24;
-        
-        return new int[]{1,5,9};
-    }
 
-    
+	/**
+	 * 
+	 * @param timeInMilli
+	 * @return A map with the equivalent duration, keys are : days, hours, minutes and seconds
+	 */
+	private static Map<String, String> convertMilliToEquivalentDuration(BigDecimal timeInMilli) {
+        Map<String, String> equivalentDuration = new TreeMap<String, String>();
+
+        // Compute seconds
+        BigDecimal[] seconds = timeInMilli.divideAndRemainder(new BigDecimal("1000"));
+        BigDecimal[] minutes = seconds[0].divideAndRemainder(new BigDecimal("60"));
+
+        // Compute minutes
+        BigDecimal[] hours = minutes[0].divideAndRemainder(new BigDecimal("60"));
+
+        // Compute hours
+        BigDecimal[] days = hours[0].divideAndRemainder(new BigDecimal("24"));
+        
+        equivalentDuration.put("days", days[0].toString());
+        equivalentDuration.put("hours", days[1].toString());
+        equivalentDuration.put("minutes", hours[1].toString());
+        equivalentDuration.put("seconds", minutes[1].toString());
+
+        return equivalentDuration;
+	}
+
 //    public String abstractProject_Info() {
 //        String s = "";
 //        s += "getAbsoluteUrl : " + abstractProject.getAbsoluteUrl();
