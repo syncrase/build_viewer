@@ -27,7 +27,6 @@ THE SOFTWARE.
 <!-- TODO add taglibs such as: xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" -->
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:i="jelly:fmt">
     
-
     <j:set var="thisJobStyle" value="${jobStyle}  background:${view.backgroundColor};" />
     <j:set var="jobNameStyle" value="text-decoration: none; color:#000000; font-size: 20; font-weight:bold;" />
             
@@ -55,33 +54,24 @@ THE SOFTWARE.
                                                 proj.buildStateDuration.get('minutes') == 0 and
                                                 proj.buildStateDuration.get('seconds') == 0 ) == false}">
                                     (
-                                    ${proj.latestBuildResult} for 
                                     <j:if test="${proj.buildStateDuration.get('days')!=0}">${proj.buildStateDuration.get('days')}d</j:if>
-                                    
                                     <j:if test="${proj.buildStateDuration.get('hours')!=0 or 
                                                 proj.buildStateDuration.get('days')!=0}">${proj.buildStateDuration.get('hours')}h</j:if>
-                                        
                                     <j:if test="${proj.buildStateDuration.get('minutes')!=0 or 
                                                 proj.buildStateDuration.get('days')!=0 or 
                                                 proj.buildStateDuration.get('hours')!=0}">${proj.buildStateDuration.get('minutes')}'</j:if>
-                                        
                                     <j:if test="${proj.buildStateDuration.get('seconds')!=0 or 
                                                 proj.buildStateDuration.get('days')!=0 or 
                                                 proj.buildStateDuration.get('hours')!=0 or 
                                                 proj.buildStateDuration.get('minutes')!=0}">${proj.buildStateDuration.get('seconds')}''</j:if>
-                                        
+                                    from the first ${proj.latestBuildResult} to this one
                                     )
                                 </j:if>
-                                
                             </div>
                             <j:if test="${proj.isClaimed()}">
-                                
-                                <!--                            <j:invoke var="failDuration" on="${proj}" method="getBuildStateDuration">
-                                    <j:arg type="java.lang.String" value="${proj.latestBuildResult}" />
-                                </j:invoke>-->
                                 <div style="float:left; width:20%;">
                                     <div id="claim">${proj.claimWrapper.claimedByName} : ${proj.claimWrapper.reason}</div>
-                                    <div id="duration" style="text-shadow: 1px 1px 0 #ccc,
+                                    <!--                                    <div id="duration" style="text-shadow: 1px 1px 0 #ccc,
                                                 0 1px 3px rgba(0,0,0,.3),
                                                 0 3px 5px rgba(0,0,0,.2),
                                                 0 5px 10px rgba(0,0,0,.25),
@@ -92,7 +82,7 @@ THE SOFTWARE.
                                         ${proj.buildStateDuration.get('hours')}h
                                         ${proj.buildStateDuration.get('minutes')}'
                                         ${proj.buildStateDuration.get('seconds')}''
-                                    </div>
+                                    </div>-->
                                 </div>
                             </j:if>
                             <br/>
@@ -100,13 +90,6 @@ THE SOFTWARE.
                     </j:forEach>
                 </p>
             </j:otherwise>
-                
         </j:choose>
-        
-        
-        
-        
-      
-    </div>
-                        
+    </div>              
 </j:jelly>
