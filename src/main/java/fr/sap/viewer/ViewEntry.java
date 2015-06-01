@@ -95,7 +95,7 @@ public class ViewEntry {
     }
 
     /**
-     * Refresh values of the ViewEntryColor field
+     * Refresh values of the ViewEntryColor field based on projects contained
      * <p>
      * @return
      */
@@ -103,12 +103,13 @@ public class ViewEntry {
 
         int maxRank = 0;
         int index = 0;
-
+        String projectRes="";
+        
         for ( ProjectImpl p : projects ) {// Go trough projects in this view
-
+            projectRes = p.getResult();
             lookForFavoriteColor:
             for ( ViewEntryColors state : bv.getCOLOR_SETTINGS() ) {// Find the corresponding status
-                if (p.getResult().equals(state.getVe_state())) {
+                if (projectRes.equals(state.getVe_state())) {
 
                     if (index >= maxRank) {
                         maxRank = index;// Keep the index of the highest priority state. Highest it is, highest the priority is
@@ -124,7 +125,7 @@ public class ViewEntry {
 
     /**
      *
-     * @return false if no separator exists or if there's only one<br/>
+     * @return false if no separator exists or if there's less than one<br/>
      * true if there's prefix in the BuildViewerList
      */
     private boolean prefixUSed() {

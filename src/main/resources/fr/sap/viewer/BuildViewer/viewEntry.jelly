@@ -33,12 +33,10 @@ THE SOFTWARE.
             
     <div style="${thisJobStyle} "  >
         <j:choose>
-            <j:if test="${view.firstJob.isClaimed()}">
-                <p>${view.firstJob.getClaim()}</p>
-            </j:if>
+            
             <j:when test="${view.count == 1}">
                 <p>
-                    <a style="${jobNameStyle}" href="${rootURL}/${view.firstJob.lastBuildUrl}">${view.firstJob.name}</a> 
+                    <a style="${jobNameStyle}" href="${rootURL}/${view.firstJob.lastBuildUrl}">${view.firstJob.name}</a> #${view.firstJob.buildNumber}
                 </p>
             </j:when>
             <j:otherwise> 
@@ -48,7 +46,11 @@ THE SOFTWARE.
                     ${view.count} jobs with the '${view.prefix}' prefix in this view<br/>
                     <br/>
                     <j:forEach var="proj" items="${view.projects}">
-                        ${proj.name}#${proj.buildNumber} -- ${proj.result}<br/>
+                        <a style="${jobNameStyle}" href="${rootURL}/${proj.lastBuildUrl}">${proj.name}</a> #${proj.buildNumber} -- ${proj.result}
+                        <j:if test="${proj.isClaimed()}">
+                            claim : ${proj.getClaim()}<br/>
+                            fail duration : ${proj.getFailDuration()}
+                        </j:if><br/>
                     </j:forEach>
                 </p>
             </j:otherwise>

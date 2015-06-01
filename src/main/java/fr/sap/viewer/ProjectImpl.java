@@ -29,6 +29,7 @@ import hudson.model.AbstractProject;
 import hudson.model.Hudson;
 import hudson.model.Result;
 import hudson.model.Run;
+import java.util.Date;
 import java.util.HashSet;
 import org.apache.commons.lang.StringUtils;
 
@@ -46,6 +47,7 @@ public class ProjectImpl {
     private final AbstractProject abstractProject;
     private final String prefixe;
     private BuildViewer bv;
+    private ClaimWrapper claimWrapper;
 
     public ProjectImpl(BuildViewer bv, AbstractProject abstractProject) {
         this.abstractProject = abstractProject;
@@ -72,10 +74,27 @@ public class ProjectImpl {
     /**
      *
      * @return "SUCCESS", "UNSTABLE", "FAILURE", "NOT_BUILT", "ABORTED"<br/>
+     * Default values for Jenkins
      * <p>
      */
+    public String getLatestBuildResult() {
+
+        return getLatestCompletedRun().getResult().toString();
+
+    }
+
+    /**
+     * Return the state of the project (Jenkins, claim, TODO...)
+     * <p>
+     * @return
+     */
     public String getResult() {
-        return abstractProject.getLastBuild().getResult().toString();
+        //Parcourir la liste !?
+        // Si j'ajoute des config de couleur c'est ici que je renvoie la bonne clé
+        //  1   result job
+        //  2   if claimed
+        //  3   unknown
+        return this.isClaimed() ? "CLAIMED" : this.getLatestBuildResult();
     }
 
     /**
@@ -83,7 +102,7 @@ public class ProjectImpl {
      * @return The build number.
      */
     public int getBuildNumber() {
-        return abstractProject.getLastBuild().getNumber();
+        return getLatestCompletedRun().getNumber();
     }
 
     public String getIconUrl() {
@@ -132,7 +151,7 @@ public class ProjectImpl {
         if (Hudson.getInstance().getPlugin("claim") == null) {
             return null;
         }
-        Run<?, ?> lastBuild = getLastCompletedRun();
+        Run<?, ?> lastBuild = getLatestCompletedRun();
         if (lastBuild == null) {
             return null;
         }
@@ -142,7 +161,7 @@ public class ProjectImpl {
             MatrixBuild matrixBuild = (hudson.matrix.MatrixBuild) lastBuild;
             claim = buildMatrixClaimString(matrixBuild, true);
         } else {
-            ClaimWrapper claimWrapper = ClaimWrapper.builder(lastBuild);
+            claimWrapper = ClaimWrapper.builder(lastBuild);
             if (claimWrapper != null && claimWrapper.isClaimed()) {
                 StringBuilder sb = new StringBuilder();
                 if (claimWrapper.getReason() != null) {
@@ -159,7 +178,7 @@ public class ProjectImpl {
         return claim;
     }
 
-    private Run<?, ?> getLastCompletedRun() {
+    private Run<?, ?> getLatestCompletedRun() {
         Run<?, ?> run = abstractProject.getLastBuild();
         while (run != null && run.isBuilding()) {
             // claims can only be made against builds once they've finished,
@@ -205,9 +224,91 @@ public class ProjectImpl {
     }
 
     public boolean isClaimed() {
-        return !"NOT_CLAIMED".equals(getClaim());
+        if (Hudson.getInstance().getPlugin("claim") == null) {
+            return false;
+        }
+        Run<?, ?> lastBuild = getLatestCompletedRun();
+        if (lastBuild == null) {
+            return false;
+        }
+        if (!(lastBuild instanceof hudson.matrix.MatrixBuild)) {
+            // TODO handle claimMatrix
+            claimWrapper = ClaimWrapper.builder(lastBuild);
+
+        }
+        return claimWrapper != null ? claimWrapper.isClaimed() : false;
+//        return !"NOT_CLAIMED".equals(getClaim());
     }
 
+    /**
+     * How long is the project claimed?
+     * <p>
+     * @return The duration of the claim
+     */
+    public String getClaimDuration() {
+
+        //TODO
+        if (isClaimed()) {
+
+            return "";
+        }
+        return "";
+    }
+
+    public String getFailDuration() {
+
+        // If the latest build is failed
+        Run<?, ?> latestRun = getLatestCompletedRun();
+        Run<?, ?> firstFailedRun = null;
+        Run<?, ?> previousRun = null;
+
+        if (validateRunState(latestRun, Result.FAILURE.toString())) {
+            firstFailedRun = latestRun;
+            do {
+                firstFailedRun = previousRun != null ? previousRun : firstFailedRun;
+                previousRun = firstFailedRun.getPreviousBuild();
+            } while (previousRun != null && validateRunState(previousRun, Result.FAILURE.toString()));
+//            firstFailedRun = firstFailedRun.getNextBuild();
+            long timeEllapse=latestRun.getTimeInMillis() - firstFailedRun.getTimeInMillis();
+            return " duration : "+firstFailedRun.getDurationString() +
+                   " <br/>estimate duration : " + firstFailedRun.getEstimatedDuration() + 
+                   " <br/>time : " + firstFailedRun.getTime() + 
+                   " <br/>time in milli : "+firstFailedRun.getTimeInMillis() + 
+                   " <br/>time stamp"+firstFailedRun.getTimestamp().toString()+
+                   " \n#### datetoString : "+(new Date(firstFailedRun.getTimeInMillis()*1000)).toString()+
+                   " \n#### date: "+(new Date(firstFailedRun.getTimeInMillis()*1000)).getYear();
+//            errorDuration = latestBuildTime - firstCrashedBuildTime
+//            return "";
+        }
+        return null;
+    }
+
+    /**
+     *
+     * @param run   run to check
+     * @param state desired native Jenkins state to check ("SUCCESS",
+     *              "UNSTABLE", "FAILURE", "NOT_BUILT", "ABORTED")<br/>
+     * For instance state = Result.FAILURE.toString()
+     * <p>
+     * @return
+     */
+    public boolean validateRunState(Run<?, ?> run, String state) {
+
+        return run.getResult().toString().equals(state);
+
+    }
+    
+    
+    private int[] convertMilliToDate(long timeInMilli){
+        long seconds = timeInMilli/1000;
+        long minutes = seconds / 60;
+        long hours = minutes / 60;
+        long days = hours / 24;
+        
+        return new int[]{1,5,9};
+    }
+
+    
 //    public String abstractProject_Info() {
 //        String s = "";
 //        s += "getAbsoluteUrl : " + abstractProject.getAbsoluteUrl();

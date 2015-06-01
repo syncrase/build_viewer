@@ -58,6 +58,7 @@ public class ClaimWrapper {
 
     static private ClaimBuildAction getClaimForRun(Run<?, ?> run) {
         ClaimBuildAction claimAction = null;
+        // Get all ClaimBuildAction actions
         List<ClaimBuildAction> claimActionList = run
                 .getActions(ClaimBuildAction.class);
         if (claimActionList.size() == 1) {

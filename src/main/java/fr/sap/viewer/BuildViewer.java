@@ -94,11 +94,12 @@ public class BuildViewer extends ListView {
     public void setDefaultColorSettings(boolean b) {
         if (b == true) {
             COLOR_SETTINGS = new LinkedHashSet<ViewEntryColors>();
-            COLOR_SETTINGS.add(new ViewEntryColors(Result.SUCCESS.toString(), "#2BFF00", "#000000"));//green
+            COLOR_SETTINGS.add(new ViewEntryColors(Result.SUCCESS.toString(), "#32BA00", "#000000"));//green
             COLOR_SETTINGS.add(new ViewEntryColors(Result.UNSTABLE.toString(), "#FFFF00", "#000000"));//yellow
-            COLOR_SETTINGS.add(new ViewEntryColors(Result.FAILURE.toString(), "#FF0000", "#000000"));//red
+            COLOR_SETTINGS.add(new ViewEntryColors(Result.FAILURE.toString(), "#BA0000", "#000000"));//red
             COLOR_SETTINGS.add(new ViewEntryColors(Result.NOT_BUILT.toString(), "#737373", "#000000"));//grey
             COLOR_SETTINGS.add(new ViewEntryColors(Result.ABORTED.toString(), "#000000", "#000000"));//dark
+            COLOR_SETTINGS.add(new ViewEntryColors("CLAIMED", "#F2B32C", "#000000"));//dark
         }
 
     }
