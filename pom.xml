@@ -11,7 +11,7 @@
     </parent>
     <groupId>fr.sap</groupId>
     <artifactId>viewer</artifactId>
-    <version>0.0.12-SNAPSHOT</version>
+    <version>0.0.1-SNAPSHOT</version>
     <packaging>hpi</packaging>
 
     <name>Build Viewer</name>
@@ -29,7 +29,7 @@
         <developer>
             <id>pierretaquet</id>
             <name>Pierre TAQUET</name>
-            <email>p.taquet@groupe-esigelec.fr</email>
+            <email>pierre.taquet@gmail.com</email>
         </developer>
     </developers>
 
