@@ -35,10 +35,8 @@ import org.apache.commons.lang.Validate;
 public class ViewEntry {
 
     HashSet<ProjectImpl> projects = new HashSet<ProjectImpl>();
-
     private final String prefixe;
     private ViewEntryColors currentState;
-
     private BuildViewer bv;
 
     ViewEntry(BuildViewer bv, ProjectImpl proj) {
@@ -52,6 +50,20 @@ public class ViewEntry {
         this.refreshState();
     }
 
+    //**************************************************************************
+    // Getters/setters
+    //**************************************************************************
+    public HashSet<ProjectImpl> getProjects() {
+        return projects;
+    }
+
+    public String getPrefix() {
+        return this.prefixe;
+    }
+
+    //**************************************************************************
+    // ViewEntry handlers
+    //**************************************************************************
     /**
      * Add project only if it has the same prefix of the view
      * <p>
@@ -78,22 +90,6 @@ public class ViewEntry {
 //        return ((ProjectImpl[])projects.toArray())[0];
     }
 
-    public String getPrefix() {
-        return this.prefixe;
-    }
-
-    public String getBackgroundColor() {
-        return currentState.getVe_backgroundColor();
-    }
-
-    public int getCount() {
-        return projects.size();
-    }
-
-    public HashSet<ProjectImpl> getProjects() {
-        return projects;
-    }
-
     /**
      * Refresh values of the ViewEntryColor field based on projects contained
      * <p>
@@ -103,8 +99,8 @@ public class ViewEntry {
 
         int maxRank = 0;
         int index = 0;
-        String projectRes="";
-        
+        String projectRes = "";
+
         for ( ProjectImpl p : projects ) {// Go trough projects in this view
             projectRes = p.getResult();
             lookForFavoriteColor:
@@ -123,6 +119,17 @@ public class ViewEntry {
         }
     }
 
+    //**************************************************************************
+    // ViewEntry details
+    //**************************************************************************
+    public String getBackgroundColor() {
+        return currentState.getVe_backgroundColor();
+    }
+
+    public int getCount() {
+        return projects.size();
+    }
+
     /**
      *
      * @return false if no separator exists or if there's less than one<br/>
@@ -131,4 +138,5 @@ public class ViewEntry {
     private boolean prefixUSed() {
         return (bv.getPrefixesSeparators() != null && bv.getPrefixesSeparators().size() >= 1);
     }
+
 }
