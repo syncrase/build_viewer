@@ -46,6 +46,8 @@ public class ProjectImpl {
     private ClaimWrapper claimWrapper;
     private Map<String, String> buildStateDuration;
 
+    private static HashSet<String> prefixes;
+
     public ProjectImpl(BuildViewer bv, AbstractProject abstractProject) {
         this.abstractProject = abstractProject;
         this.bv = bv;
@@ -95,6 +97,10 @@ public class ProjectImpl {
         return buildStateDuration;
     }
 
+    public static void setPrefixes(HashSet<String> prefixes) {
+        ProjectImpl.prefixes = prefixes;
+    }
+
     //**************************************************************************
     // AbstractProject handlers, easier to use in jellys
     //**************************************************************************
@@ -126,6 +132,7 @@ public class ProjectImpl {
         //  1   result job
         //  2   if claimed
         //  3   unknown
+        
         return this.isClaimed() ? "CLAIMED" : this.getLatestBuildResult();
     }
 

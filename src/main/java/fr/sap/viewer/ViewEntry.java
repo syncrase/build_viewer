@@ -34,7 +34,7 @@ import org.apache.commons.lang.Validate;
  */
 public class ViewEntry {
 
-    HashSet<ProjectImpl> projects = new HashSet<ProjectImpl>();
+    private HashSet<ProjectImpl> projects = new HashSet<ProjectImpl>();
     private final String prefixe;
     private ViewEntryColors currentState;
     private BuildViewer bv;
@@ -42,7 +42,7 @@ public class ViewEntry {
     ViewEntry(BuildViewer bv, ProjectImpl proj) {
         this.bv = bv;
         projects.add(proj);
-        if (prefixUSed()) {// If prefixs were configured
+        if (prefixUSed()) {// If prefix were configured
             this.prefixe = proj.getPrefix();
         } else {
             this.prefixe = ProjectImpl.NO_PREFIX_AVAILABLE;
@@ -69,7 +69,7 @@ public class ViewEntry {
      * <p>
      * @param entry
      */
-    void addProject(ProjectImpl entry) {
+    public void addProject(ProjectImpl entry) {
         Validate.notNull(entry);
         if (entry.getPrefix().equals(this.prefixe)) {
             projects.add(entry);

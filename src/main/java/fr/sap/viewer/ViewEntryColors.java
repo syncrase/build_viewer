@@ -23,6 +23,8 @@
  */
 package fr.sap.viewer;
 
+import hudson.model.Result;
+
 /**
  * Representative of the displaying of the ViewEntry
  * <p>
@@ -33,11 +35,11 @@ public class ViewEntryColors {
     /**
      * These values are in the hudson.model.Result Object
      */
-    public static String[] BUILD_STATE = {"SUCCESS", "UNSTABLE", "FAILURE", "NOT_BUILT", "ABORTED"};
+    public final static String[] BUILD_STATE = {Result.SUCCESS.toString(), Result.UNSTABLE.toString(), Result.FAILURE.toString(), Result.NOT_BUILT.toString(), Result.ABORTED.toString()};
 
-    private String ve_state;
-    private String ve_backgroundColor;
-    private String ve_fontColor;
+    private final String ve_state;
+    private final String ve_backgroundColor;
+    private final String ve_fontColor;
 
     public ViewEntryColors(String ve_state, String ve_backgroundColor, String ve_fontColor) {
         this.ve_state = ve_state;
