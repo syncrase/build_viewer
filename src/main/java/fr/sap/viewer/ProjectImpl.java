@@ -23,14 +23,10 @@
  */
 package fr.sap.viewer;
 
-import hudson.matrix.MatrixBuild;
-import hudson.matrix.MatrixRun;
 import hudson.model.AbstractProject;
 import hudson.model.Hudson;
-import hudson.model.Result;
 import hudson.model.Run;
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.TreeMap;
@@ -46,7 +42,7 @@ public class ProjectImpl {
 
     private final AbstractProject abstractProject;
     private final String prefixe;
-    private BuildViewer bv;
+    private final BuildViewer bv;
     private ClaimWrapper claimWrapper;
     private Map<String, String> buildStateDuration;
 
@@ -56,6 +52,9 @@ public class ProjectImpl {
         this.prefixe = computePrefix(this.getName());
     }
 
+    //**************************************************************************
+    // Getters / setters
+    //**************************************************************************
     /**
      *
      * @return
@@ -64,6 +63,41 @@ public class ProjectImpl {
         return abstractProject;
     }
 
+    /**
+     *
+     * @return The found prefix of this job
+     */
+    public String getPrefix() {
+        return prefixe;
+    }
+
+    public ClaimWrapper getClaimWrapper() {
+        if (claimWrapper == null) {
+            refreshClaim();
+        }
+        return claimWrapper;
+
+    }
+
+    /**
+     * Get the time of the current build and check how much time this state is,
+     * only if the current is the good one<br/>
+     * It works only with the build results, not customs ones which used here
+     * <p>
+     * @param state One of the Result's states
+     * <p>
+     * @return
+     */
+    public Map<String, String> getBuildStateDuration() {
+        if (buildStateDuration == null) {
+            computeBuildStateDuration();
+        }
+        return buildStateDuration;
+    }
+
+    //**************************************************************************
+    // AbstractProject handlers, easier to use in jellys
+    //**************************************************************************
     public String getName() {
         return abstractProject.getName();
     }
@@ -72,14 +106,13 @@ public class ProjectImpl {
         return abstractProject.getSearchUrl();
     }
 
-    /**
-     *
-     * @return "SUCCESS", "UNSTABLE", "FAILURE", "NOT_BUILT", "ABORTED"<br/>
-     * Default values for Jenkins
-     * <p>
-     */
-    public String getLatestBuildResult() {
-        return getLatestCompletedRun().getResult().toString();
+    public String getIconUrl() {
+        try {
+            return abstractProject.getLastCompletedBuild().getBuildStatusUrl();
+        } catch (Throwable t) {
+            return "Getting the build Status throws an exception:\n" + t.getMessage();
+        }
+
     }
 
     /**
@@ -104,55 +137,29 @@ public class ProjectImpl {
         return getLatestCompletedRun().getNumber();
     }
 
-    public String getIconUrl() {
-        try {
-            return abstractProject.getLastCompletedBuild().getBuildStatusUrl();
-        } catch (Throwable t) {
-            return "Getting the build Status throws an exception:\n" + t.getMessage();
-        }
-
-    }
-
     /**
      *
-     * @return The found prefix of this job
-     */
-    public String getPrefix() {
-        return prefixe;
-    }
-
-    /**
-     *
-     * @param name The name of the job
+     * @return "SUCCESS", "UNSTABLE", "FAILURE", "NOT_BUILT", "ABORTED"<br/>
+     * Default values for Jenkins
      * <p>
-     * @return the prefix use for this job<br/>null if no prefix has been found
-     *         in the project name
      */
-    private String computePrefix(String name) {
-        HashSet<String> prefixes = bv.getPrefixesSeparators();
-        if (prefixes != null) {
-            if (prefixes.size() > 0) {
-                for ( String prefix : prefixes ) {
-                    if (name.contains(prefix)) {
-                        return StringUtils.substringBefore(name, prefix);
-                    }
-                }
-                return null;
-            } else {
-                return null;
-            }
-        }
-        return null;
+    public String getLatestBuildResult() {
+        return getLatestCompletedRun().getResult().toString();
     }
 
-    public ClaimWrapper getClaimWrapper() {
-        if (claimWrapper == null) {
-            refreshClaim();
+    private Run<?, ?> getLatestCompletedRun() {
+        Run<?, ?> run = abstractProject.getLastBuild();
+        while (run != null && run.isBuilding()) {
+            // claims can only be made against builds once they've finished,
+            // so check the previous build if currently building.
+            run = run.getPreviousBuild();
         }
-        return claimWrapper;
-
+        return run;
     }
 
+    //**************************************************************************
+    // About CLAIM
+    //**************************************************************************
     /**
      * This method refresh the claimWrapper field
      * <p>
@@ -201,14 +208,106 @@ public class ProjectImpl {
         return true;
     }
 
-    private Run<?, ?> getLatestCompletedRun() {
-        Run<?, ?> run = abstractProject.getLastBuild();
-        while (run != null && run.isBuilding()) {
-            // claims can only be made against builds once they've finished,
-            // so check the previous build if currently building.
-            run = run.getPreviousBuild();
+    public boolean isClaimed() {
+        if (isClaimPluginAvailable()) {
+            Run<?, ?> lastBuild = getLatestCompletedRun();
+            if (lastBuild == null) {
+                return false;
+            }
+            if (!(lastBuild instanceof hudson.matrix.MatrixBuild)) {
+                // TODO handle claimMatrix
+                claimWrapper = ClaimWrapper.builder(lastBuild);
+            }
+            return claimWrapper != null ? claimWrapper.isClaimed() : false;
         }
-        return run;
+        return false;
+    }
+
+    //**************************************************************************
+    // Computing
+    //**************************************************************************
+    /**
+     *
+     * @param name The name of the job
+     * <p>
+     * @return the prefix use for this job<br/>null if no prefix has been found
+     *         in the project name
+     */
+    private String computePrefix(String name) {
+        HashSet<String> prefixes = bv.getPrefixesSeparators();
+        if (prefixes != null) {
+            if (prefixes.size() > 0) {
+                for ( String prefix : prefixes ) {
+                    if (name.contains(prefix)) {
+                        return StringUtils.substringBefore(name, prefix);
+                    }
+                }
+                return null;
+            } else {
+                return null;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Get the time of the current build and check how much time this state is
+     * <p>
+     * @param state One of the Result's states
+     * <p>
+     * @return
+     */
+    private void computeBuildStateDuration() {
+
+        // If the latest build is failed
+        Run<?, ?> latestRun = getLatestCompletedRun();
+        Run<?, ?> firstRun = null;
+        Run<?, ?> previousRun = null;
+        String state = latestRun.getResult().toString();
+
+        firstRun = latestRun;
+        do {
+            firstRun = previousRun != null ? previousRun : firstRun;
+            previousRun = firstRun.getPreviousBuild();
+        } while (previousRun != null && validateRunState(previousRun, state));
+        long timeEllapse = latestRun.getTimeInMillis() - firstRun.getTimeInMillis();
+        buildStateDuration = convertMillisecondsToEquivalentDuration(new BigDecimal(String.valueOf(timeEllapse)));
+    }
+
+    /**
+     *
+     * @param timeInMilli
+     *                    <p>
+     * @return A map with the equivalent duration, keys are : days, hours,
+     *         minutes and seconds
+     */
+    private Map<String, String> convertMillisecondsToEquivalentDuration(BigDecimal timeInMilli) {
+        Map<String, String> equivalentDuration = new TreeMap<String, String>();
+        BigDecimal[] seconds = timeInMilli.divideAndRemainder(new BigDecimal("1000"));
+        BigDecimal[] minutes = seconds[0].divideAndRemainder(new BigDecimal("60"));
+        BigDecimal[] hours = minutes[0].divideAndRemainder(new BigDecimal("60"));
+        BigDecimal[] days = hours[0].divideAndRemainder(new BigDecimal("24"));
+        equivalentDuration.put("days", days[0].toString());
+        equivalentDuration.put("hours", days[1].toString());
+        equivalentDuration.put("minutes", hours[1].toString());
+        equivalentDuration.put("seconds", minutes[1].toString());
+        return equivalentDuration;
+    }
+
+    //**************************************************************************
+    // Security
+    //**************************************************************************
+    /**
+     *
+     * @param run   run to check
+     * @param state desired native Jenkins state to check ("SUCCESS",
+     *              "UNSTABLE", "FAILURE", "NOT_BUILT", "ABORTED")<br/>
+     * For instance state = Result.FAILURE.toString()
+     * <p>
+     * @return
+     */
+    private boolean validateRunState(Run<?, ?> run, String state) {
+        return run.getResult().toString().equals(state);
     }
 
 //    private String buildMatrixClaimString(MatrixBuild matrixBuild, boolean includeClaimed) {
@@ -245,94 +344,7 @@ public class ProjectImpl {
 //        }
 //        return claims;
 //    }
-
-    public boolean isClaimed() {
-        if (isClaimPluginAvailable()) {
-            Run<?, ?> lastBuild = getLatestCompletedRun();
-            if (lastBuild == null) {
-                return false;
-            }
-            if (!(lastBuild instanceof hudson.matrix.MatrixBuild)) {
-                // TODO handle claimMatrix
-                claimWrapper = ClaimWrapper.builder(lastBuild);
-            }
-            return claimWrapper != null ? claimWrapper.isClaimed() : false;
-        }
-        return false;
-    }
-
-    /**
-     * Get the time of the current build and check how much time this state is,
-     * only if the current is the good one<br/>
-     * It works only with the build results, not customs ones which used here
-     * <p>
-     * @param state One of the Result's states
-     * <p>
-     * @return
-     */
-    public Map<String, String> getBuildStateDuration() {
-        if (buildStateDuration == null) {
-            computeBuildStateDuration();
-        }
-        return buildStateDuration;
-    }
-
-    /**
-     * Get the time of the current build and check how much time this state is
-     * <p>
-     * @param state One of the Result's states
-     * <p>
-     * @return
-     */
-    private void computeBuildStateDuration() {
-
-        // If the latest build is failed
-        Run<?, ?> latestRun = getLatestCompletedRun();
-        Run<?, ?> firstRun = null;
-        Run<?, ?> previousRun = null;
-        String state = latestRun.getResult().toString();
-
-        firstRun = latestRun;
-        do {
-            firstRun = previousRun != null ? previousRun : firstRun;
-            previousRun = firstRun.getPreviousBuild();
-        } while (previousRun != null && validateRunState(previousRun, state));
-        long timeEllapse = latestRun.getTimeInMillis() - firstRun.getTimeInMillis();
-        buildStateDuration = convertMillisecondsToEquivalentDuration(new BigDecimal(String.valueOf(timeEllapse)));
-    }
-
-    /**
-     *
-     * @param run   run to check
-     * @param state desired native Jenkins state to check ("SUCCESS",
-     *              "UNSTABLE", "FAILURE", "NOT_BUILT", "ABORTED")<br/>
-     * For instance state = Result.FAILURE.toString()
-     * <p>
-     * @return
-     */
-    private boolean validateRunState(Run<?, ?> run, String state) {
-        return run.getResult().toString().equals(state);
-    }
-
-    /**
-     *
-     * @param timeInMilli
-     *                    <p>
-     * @return A map with the equivalent duration, keys are : days, hours,
-     *         minutes and seconds
-     */
-    private Map<String, String> convertMillisecondsToEquivalentDuration(BigDecimal timeInMilli) {
-        Map<String, String> equivalentDuration = new TreeMap<String, String>();
-        BigDecimal[] seconds = timeInMilli.divideAndRemainder(new BigDecimal("1000"));
-        BigDecimal[] minutes = seconds[0].divideAndRemainder(new BigDecimal("60"));
-        BigDecimal[] hours = minutes[0].divideAndRemainder(new BigDecimal("60"));
-        BigDecimal[] days = hours[0].divideAndRemainder(new BigDecimal("24"));
-        equivalentDuration.put("days", days[0].toString());
-        equivalentDuration.put("hours", days[1].toString());
-        equivalentDuration.put("minutes", hours[1].toString());
-        equivalentDuration.put("seconds", minutes[1].toString());
-        return equivalentDuration;
-    }
+}
 
 //    public String abstractProject_Info() {
 //        String s = "";
@@ -454,5 +466,4 @@ public class ProjectImpl {
 //        }
 //    }
 //
-//    
-}
+//   

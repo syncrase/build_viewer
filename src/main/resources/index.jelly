@@ -3,5 +3,5 @@
   This view is used to render the installed plugins page.
 -->
 <div>
-  This plugin displays the project status in a view
+  This plugin provides a new View to gather projects in a dashboard and allow to get build information in customs XML.
 </div>

@@ -56,17 +56,15 @@ public class BuildViewer extends ListView {
     public static final String DEFAULT_BACKGROUND_COLOR = "#FFFFFF";
 
     private String backgroundColor;
-    private String captionColor;
-    private String captionTextColor;
 
     private LinkedHashSet<ViewEntryColors> COLOR_SETTINGS;
     private HashSet<String> prefixesSeparators;
 
-    private boolean groupedByPrefix = false;
     private String captionText;
-
     private int captionSize;
-
+    private String captionColor;
+    private String captionTextColor;
+    
     @DataBoundConstructor
     public BuildViewer(String name, String backgroundColor, String captionColor, String captionTextColor,
                        LinkedHashSet<ViewEntryColors> COLOR_SETTINGS, String captionText, int captionSize, HashSet<String> prefixesSeparators) {
@@ -171,11 +169,6 @@ public class BuildViewer extends ListView {
 //        dashboard = new Dashboard(DashboardUtils.computeTheBestSquareRepartition(contents.size()));
         dashboard = new Dashboard(this, contents);
 //        , getDEFAULT_SCREEN_HEIGHT() - this.captionSize, getDEFAULT_SCREEN_WIDTH()
-        if (!groupedByPrefix) {
-
-        } else {
-
-        }
 
         return dashboard;
     }
@@ -298,7 +291,7 @@ public class BuildViewer extends ListView {
          */
         @Override
         public String getDisplayName() {
-            return "Displayed name of my view";
+            return "SAP Radiator";
         }
 
         /**
