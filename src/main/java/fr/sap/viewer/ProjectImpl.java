@@ -25,6 +25,7 @@ package fr.sap.viewer;
 
 import hudson.model.AbstractProject;
 import hudson.model.Hudson;
+import hudson.model.Result;
 import hudson.model.Run;
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -41,17 +42,15 @@ public class ProjectImpl {
     public static final String NO_PREFIX_AVAILABLE = "NO_PREFIX_AVAILABLE";
 
     private final AbstractProject abstractProject;
-    private final String prefixe;
+    private final String prefix;
     private final BuildViewer bv;
-    private ClaimWrapper claimWrapper;
-    private Map<String, String> buildStateDuration;
-
-    private static HashSet<String> prefixes;
+//    private ClaimWrapper claimWrapper;
+//    private Map<String, String> buildStateDuration;
 
     public ProjectImpl(BuildViewer bv, AbstractProject abstractProject) {
         this.abstractProject = abstractProject;
         this.bv = bv;
-        this.prefixe = computePrefix(this.getName());
+        this.prefix = computePrefix(this.getName());
     }
 
     //**************************************************************************
@@ -70,35 +69,7 @@ public class ProjectImpl {
      * @return The found prefix of this job
      */
     public String getPrefix() {
-        return prefixe;
-    }
-
-    public ClaimWrapper getClaimWrapper() {
-        if (claimWrapper == null) {
-            refreshClaim();
-        }
-        return claimWrapper;
-
-    }
-
-    /**
-     * Get the time of the current build and check how much time this state is,
-     * only if the current is the good one<br/>
-     * It works only with the build results, not customs ones which used here
-     * <p>
-     * @param state One of the Result's states
-     * <p>
-     * @return
-     */
-    public Map<String, String> getBuildStateDuration() {
-        if (buildStateDuration == null) {
-            computeBuildStateDuration();
-        }
-        return buildStateDuration;
-    }
-
-    public static void setPrefixes(HashSet<String> prefixes) {
-        ProjectImpl.prefixes = prefixes;
+        return prefix;
     }
 
     //**************************************************************************
@@ -132,8 +103,9 @@ public class ProjectImpl {
         //  1   result job
         //  2   if claimed
         //  3   unknown
-        
-        return this.isClaimed() ? "CLAIMED" : this.getLatestBuildResult();
+        ClaimWrapper cw = getClaimWrapper();
+//        String latestJenkinsResult = this.getLatestBuildResult();
+        return (cw != null && (cw.isClaimed() == true)) ? "CLAIMED" : this.getLatestBuildResult();
     }
 
     /**
@@ -141,7 +113,9 @@ public class ProjectImpl {
      * @return The build number.
      */
     public int getBuildNumber() {
-        return getLatestCompletedRun().getNumber();
+//        return getLatestCompletedRun().getNumber();
+        Run<?, ?> run = getLatestCompletedRun();
+        return run != null ? run.getNumber() : 0;
     }
 
     /**
@@ -151,7 +125,8 @@ public class ProjectImpl {
      * <p>
      */
     public String getLatestBuildResult() {
-        return getLatestCompletedRun().getResult().toString();
+        Run<?, ?> run = getLatestCompletedRun();
+        return run != null ? run.getResult().toString() : Result.NOT_BUILT.toString();
     }
 
     private Run<?, ?> getLatestCompletedRun() {
@@ -168,66 +143,28 @@ public class ProjectImpl {
     // About CLAIM
     //**************************************************************************
     /**
-     * This method refresh the claimWrapper field
-     * <p>
-     * @return -10 if claim plugin isn't available<br/>
-     * 0 if the latest completed build equals null<br/>
-     * 5 if not claimed<br/>
-     * 10 if it's claimed<br/>
-     */
-    private int refreshClaim() {
-        // Doesn't do anything if the plugin isn't available
-        if (isClaimPluginAvailable()) {
-            Run<?, ?> lastBuild = getLatestCompletedRun();
-            if (lastBuild != null) {
-                // find the claim
-                String claim = "";
-                if (lastBuild instanceof hudson.matrix.MatrixBuild) {
-                    //TODO
-//                    MatrixBuild matrixBuild = (hudson.matrix.MatrixBuild) lastBuild;
-//                    claim = buildMatrixClaimString(matrixBuild, true);
-                    return 10;
-                } else {
-                    claimWrapper = ClaimWrapper.builder(lastBuild);
-                    if (claimWrapper != null && claimWrapper.isClaimed()) {
-                        return 10;
-                    } else {
-                        return 5;
-                    }
-                }
-            } else {
-                return 0;
-            }
-
-        } else {
-            return -10;
-        }
-    }
-
-    /**
      *
      * @return true if the plugin is available in Jenkins
      */
     private boolean isClaimPluginAvailable() {
-        if (Hudson.getInstance().getPlugin("claim") == null) {
-            return false;
-        }
-        return true;
+        return (Hudson.getInstance().getPlugin("claim") == null) ? false : true;
     }
 
-    public boolean isClaimed() {
+    public ClaimWrapper getClaimWrapper() {
         if (isClaimPluginAvailable()) {
-            Run<?, ?> lastBuild = getLatestCompletedRun();
-            if (lastBuild == null) {
-                return false;
+            Run<?, ?> latestBuild = getLatestCompletedRun();
+            if (latestBuild != null) {
+                String claim = "";
+                if (latestBuild instanceof hudson.matrix.MatrixBuild) {
+                    //TODO
+//                    MatrixBuild matrixBuild = (hudson.matrix.MatrixBuild) lastBuild;
+//                    claim = buildMatrixClaimString(matrixBuild, true);
+                } else {
+                    return ClaimWrapper.builder(latestBuild);
+                }
             }
-            if (!(lastBuild instanceof hudson.matrix.MatrixBuild)) {
-                // TODO handle claimMatrix
-                claimWrapper = ClaimWrapper.builder(lastBuild);
-            }
-            return claimWrapper != null ? claimWrapper.isClaimed() : false;
         }
-        return false;
+        return null;
     }
 
     //**************************************************************************
@@ -264,21 +201,49 @@ public class ProjectImpl {
      * <p>
      * @return
      */
-    private void computeBuildStateDuration() {
+    public String getBuildStateDurationBetweenRuns() {
 
         // If the latest build is failed
         Run<?, ?> latestRun = getLatestCompletedRun();
-        Run<?, ?> firstRun = null;
-        Run<?, ?> previousRun = null;
-        String state = latestRun.getResult().toString();
+        if (latestRun != null) {
+            Run<?, ?> firstRun = null;
+            Run<?, ?> previousRun = null;
+            String state = latestRun.getResult().toString();
 
-        firstRun = latestRun;
-        do {
-            firstRun = previousRun != null ? previousRun : firstRun;
-            previousRun = firstRun.getPreviousBuild();
-        } while (previousRun != null && validateRunState(previousRun, state));
-        long timeEllapse = latestRun.getTimeInMillis() - firstRun.getTimeInMillis();
-        buildStateDuration = convertMillisecondsToEquivalentDuration(new BigDecimal(String.valueOf(timeEllapse)));
+            firstRun = latestRun;
+            do {
+                firstRun = previousRun != null ? previousRun : firstRun;
+                previousRun = firstRun.getPreviousBuild();
+            } while (previousRun != null && validateRunState(previousRun, state));
+            long timeEllapse = latestRun.getTimeInMillis() - firstRun.getTimeInMillis();
+            return convertMillisecondsToEquivalentDuration(new BigDecimal(String.valueOf(timeEllapse)));
+        }
+        return null;
+    }
+
+    /**
+     * Get the time of the current build and check how much time this state is
+     * <p>
+     * @param state One of the Result's states
+     * <p>
+     * @return
+     */
+    public String getBuildStateDurationUpToNow() {
+        Run<?, ?> latestRun = getLatestCompletedRun();
+        if (latestRun != null) {
+            Run<?, ?> firstRun = null;
+            Run<?, ?> previousRun = null;
+            String state = latestRun.getResult().toString();
+
+            firstRun = latestRun;
+            do {
+                firstRun = previousRun != null ? previousRun : firstRun;
+                previousRun = firstRun.getPreviousBuild();
+            } while (previousRun != null && validateRunState(previousRun, state));
+            long timeEllapse = System.currentTimeMillis() - firstRun.getTimeInMillis();
+            return convertMillisecondsToEquivalentDuration(new BigDecimal(String.valueOf(timeEllapse)));
+        }
+        return "";
     }
 
     /**
@@ -288,17 +253,24 @@ public class ProjectImpl {
      * @return A map with the equivalent duration, keys are : days, hours,
      *         minutes and seconds
      */
-    private Map<String, String> convertMillisecondsToEquivalentDuration(BigDecimal timeInMilli) {
-        Map<String, String> equivalentDuration = new TreeMap<String, String>();
+    private String convertMillisecondsToEquivalentDuration(BigDecimal timeInMilli) {
         BigDecimal[] seconds = timeInMilli.divideAndRemainder(new BigDecimal("1000"));
         BigDecimal[] minutes = seconds[0].divideAndRemainder(new BigDecimal("60"));
         BigDecimal[] hours = minutes[0].divideAndRemainder(new BigDecimal("60"));
         BigDecimal[] days = hours[0].divideAndRemainder(new BigDecimal("24"));
-        equivalentDuration.put("days", days[0].toString());
-        equivalentDuration.put("hours", days[1].toString());
-        equivalentDuration.put("minutes", hours[1].toString());
-        equivalentDuration.put("seconds", minutes[1].toString());
-        return equivalentDuration;
+//        equivalentDuration.put("days", days[0].toString());
+//        equivalentDuration.put("hours", days[1].toString());
+//        equivalentDuration.put("minutes", hours[1].toString());
+//        equivalentDuration.put("seconds", minutes[1].toString());
+
+        StringBuilder sb = new StringBuilder();
+//        sb.append(days[0] == BigDecimal.ZERO ? "" : days[0].toString() + "d ")
+//                .append(days[0] == BigDecimal.ZERO ? "" : days[0].toString() + "h ")
+//                .append(days[1] == BigDecimal.ZERO ? "" : days[1].toString() + "m ");
+        sb.append(days[0].toString() + "d ")
+                .append(days[0].toString() + "h ")
+                .append(days[1].toString() + "m ");
+        return sb.toString();
     }
 
     //**************************************************************************

@@ -23,6 +23,7 @@
  */
 package fr.sap.viewer;
 
+import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -45,11 +46,11 @@ public class Dashboard {
     Dashboard(BuildViewer bv, List<ProjectImpl> contents) {
         this.bv = bv;
         rows = toRows(this.toViewList(contents));
-        this.dashboardHeightInPixel = this.bv.getDEFAULT_SCREEN_HEIGHT() - this.bv.getCaptionSize();
+        this.dashboardHeightInPixel = 1080 - this.bv.getCaptionSize();//Toolkit.getDefaultToolkit().getScreenSize().height
         double[] a = getCountOfRows(getCountOfViews(rows));
         this.viewsHeight = dashboardHeightInPixel / a[0];
 //        this.multiplier = a[1];
-        this.viewsWidth = this.bv.getDEFAULT_SCREEN_WIDTH() / getCountOfViewsPerRow(getCountOfViews(rows));
+        this.viewsWidth = 1920 / getCountOfViewsPerRow(getCountOfViews(rows));//this.bv.getDEFAULT_SCREEN_WIDTH()
         this.margin = Math.ceil(viewsHeight / 100);
         this.viewsHeight -= this.margin * 2 * a[0];
         this.viewsWidth -= this.margin * 2 * getCountOfViewsPerRow(getCountOfViews(rows));

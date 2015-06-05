@@ -64,7 +64,7 @@ public class BuildViewer extends ListView {
     private int captionSize;
     private String captionColor;
     private String captionTextColor;
-    
+
     @DataBoundConstructor
     public BuildViewer(String name, String backgroundColor, String captionColor, String captionTextColor,
                        LinkedHashSet<ViewEntryColors> COLOR_SETTINGS, String captionText, int captionSize, HashSet<String> prefixesSeparators) {
@@ -115,11 +115,11 @@ public class BuildViewer extends ListView {
     }
 
     public static int getDEFAULT_SCREEN_HEIGHT() {
-        return Toolkit.getDefaultToolkit().getScreenSize().height;
+        return 1080;//Toolkit.getDefaultToolkit().getScreenSize().height
     }
 
     public static int getDEFAULT_SCREEN_WIDTH() {
-        return Toolkit.getDefaultToolkit().getScreenSize().width;
+        return 1920;//Toolkit.getDefaultToolkit().getScreenSize().width
     }
 
     public String getBackgroundColor() {
@@ -165,11 +165,7 @@ public class BuildViewer extends ListView {
     public Dashboard getDashboard() {
         Dashboard dashboard;
         List<ProjectImpl> contents = getContents();
-//
-//        dashboard = new Dashboard(DashboardUtils.computeTheBestSquareRepartition(contents.size()));
         dashboard = new Dashboard(this, contents);
-//        , getDEFAULT_SCREEN_HEIGHT() - this.captionSize, getDEFAULT_SCREEN_WIDTH()
-
         return dashboard;
     }
 
@@ -233,8 +229,6 @@ public class BuildViewer extends ListView {
 //        }
     }
 
-    
-    
     /*
     
     

@@ -67,14 +67,25 @@ THE SOFTWARE.
         text-shadow: 2px 2px 5px #909090;
         }
         #dashboard{
+        position:fixed;
         width: 100%;
         height: 100%;
         }
 
         
+        
+        
+        
+        
+        
     </style>
         
-
+    <script type="text/javascript">
+        function getHeight(){
+        alert(screen.height);
+        return screen.height;
+        }
+    </script>
     <j:choose>
         <j:when test="${empty(items)}">
             <st:include page="noJob.jelly" />
@@ -96,8 +107,12 @@ THE SOFTWARE.
                     </j:otherwise>
                 </j:choose>
                 <div id="dashboard">
+                    
+                    <!--<script type="text/javascript">var myVar = 2;</script>-->
+                    
                     <j:choose>
                         <j:invoke var="dashboard" on="${from}" method="getDashboard" />
+                        !!${myVar}!!
                         <j:invoke var="viewsRows" on="${dashboard}" method="getRows" />
                         <j:forEach var="row" items="${viewsRows}">
                             <j:forEach var="view" items="${row}">
@@ -111,4 +126,11 @@ THE SOFTWARE.
             </div>
         </j:otherwise>
     </j:choose>
+    
+    <script type="text/javascript">
+        alert(myVar);
+	
+	
+	
+    </script>
 </j:jelly>

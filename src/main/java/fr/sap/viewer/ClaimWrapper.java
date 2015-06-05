@@ -23,6 +23,7 @@
  */
 package fr.sap.viewer;
 
+import hudson.model.Hudson;
 import hudson.model.Run;
 import hudson.plugins.claim.ClaimBuildAction;
 import java.util.List;
@@ -49,14 +50,6 @@ public class ClaimWrapper {
      * @return null if no single ClaimBuildAction for the run param.
      */
     static public ClaimWrapper builder(Run<?, ?> run) {
-        ClaimBuildAction claimForRun = getClaimForRun(run);
-        if (claimForRun == null) {
-            return null;
-        }
-        return new ClaimWrapper(claimForRun);
-    }
-
-    static private ClaimBuildAction getClaimForRun(Run<?, ?> run) {
         ClaimBuildAction claimAction = null;
         // Get all ClaimBuildAction actions
         List<ClaimBuildAction> claimActionList = run
@@ -66,7 +59,10 @@ public class ClaimWrapper {
         } else if (claimActionList.size() > 1) {
 //            Log.warn("Multiple ClaimBuildActions found for job ");
         }
-        return claimAction;
+        if (claimAction == null) {
+            return null;
+        }
+        return new ClaimWrapper(claimAction);
     }
 
     public String getClaimedByName() {
@@ -81,4 +77,11 @@ public class ClaimWrapper {
         return claimBuildAction.getReason();
     }
 
+    public String getDate() {
+        return claimBuildAction.getClaimDate().toString();
+    }
+
+    public String getVersion() {
+        return Hudson.getInstance().getPlugin("claim").getWrapper().getVersion();
+    }
 }
