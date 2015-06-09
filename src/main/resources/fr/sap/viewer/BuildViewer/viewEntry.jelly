@@ -42,7 +42,7 @@ THE SOFTWARE.
     <j:set var="thisJobStyle" value="${jobStyle}  background:${view.backgroundColor};" />
     <j:set var="jobNameStyle" value="text-decoration: none; color:#000000; font-size: 20; font-weight:bold;" />
             
-    <div style="${thisJobStyle} "  >
+    <div id="jobsgroup" style="${thisJobStyle} "  >
         <j:choose>
             
             <j:when test="${view.count == 1}">
@@ -93,7 +93,9 @@ THE SOFTWARE.
                                 <td>
                                     <j:choose>
                                         <j:when test="${proj.claimWrapper.isClaimed()==true}">
-                                            <div style="text-align:center;" tooltip="${proj.claimWrapper.claimedByName} : ${proj.claimWrapper.reason} &lt;br/&gt;Date : ${proj.claimWrapper.date}">
+                                            <div style="text-align:center;" 
+                                                 title="${proj.claimWrapper.claimedByName} : ${proj.claimWrapper.reason} &#013;Date : ${proj.claimWrapper.date}"
+                                                 tooltip="${proj.claimWrapper.claimedByName} : ${proj.claimWrapper.reason} &lt;br/&gt;Date : ${proj.claimWrapper.date}">
                                                 <st:nbsp/>${proj.result}
                                             </div>
                                         </j:when>

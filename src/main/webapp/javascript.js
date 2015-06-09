@@ -22,13 +22,32 @@
  * THE SOFTWARE.
  */
 
-alert("hello");
-document.getElementsByTagName('body').defineProperties();
-var table = document.getElementById(tableId);
+
+var h = window.innerHeight
+        || document.documentElement.clientHeight
+        || document.body.clientHeight;
+
+var w = window.innerWidth
+        || document.documentElement.clientWidth
+        || document.body.clientWidth;
+
+$("side-panel").removeClass("col-sm-9");
+$("side-panel").removeClass("col-md-7");
+$("side-panel").removeClass("col-lg-6");
+$("side-panel").removeClass("col-xlg-4");
+
+$("main-panel").removeClass("col-sm-15");
+$("main-panel").removeClass("col-md-17");
+$("main-panel").removeClass("col-lg-18");
+$("main-panel").removeClass("col-xlg-20");
+
+//alert("hello");
+//document.getElementsByTagName('body').defineProperties();
+//var table = document.getElementById(tableId);
 //        <!--// Create an empty <tr> element and add it to the 1st position of the table:-->
-var row = table.insertRow(table.rows.length - 2);
+//var row = table.insertRow(table.rows.length - 2);
 //        <!--// Insert new cells (<td> elements) at the 1st and 2nd position of the "new" <tr> element:-->
-var cell = row.insertCell(0);
+//var cell = row.insertCell(0);
 function resize() {
 
     var i = 0, j = 0;
