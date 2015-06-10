@@ -31,18 +31,14 @@ THE SOFTWARE.
         width:25%;
         text-align: center;
         }
-        #projectlist tr {
-            
-        }
         #projectlist {
         width:100%;
         }
     </style>
 
-    <j:set var="thisJobStyle" value="${jobStyle}  " />
     <j:set var="jobNameStyle" value="text-decoration: none; color:#000000; font-size: 20; font-weight:bold;" />
             
-    <div id="jobsgroup" style="${thisJobStyle}" >
+    <div id="jobsgroup" style="${jobStyle}" >
         <j:choose>
             <j:when test="${view.count == 1}">
                 <a style="${jobNameStyle}" href="${rootURL}/${view.firstJob.lastBuildUrl}" >${view.firstJob.name}</a>
@@ -65,12 +61,6 @@ THE SOFTWARE.
                     ${view.count} jobs with the '${view.prefix}' prefix in this view<br/>
                     <br/>
                     <table id="projectlist" >
-                        <colgroup>
-                            <col width="25"/>
-                            <col width="25"/>
-                            <col width="25"/>
-                            <col width="25"/>
-                        </colgroup>
                         <j:forEach var="proj" items="${view.projects}">     
                             <tr>
                                 <td style="text-align:left;">

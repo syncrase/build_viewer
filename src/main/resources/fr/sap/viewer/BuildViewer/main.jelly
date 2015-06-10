@@ -23,8 +23,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 -->
 <?jelly version="1.0" encoding="utf-8" ?>
-<j:jelly trim="false" xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt" xmlns:g="glide">
-
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    <script type="text/javascript" src="${rootURL}/plugin/viewer/javascript.js" />
    
     <style type="text/css" title="myInnerCSS">
 
@@ -73,10 +74,6 @@ THE SOFTWARE.
         position:absolute;
         }
     </style>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-    
-    <script type="text/javascript" src="${rootURL}/plugin/viewer/javascript.js" />
-
     <j:choose>
         <j:when test="${empty(items)}">
             <st:include page="noJob.jelly" />
@@ -100,24 +97,19 @@ THE SOFTWARE.
                 <div id="dashboard">
                     <j:choose>
                         <j:invoke var="dashboard" on="${from}" method="getDashboard" />
-                        <j:invoke var="dashboard" on="${from}" method="getDashboard" escapeText="false" exceptionVar="exceptionV" />
                         <form action="#">
                             <input id="hiddenCountOfViews" type="hidden" value="${dashboard.getCountOfViews()}" />
                         </form>
                         <j:invoke var="viewsEntries" on="${dashboard}" method="getViewEntriesCol" />
                         <j:forEach var="view" items="${viewsEntries}">
-                            <j:set var="jobStyle" value="float: left;  
-                            margin:5px; padding: 15px; border-radius: 5px; background:${view.backgroundColor};" />
+                            <j:set var="jobStyle" value="float: left; margin:5px; padding: 15px; border-radius: 5px; background:${view.backgroundColor};" />
                             <st:include page="viewEntry.jelly" />
                         </j:forEach>
-                        
                     </j:choose>
                 </div>
             </div>
         </j:otherwise>
     </j:choose>
-    
-
     <script type="text/javascript">
         breadcrumbarheight = $('div#breadcrumbBar').css("height").split("px")[0];
         h=h-breadcrumbarheight-15;
@@ -136,7 +128,6 @@ THE SOFTWARE.
         var viewheight = ((h - captionSize) / countOfRows) - 5*countOfRows;
         var viewwidth = (w / xdash) - 4*xdash;
     </script>
-    
     <script type="text/javascript">
         $('div#container').css({"max-width":w+"px", "max-height":h+"px", "width":w+"px", "height":h+"px"});
         $('div#jobsgroup').css({"max-width":viewwidth+"px", "max-height":viewheight+"px", "height":viewheight+"px", "width":viewwidth+"px"});

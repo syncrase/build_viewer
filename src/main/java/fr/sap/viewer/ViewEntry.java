@@ -34,10 +34,10 @@ import org.apache.commons.lang.Validate;
  */
 public class ViewEntry {
 
-    private HashSet<ProjectImpl> projects = new HashSet<ProjectImpl>();
+    private final HashSet<ProjectImpl> projects = new HashSet<ProjectImpl>();
     private final String prefixe;
     private ViewEntryColors currentState;
-    private BuildViewer bv;
+    private final BuildViewer bv;
 
     ViewEntry(BuildViewer bv, ProjectImpl proj) {
         this.bv = bv;
@@ -87,7 +87,6 @@ public class ViewEntry {
             return it.next();
         }
         return null;
-//        return ((ProjectImpl[])projects.toArray())[0];
     }
 
     /**

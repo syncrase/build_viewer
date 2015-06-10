@@ -42,6 +42,12 @@ THE SOFTWARE.
         font-size: 10pt;
         }
         
+        table#stateList {
+        width=1920px;
+        margin:auto;
+        padding:10px;
+        }
+        
         table#stateList tr td.redips-mark div div.headerStyle {
         background:#9B9EA2;
         line-height:30px;
@@ -66,7 +72,7 @@ THE SOFTWARE.
         
         table#stateList tr td.redips-mark div div.colDrahNDropStyle {
         float:left;
-        margin-left:50px;
+        <!--margin-left:50px;-->
         }
 
         table#stateList tr td div.redips-drag div.colBackgroundStyle {       
@@ -86,7 +92,7 @@ THE SOFTWARE.
         
         table#stateList tr td div.redips-drag div.colDrahNDropStyle {
         float:left;
-        width:300px;
+        width:50px;
         }
         
     </style>
@@ -119,40 +125,7 @@ THE SOFTWARE.
         }
         }
         }
-        
-        function upRow(tableId, stateValue){
-        var table = document.getElementById(tableId);
-        for(var i = 0 ; i &lt; table.rows.length ; i++){
-        if(table.rows[i].cells[0].innerHTML.match(stateValue) != null){
-        if(i == 1){
-        alert('This row is already the first one');
-        }else{
-        var rowToUp = table.rows[i].innerHTML;
-        table.rows[i].innerHTML = table.rows[i-1].innerHTML;
-        table.rows[i-1].innerHTML = rowToUp;
-        }
-        break;
-        }
-        }
-        }
-        
-        function downRow(tableId, stateValue){
-        var table = document.getElementById(tableId);
-        for(var i = 0 ; i &lt; table.rows.length ; i++){
-        if(table.rows[i].cells[0].innerHTML.match(stateValue) != null){
-        var length = table.rows.length - 1;
-        if(i == length){
-        alert('This row is already the last one');
-        }else{
-        var rowToDown = table.rows[i].innerHTML;
-        table.rows[i].innerHTML = table.rows[i+1].innerHTML;
-        table.rows[i+1].innerHTML = rowToDown;
-        }
-        break;
-        }
-        }
-        }
-        
+       
     </script>
 
     
@@ -264,12 +237,12 @@ THE SOFTWARE.
                 </j:invoke>
             </j:if>
             <form>
-                <div>
+                <div >
                     <div id="redips-drag" style="margin-bottom:20px;" >
-                        <table id="stateList" >
+                        <table id="stateList"  style="background:blue;width:976px;" >
                             <tr>
                                 <td class="redips-mark">
-                                    <div >
+                                    <div>
                                         <div class="colStateStyle headerStyle" >${%State}</div>
                                         <div class="colBackgroundStyle headerStyle">${%Background color}</div>
                                         <div  class="colFontColorStyle headerStyle">${%Font color}</div>
@@ -293,7 +266,7 @@ THE SOFTWARE.
                                             <div class="colFontColorStyle">
                                                 <input type="color" name="ve_fontColor" value="${state.ve_fontColor}" style="" />
                                             </div>
-                                            <div class="colDrahNDropStyle">
+                                            <div class="colDrahNDropStyle" style="width:50px;background:red;" >
                                                 <img src="${myImagesURL}Cursor-Move2-512.png" type="image/png" alt="dragNdrop" tooltip="Drap and drop to change the priority" height="20" width="20" />
                                             </div>
                                         </div>
