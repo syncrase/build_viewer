@@ -39,17 +39,14 @@ THE SOFTWARE.
         }
     </style>
 
-    <j:set var="thisJobStyle" value="${jobStyle}  background:${view.backgroundColor};" />
+    <j:set var="thisJobStyle" value="${jobStyle}  " />
     <j:set var="jobNameStyle" value="text-decoration: none; color:#000000; font-size: 20; font-weight:bold;" />
             
-    <div id="jobsgroup" style="${thisJobStyle} "  >
+    <div id="jobsgroup" style="${thisJobStyle}" >
         <j:choose>
-            
             <j:when test="${view.count == 1}">
-                <!--                <p>
-                    <a style="${jobNameStyle}" href="${rootURL}/${view.firstJob.lastBuildUrl}">${view.firstJob.name}</a> #${view.firstJob.buildNumber}
-                </p>-->
-                <a style="${jobNameStyle}" href="${rootURL}/${view.firstJob.lastBuildUrl}" >${view.firstJob.name}</a><span>#${view.firstJob.buildNumber}</span>
+                <a style="${jobNameStyle}" href="${rootURL}/${view.firstJob.lastBuildUrl}" >${view.firstJob.name}</a>
+                <span>#${view.firstJob.buildNumber}</span>
                 <j:choose>
                     <j:when test="${view.firstJob.claimWrapper.isClaimed()==true}">
                         <div style="text-align:center;" tooltip="${view.firstJob.claimWrapper.claimedByName} : ${view.firstJob.claimWrapper.reason} &lt;br/&gt;Date : ${view.firstJob.claimWrapper.date}">
@@ -57,15 +54,12 @@ THE SOFTWARE.
                         </div>
                     </j:when>
                     <j:otherwise>
-                        <!--<div style="float:left;">-->
                         <st:nbsp/>${view.firstJob.result}
-                        <!--</div>-->
                     </j:otherwise>
                 </j:choose>
                 <span>since ${view.firstJob.buildStateDurationUpToNow}</span>
             </j:when>
-            <j:otherwise> 
-            
+            <j:otherwise>
                 <p style="font-size:15xp;" >
                     <br/>
                     ${view.count} jobs with the '${view.prefix}' prefix in this view<br/>
@@ -77,12 +71,7 @@ THE SOFTWARE.
                             <col width="25"/>
                             <col width="25"/>
                         </colgroup>
-                        <j:forEach var="proj" items="${view.projects}">
-                            <!--<div style="width:100%;">-->
-                            <!--<div style="float:left;width:80%;">-->
-                            
-                                
-                                    
+                        <j:forEach var="proj" items="${view.projects}">     
                             <tr>
                                 <td style="text-align:left;">
                                     <a style="${jobNameStyle}" href="${rootURL}/${proj.lastBuildUrl}" >${proj.name}</a>
@@ -97,14 +86,11 @@ THE SOFTWARE.
                                             <div style="text-align:center;" 
                                                  title="${proj.claimWrapper.claimedByName} : ${proj.claimWrapper.reason} &#013;Date : ${proj.claimWrapper.date}">
                                                 <st:nbsp/>${proj.result}
-                                                
-                                                 <!--tooltip="${proj.claimWrapper.claimedByName} : ${proj.claimWrapper.reason} &lt;br/&gt;Date : ${proj.claimWrapper.date}"-->
+                                                <!--tooltip="${proj.claimWrapper.claimedByName} : ${proj.claimWrapper.reason} &lt;br/&gt;Date : ${proj.claimWrapper.date}"-->
                                             </div>
                                         </j:when>
                                         <j:otherwise>
-                                            <!--<div style="float:left;">-->
                                             <st:nbsp/>${proj.result}
-                                            <!--</div>-->
                                         </j:otherwise>
                                     </j:choose>
                                 </td>
@@ -112,47 +98,11 @@ THE SOFTWARE.
                                     since ${proj.buildStateDurationUpToNow}
                                 </td>
                             </tr>
-                                
-                            <!--                                    <div style="float:left;">
-                                <a style="${jobNameStyle}" href="${rootURL}/${proj.lastBuildUrl}" >${proj.name}</a> #${proj.buildNumber} 
-                            </div>-->
-                                
-                            <!--                                ${proj.claimWrapper.isClaimed()==true}-->
-                            <!--                                    <j:choose>
-                                <j:when test="${proj.claimWrapper.isClaimed()==true}">
-                                    <div style="float:left;" tooltip="${proj.claimWrapper.claimedByName} : ${proj.claimWrapper.reason} &lt;br/&gt;Date : ${proj.claimWrapper.date}">
-                                        <st:nbsp/>${proj.result}
-                                    </div>
-                                </j:when>
-                                <j:otherwise>
-                                    <div style="float:left;">
-                                        <st:nbsp/>${proj.result}
-                                    </div>
-                                </j:otherwise>
-                            </j:choose>-->
-                            <!--                                    <div style="float:left;">
-                                <st:nbsp/>since ${proj.buildStateDurationUpToNow}
-                            </div>-->
-                                
-                            <!--</div>-->
-                            
-                            <!--                            <j:if test="${proj.claimWrapper!=null &amp;&amp; proj.claimWrapper.isClaimed()==true}">
-                                <div style="float:left; width:20%;">
-                                    <div id="claim">${proj.claimWrapper.claimedByName} : ${proj.claimWrapper.reason}<br/>
-                                        Date : ${proj.claimWrapper.date}<br/>
-                                        Version : ${proj.claimWrapper.version} 
-                                    </div>
-                                </div>
-                            </j:if>-->
                             <br/>
-                            <!--</div>-->
                         </j:forEach>
                     </table>
                 </p>
             </j:otherwise>
         </j:choose>
-    </div>    
-    <script type="text/javascript">
-
-    </script>          
+    </div>       
 </j:jelly>

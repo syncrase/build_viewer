@@ -115,20 +115,6 @@ public class BuildViewer extends ListView {
         return captionSize;
     }
 
-    public static int getDEFAULT_SCREEN_HEIGHT() {
-//        UI.getCurrent().getPage().getBrowserWindowHeight();
-//        ApplicationContext context = this.getContext();
-//if (context instanceof WebApplicationContext) {
-//Heigth= ((WebApplicationContext)this.getContext()).getBrowser().getScreenHeight();
-//Width = ((WebApplicationContext)this.getContext()).	getBrowser().getScreenWidth();
-//}
-        return 1080;//Toolkit.getDefaultToolkit().getScreenSize().height
-    }
-
-    public static int getDEFAULT_SCREEN_WIDTH() {
-        return 1920;//Toolkit.getDefaultToolkit().getScreenSize().width
-    }
-
     public String getBackgroundColor() {
         return backgroundColor;
     }
@@ -144,28 +130,15 @@ public class BuildViewer extends ListView {
     public List<ProjectImpl> getContents() {
         List<ProjectImpl> contents;
         contents = new ArrayList<ProjectImpl>();
-
-//        Map<hudson.model.Queue.Item, Integer> placeInQueue = new HashMap<hudson.model.Queue.Item, Integer>();
-//        int j = 1;
-//        for ( hudson.model.Queue.Item i : Hudson.getInstance().getQueue().getItems() ) {
-//            placeInQueue.put(i, j++);
-//        }
-//super.
         ProjectImpl project;
         for ( TopLevelItem item : super.getItems() ) {
-
             if (item instanceof AbstractProject) {
-                //AbstractProject project = (AbstractProject) item;
-
                 project = new ProjectImpl(this, (AbstractProject) item);
                 if (!project.getAbstractProject().isDisabled()) {
-////                    IViewEntry entry = new JobViewEntry(this, project);
-////                    contents.addBuild(entry);
                     contents.add(project);
                 }
             }
         }
-
         return contents;
     }
 
@@ -175,8 +148,7 @@ public class BuildViewer extends ListView {
         dashboard = new Dashboard(this, contents);
         return dashboard;
     }
-    
-    
+
     public Dashboard getDashboard(Integer i1, Integer i2) {
         Dashboard dashboard;
         List<ProjectImpl> contents = getContents();
