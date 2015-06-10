@@ -42,18 +42,21 @@ public class Dashboard {
     private double viewsHeight;
     private double viewsWidth;
     private BuildViewer bv;
+    private List<ProjectImpl> contents;
+    private Collection<ViewEntry> viewEntriesCol;
 
     Dashboard(BuildViewer bv, List<ProjectImpl> contents) {
+        this.contents = contents;
         this.bv = bv;
         rows = toRows(this.toViewList(contents));
         this.dashboardHeightInPixel = 1080 - this.bv.getCaptionSize();//Toolkit.getDefaultToolkit().getScreenSize().height
-        double[] a = getCountOfRows(getCountOfViews(rows));
+        double[] a = getCountOfRows(getCountOfViews());
         this.viewsHeight = dashboardHeightInPixel / a[0];
 //        this.multiplier = a[1];
-        this.viewsWidth = 1920 / getCountOfViewsPerRow(getCountOfViews(rows));//this.bv.getDEFAULT_SCREEN_WIDTH()
+        this.viewsWidth = 1920 / getCountOfViewsPerRow(getCountOfViews());//this.bv.getDEFAULT_SCREEN_WIDTH()
         this.margin = Math.ceil(viewsHeight / 100);
         this.viewsHeight -= this.margin * 2 * a[0];
-        this.viewsWidth -= this.margin * 2 * getCountOfViewsPerRow(getCountOfViews(rows));
+        this.viewsWidth -= this.margin * 2 * getCountOfViewsPerRow(getCountOfViews());
 
     }
 
@@ -79,6 +82,16 @@ public class Dashboard {
     public double getViewsWidth() {
         return viewsWidth;
     }
+
+    public List<ProjectImpl> getContents() {
+        return contents;
+    }
+
+    public Collection<ViewEntry> getViewEntriesCol() {
+        return viewEntriesCol;
+    }
+    
+    
 
     //**************************************************************************
     // Jelly binding
@@ -166,14 +179,15 @@ public class Dashboard {
         return columnCount - ((totalViews > 2 * columnCount) ? 0 : 1);
     }
 
-    private int getCountOfViews(Collection<Collection<ViewEntry>> rows) {
-        int count = 0;
-        for ( Collection<ViewEntry> col : rows ) {
-            for ( ViewEntry ve : col ) {
-                count++;
-            }
-        }
-        return count;
+    public int getCountOfViews() {
+//        int count = 0;
+//        for ( Collection<ViewEntry> col : rows ) {
+//            for ( ViewEntry ve : col ) {
+//                count++;
+//            }
+//        }
+//        return count;
+        return viewEntriesCol.size();
     }
 
     /**
@@ -200,6 +214,8 @@ public class Dashboard {
             }
             views.add(new ViewEntry(bv, proj));//Set the project (either the prefix is not yet available or it doesn't exists) in just one view
         }
+        
+        this.viewEntriesCol = views;
         return views;
     }
     

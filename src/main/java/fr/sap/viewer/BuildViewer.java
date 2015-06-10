@@ -40,6 +40,7 @@ import javax.servlet.ServletException;
 import net.sf.json.JSONObject;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
+import org.springframework.context.ApplicationContext;
 
 /**
  *
@@ -114,13 +115,19 @@ public class BuildViewer extends ListView {
         return captionSize;
     }
 
-//    public static int getDEFAULT_SCREEN_HEIGHT() {
-//        return 1080;//Toolkit.getDefaultToolkit().getScreenSize().height
-//    }
-//
-//    public static int getDEFAULT_SCREEN_WIDTH() {
-//        return 1920;//Toolkit.getDefaultToolkit().getScreenSize().width
-//    }
+    public static int getDEFAULT_SCREEN_HEIGHT() {
+//        UI.getCurrent().getPage().getBrowserWindowHeight();
+//        ApplicationContext context = this.getContext();
+//if (context instanceof WebApplicationContext) {
+//Heigth= ((WebApplicationContext)this.getContext()).getBrowser().getScreenHeight();
+//Width = ((WebApplicationContext)this.getContext()).	getBrowser().getScreenWidth();
+//}
+        return 1080;//Toolkit.getDefaultToolkit().getScreenSize().height
+    }
+
+    public static int getDEFAULT_SCREEN_WIDTH() {
+        return 1920;//Toolkit.getDefaultToolkit().getScreenSize().width
+    }
 
     public String getBackgroundColor() {
         return backgroundColor;
@@ -168,6 +175,7 @@ public class BuildViewer extends ListView {
         dashboard = new Dashboard(this, contents);
         return dashboard;
     }
+    
     
     public Dashboard getDashboard(Integer i1, Integer i2) {
         Dashboard dashboard;

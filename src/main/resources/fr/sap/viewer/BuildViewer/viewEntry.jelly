@@ -49,7 +49,7 @@ THE SOFTWARE.
                 <!--                <p>
                     <a style="${jobNameStyle}" href="${rootURL}/${view.firstJob.lastBuildUrl}">${view.firstJob.name}</a> #${view.firstJob.buildNumber}
                 </p>-->
-                <a style="${jobNameStyle}" href="${rootURL}/${view.firstJob.lastBuildUrl}" >${view.firstJob.name}</a>#${view.firstJob.buildNumber}
+                <a style="${jobNameStyle}" href="${rootURL}/${view.firstJob.lastBuildUrl}" >${view.firstJob.name}</a><span>#${view.firstJob.buildNumber}</span>
                 <j:choose>
                     <j:when test="${view.firstJob.claimWrapper.isClaimed()==true}">
                         <div style="text-align:center;" tooltip="${view.firstJob.claimWrapper.claimedByName} : ${view.firstJob.claimWrapper.reason} &lt;br/&gt;Date : ${view.firstJob.claimWrapper.date}">
@@ -62,7 +62,7 @@ THE SOFTWARE.
                         <!--</div>-->
                     </j:otherwise>
                 </j:choose>
-                since ${view.firstJob.buildStateDurationUpToNow}
+                <span>since ${view.firstJob.buildStateDurationUpToNow}</span>
             </j:when>
             <j:otherwise> 
             
@@ -93,10 +93,12 @@ THE SOFTWARE.
                                 <td>
                                     <j:choose>
                                         <j:when test="${proj.claimWrapper.isClaimed()==true}">
+                                            <!-- Tooltip doesn't work with jQuery import -->
                                             <div style="text-align:center;" 
-                                                 title="${proj.claimWrapper.claimedByName} : ${proj.claimWrapper.reason} &#013;Date : ${proj.claimWrapper.date}"
-                                                 tooltip="${proj.claimWrapper.claimedByName} : ${proj.claimWrapper.reason} &lt;br/&gt;Date : ${proj.claimWrapper.date}">
+                                                 title="${proj.claimWrapper.claimedByName} : ${proj.claimWrapper.reason} &#013;Date : ${proj.claimWrapper.date}">
                                                 <st:nbsp/>${proj.result}
+                                                
+                                                 <!--tooltip="${proj.claimWrapper.claimedByName} : ${proj.claimWrapper.reason} &lt;br/&gt;Date : ${proj.claimWrapper.date}"-->
                                             </div>
                                         </j:when>
                                         <j:otherwise>
@@ -149,5 +151,8 @@ THE SOFTWARE.
                 </p>
             </j:otherwise>
         </j:choose>
-    </div>              
+    </div>    
+    <script type="text/javascript">
+
+    </script>          
 </j:jelly>

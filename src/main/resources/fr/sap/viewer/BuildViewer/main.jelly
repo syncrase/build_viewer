@@ -22,9 +22,20 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 -->
-
-<?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
+<!--<pre style="margin-left:20px;line-height:1;color:FireBrick;">--> 
+<?jelly version="1.0" encoding="utf-8" ?>
+<j:jelly trim="false" xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt" xmlns:g="glide">
+    <g:evaluate var="jvar_test_eve" object="true" jelly="true">    
+        <!--"mytest;-->   
+        <!--        <script type="text/javascript">
+            var w = window.innerWidth
+        || document.documentElement.clientWidth
+        || document.body.clientWidth;
+            //alert(w);
+            <j:set var="jvar_test" >${w}</j:set>
+        </script>-->
+    </g:evaluate> 
+    <!--    <j:set var="jvar_test" value="${test}"/> -->
     <style type="text/css" title="myInnerCSS">
 
         #header{
@@ -49,7 +60,7 @@ THE SOFTWARE.
         }	
         
         html{
-        <!--overflow: hidden;-->
+        overflow: hidden;
         }
 
         #page-body {
@@ -99,7 +110,8 @@ THE SOFTWARE.
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
     <script type="text/javascript">
         <!--        alert(document.getElementById("side-panel").style.display = "none")-->
-
+        <!--        var myVar = true;
+        var test = "saluttest";-->
 
 
 
@@ -109,11 +121,13 @@ THE SOFTWARE.
         alert("height ok");
         document.getElementById("container").style.width = 1920;-->
         
-        
+        <!--        function getOne(){
+            return 1;
+        }
         function getHeight(){
         alert(screen.height);
         return screen.height;
-        }
+        }-->
     </script>
     <script type="text/javascript" src="${rootURL}/plugin/viewer/javascript.js" />
     <j:choose>
@@ -122,71 +136,144 @@ THE SOFTWARE.
         </j:when>
         <j:otherwise>
             <j:set var="captionSize" value="${from.getCaptionSize()}" />
-            <j:set var="dashboardHeight" value="${from.getDashboardHeight()}" />
-            <j:set var="dashboardWidth" value="${from.getDashboardWidth()}" />
+
             <!--width:${from.DEFAULT_SCREEN_WIDTH}px;height:${from.DEFAULT_SCREEN_HEIGHT}px;-->
-            <div id="container" style="background:${from.backgroundColor}">
+            <div id="container" style="background:${from.backgroundColor};margin=auto;">
                 <j:choose>
                     <j:when test="${from.getCaptionText() != ''}">
                         <j:set var="captionStyle" value="font-size: ${captionSize*0.5}pt;max-height:${captionSize}px;background:${from.captionColor};" />
                         <div id="caption" style="${captionStyle}">
                             <a style="text-decoration:none; color:${from.captionTextColor};" href="configure">${from.getCaptionText()}</a>
                         </div>
+                        <form action="#">
+                            <input id="hiddenCaptionSize" type="hidden" value="${captionSize}" />
+                        </form>
                     </j:when>
                     <j:otherwise>
                     </j:otherwise>
                 </j:choose>
                 <div id="dashboard">
+                    
+                    <!--<button class="positive" name="save" id="cart" hidden="hidden"></button>-->
+                    <!--                    !!! ${jvar_test} -  $[jvar_test]
+                    !!! ${jvar_test_eve} -  $[jvar_test_eve]-->
                     <j:choose>
                         <j:invoke var="dashboard" on="${from}" method="getDashboard" />
-<!--                        
-                        <j:set var="height" value="&lt;script type='text/javascript';&gt;this = h&lt;/script&gt;" />
-                        !!! ${height}-->
-                        <j:invoke var="dashboard" on="${from}" method="getDashboard">
-                            <j:arg type="java.lang.Integer" value="1" />
-                            <j:arg type="java.lang.Integer" value="2" />
-                        </j:invoke>
-<!--                        <script type="text/javascript">
+                        
+                        <!--                        <g:evaluate var="jvar_gr" object="true">
+                          var myVar = true;
+                                                    alert('tatez');
+                        </g:evaluate>-->
+
+                        <!--<j:no_escape>
+                         ${myVar};
+                            alert('tatez');
+                        </j:no_escape>-->
+                        <!--<j:set var="height" value="JS:window.innerWidth" />-->
+                        <j:set var="testVar" value="salutsalut" />
+                        <!--&lt;script type='text/javascript'&gt; &lt;/script&gt;-->
+                        
+                        <j:invoke var="dashboard" on="${from}" method="getDashboard" escapeText="false" exceptionVar="exceptionV" />
+                        <!--<input id="clipboard" type="hidden" >${dashboard.getCountOfViews()}</input>-->
+                        <!--${dashboard.margin}-->
+                        
+                        <form action="#">
+                            <input id="hiddenCountOfViews" type="hidden" value="${dashboard.getCountOfViews()}" />
+                        </form>
+            
+                        <!--                        <script type="text/javascript">
                             document.getElementById("field1").value = h;
                         </script>-->
+                        <!--! ${dashboard.getCountOfViews()} !-->
                         <j:invoke var="viewsRows" on="${dashboard}" method="getRows" />
                         <j:forEach var="row" items="${viewsRows}">
                             <j:forEach var="view" items="${row}">
-                                <j:set var="jobStyle" value="float: left; width:${dashboard.viewsWidth}px; height:${dashboard.viewsHeight}px; 
-                            margin:${dashboard.margin}px; padding: 1%; border-radius: 5px;" />
+                                <j:set var="jobStyle" value="float: left;  
+                            margin:5px; padding: 15px; border-radius: 5px;" />
                                 <st:include page="viewEntry.jelly" />
                             </j:forEach>
+                            <!--width:${dashboard.viewsWidth}px; height:${dashboard.viewsHeight}px;-->
                         </j:forEach>
-                    </j:choose>	
+                    </j:choose>
                 </div>
             </div>
             <script type="text/javascript">
-                
-                
+                <!--                var countOfViews = document.getElementById("countOfViews").value;
+                alert(countOfViews);
                 document.getElementById("container").style.height = h+"px";
-                document.getElementById("container").style.width = w+"px";
+                document.getElementById("container").style.width = w+"px";-->
+                <!--alert(document.getElementById("container").style.width);-->
+                
+        
+        
             </script>
         </j:otherwise>
     </j:choose>
     
 
-    
-<!--    <script type="text/javascript">
-        alert("alert");
-	
-        	$('div#container').animate({'margin-top': '300px', 'margin-left': '400px'},1000);
-        $('div#container').css('background','black');
+    <script type="text/javascript">
+        <!--w=w;-->
+        <!--alert(h);-->
+        <!--var breadcrumbarheight = $('div#breadcrumbBar').css("height");-->
+        <!--breadcrumbarheight = breadcrumbarheight.split("px");-->
+        breadcrumbarheight = $('div#breadcrumbBar').css("height").split("px")[0];
+        <!--alert(breadcrumbarheight);-->
+        h=h-breadcrumbarheight-15;
+        <!--alert(h);-->
+        <!--get count of view in dashboard-->
+        var countOfViews = document.getElementById("hiddenCountOfViews").value;
         
+        var captionSize = document.getElementById("hiddenCaptionSize");
         
-                $("side-panel").removeClass("col-sm-9");
-        $("side-panel").removeClass("col-md-7");
-        $("side-panel").removeClass("col-lg-6");
-        $("side-panel").removeClass("col-xlg-4");
+        if(captionSize==null){
+            captionSize=0;
+            <!--alert("il n'y a pas de caption");-->
+        }else{
+            captionSize=captionSize.value;
+            <!--alert("il y a une caption");-->
+        }
         
-        $("main-panel").removeClass("col-sm-15");
-        $("main-panel").removeClass("col-md-17");
-        $("main-panel").removeClass("col-lg-18");
-        $("main-panel").removeClass("col-xlg-20");
+        <!--alert("je suis par la");-->
+        <!--Get count of rows and columns-->
+        <!-- x-axis -->
+        xdash = 0;
+        while (countOfViews &gt; xdash * xdash) {
+        xdash++;
+        }
+        
+        var countOfRows = countOfViews % xdash;
 
-    </script>-->
+        
+        <!--prévoir caption size : h - cSize-->
+        <!--alert(h+" / "+countOfRows+" = "+(h / countOfRows));-->
+        <!--alert("je suis par la");-->
+
+        var viewheight = ((h - captionSize) / countOfRows) - 5*countOfRows;
+
+        var viewwidth = (w / xdash) - 4*xdash;
+        <!--alert(captionSize);-->
+    </script>
+    
+    <script type="text/javascript">
+        <!--       
+        double[] a = getCountOfRows(getCountOfViews(rows));
+        this.viewsHeight = dashboardHeightInPixel / a[0];
+        this.viewsWidth = 1920 / getCountOfViewsPerRow(getCountOfViews(rows));//this.bv.getDEFAULT_SCREEN_WIDTH()
+        this.margin = Math.ceil(viewsHeight / 100);
+        this.viewsHeight -= this.margin * 2 * a[0];
+        this.viewsWidth -= this.margin * 2 * getCountOfViewsPerRow(getCountOfViews(rows));-->
+        
+        
+        
+        <!--alert("viewwidth = "+viewwidth);-->
+        <!--alert(viewwidth+" x "+viewheight);-->
+        
+        $('div#container').css({"max-width":w+"px", "max-height":h+"px", "width":w+"px", "height":h+"px"});
+        $('div#jobsgroup').css({"max-width":viewwidth+"px", "max-height":viewheight+"px", "height":viewheight+"px", "width":viewwidth+"px"});
+        
+        <!--alert();-->
+        <!--$('div#jobsgroup').css('height',viewheight+'px');-->
+        
+    </script>
 </j:jelly>
+<!--</pre>--> 
