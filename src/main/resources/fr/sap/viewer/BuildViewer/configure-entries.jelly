@@ -25,6 +25,7 @@ THE SOFTWARE.
 <!--xmlns:g="glide"-->
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt" 
          trim="false" xmlns:g="glide" xmlns:j2="jelly:core" xmlns:g2="null">
+    <script type="text/javascript" src="${rootURL}/plugin/viewer/redips.js" />
     <style type="text/css" title="myInnerCSS">
         .redips-drag {
         cursor: move;
@@ -216,7 +217,7 @@ THE SOFTWARE.
             </f:entry>
         </f:optionalBlock>
         
-        <f:optionalBlock name="ConfigureColor" title="${%Configure colors}" help="${helpURL}?.html">
+        <f:optionalBlock name="ConfigureColor" title="${%Configure colors}" help="${helpURL}?.html" checked="${it.includeBackgroundColor != null}">
             <f:entry title="${%Background color}" field="backgroundColor"  help="${helpURL}?.html">
                 <j:choose>
                     <j:when test="${it.backgroundColor != null}">
@@ -239,13 +240,13 @@ THE SOFTWARE.
             <form>
                 <div >
                     <div id="redips-drag" style="margin-bottom:20px;" >
-                        <table id="stateList"  style="background:blue;width:976px;" >
+                        <table id="stateList"  style="width:976px;" >
                             <tr>
                                 <td class="redips-mark">
                                     <div>
                                         <div class="colStateStyle headerStyle" >${%State}</div>
                                         <div class="colBackgroundStyle headerStyle">${%Background color}</div>
-                                        <div  class="colFontColorStyle headerStyle">${%Font color}</div>
+                                        <div class="colFontColorStyle headerStyle">${%Font color}</div>
                                         <div style="background:#FFFFFF" class="colDrahNDropStyle" ></div>
                                     </div>
                                 </td>
@@ -266,7 +267,7 @@ THE SOFTWARE.
                                             <div class="colFontColorStyle">
                                                 <input type="color" name="ve_fontColor" value="${state.ve_fontColor}" style="" />
                                             </div>
-                                            <div class="colDrahNDropStyle" style="width:50px;background:red;" >
+                                            <div class="colDrahNDropStyle" style="width:50px;" >
                                                 <img src="${myImagesURL}Cursor-Move2-512.png" type="image/png" alt="dragNdrop" tooltip="Drap and drop to change the priority" height="20" width="20" />
                                             </div>
                                         </div>
@@ -282,8 +283,7 @@ THE SOFTWARE.
                         </table>
                     </div>		
                     <div >
-                        <input  type="button" value="${%Add row}" onclick="addRow('stateList')" class="redips-trash" tooltip="Apply and refresh the page to priorize the new state" />
-                        <!--<input  type="button" value="${%Restore to default}" onclick="${from.setDefaultColorSettings(true)}; window.location.reload();" />   style="${bottomButtonStyle}"-->   
+                        <input  type="button" value="${%Add row}" onclick="addRow('stateList')" class="redips-trash" tooltip="Apply and refresh the page to priorize the new state" />  
                     </div>
                 </div>
             </form>
@@ -293,26 +293,14 @@ THE SOFTWARE.
     
     <!--Job gathering-->
     <f:section title="${%Job gathering}">
-        <!--<j:set var="content" value=""/>-->
-
         <j:forEach var="prefix" items="${from.prefixesSeparators}">
-
-
             <j:set var="content" value="${content} ${prefix}"/>
         </j:forEach>
-        <!--prefixes : ${content}-->
-        
         <f:entry title="${%Prefixes used}" field="prefixesSeparators"  help="${helpURL}?.html">
             <f:textbox name="prefixesSeparators" tooltip="Set separators values separate per spaces" value="${content}"/>
-            <!--field="prefixesSeparators"-->
         </f:entry>
-        
     </f:section>
   
-<!--    <script type="text/javascript">
-        $(document).ready(function() {
-        });
-    </script>-->
     
     <script type="text/javascript">
         /*
@@ -1364,6 +1352,7 @@ THE SOFTWARE.
         }
         }());
     </script>
+        
     <script>
         (function() {
         Behaviour.specify("#recurse", 'ListView', 0, function(e) {

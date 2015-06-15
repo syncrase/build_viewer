@@ -30,7 +30,6 @@ import hudson.model.ListView;
 import hudson.model.Result;
 import hudson.model.TopLevelItem;
 import hudson.model.ViewDescriptor;
-import java.awt.Toolkit;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -40,7 +39,6 @@ import javax.servlet.ServletException;
 import net.sf.json.JSONObject;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
-import org.springframework.context.ApplicationContext;
 
 /**
  *

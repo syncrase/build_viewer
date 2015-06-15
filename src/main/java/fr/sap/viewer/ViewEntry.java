@@ -42,11 +42,7 @@ public class ViewEntry {
     ViewEntry(BuildViewer bv, ProjectImpl proj) {
         this.bv = bv;
         projects.add(proj);
-        if (prefixUSed()) {// If prefix were configured
-            this.prefixe = proj.getPrefix();
-        } else {
-            this.prefixe = ProjectImpl.NO_PREFIX_AVAILABLE;
-        }
+        this.prefixe = (bv.getPrefixesSeparators() != null && bv.getPrefixesSeparators().size() >= 1) ? proj.getPrefix() : ProjectImpl.NO_PREFIX;
         this.refreshState();
     }
 
@@ -61,8 +57,17 @@ public class ViewEntry {
         return this.prefixe;
     }
 
+    public String getBackgroundColor() {
+        refreshState();
+        return currentState.getVe_backgroundColor();
+    }
+
+    public int getCount() {
+        return projects.size();
+    }
+
     //**************************************************************************
-    // ViewEntry handlers
+    // projects handlers
     //**************************************************************************
     /**
      * Add project only if it has the same prefix of the view
@@ -90,7 +95,7 @@ public class ViewEntry {
     }
 
     /**
-     * Refresh values of the ViewEntryColor field based on projects contained
+     * Refresh values of the ViewEntryColor field based on projects results
      * <p>
      * @return
      */
@@ -116,26 +121,6 @@ public class ViewEntry {
             }
             index = 0;
         }
-    }
-
-    //**************************************************************************
-    // ViewEntry details
-    //**************************************************************************
-    public String getBackgroundColor() {
-        return currentState.getVe_backgroundColor();
-    }
-
-    public int getCount() {
-        return projects.size();
-    }
-
-    /**
-     *
-     * @return false if no separator exists or if there's less than one<br/>
-     * true if there's prefix in the BuildViewerList
-     */
-    private boolean prefixUSed() {
-        return (bv.getPrefixesSeparators() != null && bv.getPrefixesSeparators().size() >= 1);
     }
 
 }

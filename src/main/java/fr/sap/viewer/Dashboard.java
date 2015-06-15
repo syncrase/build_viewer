@@ -37,11 +37,11 @@ import java.util.List;
 public class Dashboard {
 
     private final BuildViewer bv;
-    private final List<ProjectImpl> contents;
+//    private final List<ProjectImpl> contents;
     private Collection<ViewEntry> viewEntriesCol;
 
     Dashboard(BuildViewer bv, List<ProjectImpl> contents) {
-        this.contents = contents;
+//        this.contents = contents;
         this.bv = bv;
         viewEntriesCol = this.toViewEntryCollection(contents);
     }
@@ -49,9 +49,9 @@ public class Dashboard {
     //**************************************************************************
     // Getters / setters
     //**************************************************************************
-    public List<ProjectImpl> getContents() {
-        return contents;
-    }
+//    public List<ProjectImpl> getContents() {
+//        return contents;
+//    }
 
     public Collection<ViewEntry> getViewEntriesCol() {
         return Collections.unmodifiableCollection(viewEntriesCol);

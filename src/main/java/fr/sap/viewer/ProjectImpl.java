@@ -29,8 +29,6 @@ import hudson.model.Result;
 import hudson.model.Run;
 import java.math.BigDecimal;
 import java.util.HashSet;
-import java.util.Map;
-import java.util.TreeMap;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -39,7 +37,7 @@ import org.apache.commons.lang.StringUtils;
  */
 public class ProjectImpl {
 
-    public static final String NO_PREFIX_AVAILABLE = "NO_PREFIX_AVAILABLE";
+    public static final String NO_PREFIX = "";
 
     private final AbstractProject abstractProject;
     private final String prefix;
@@ -186,12 +184,12 @@ public class ProjectImpl {
                         return StringUtils.substringBefore(name, prefix);
                     }
                 }
-                return null;
+                return NO_PREFIX;
             } else {
-                return null;
+                return NO_PREFIX;
             }
         }
-        return null;
+        return NO_PREFIX;
     }
 
     /**
@@ -258,19 +256,7 @@ public class ProjectImpl {
         BigDecimal[] minutes = seconds[0].divideAndRemainder(new BigDecimal("60"));
         BigDecimal[] hours = minutes[0].divideAndRemainder(new BigDecimal("60"));
         BigDecimal[] days = hours[0].divideAndRemainder(new BigDecimal("24"));
-//        equivalentDuration.put("days", days[0].toString());
-//        equivalentDuration.put("hours", days[1].toString());
-//        equivalentDuration.put("minutes", hours[1].toString());
-//        equivalentDuration.put("seconds", minutes[1].toString());
-
-        StringBuilder sb = new StringBuilder();
-//        sb.append(days[0] == BigDecimal.ZERO ? "" : days[0].toString() + "d ")
-//                .append(days[0] == BigDecimal.ZERO ? "" : days[0].toString() + "h ")
-//                .append(days[1] == BigDecimal.ZERO ? "" : days[1].toString() + "m ");
-        sb.append(days[0].toString() + "d ")
-                .append(days[0].toString() + "h ")
-                .append(days[1].toString() + "m ");
-        return sb.toString();
+        return (new StringBuilder()).append(days[0].toString()).append("d ").append(days[0].toString()).append("h ").append(days[1].toString()).append("m ").toString();
     }
 
     //**************************************************************************
