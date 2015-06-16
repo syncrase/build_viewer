@@ -63,8 +63,9 @@ THE SOFTWARE.
                     <table id="projectlist" >
                         <j:forEach var="proj" items="${view.projects}">     
                             <tr>
+                                ${proj.test()}
                                 <td style="text-align:left;">
-                                    <a style="${jobNameStyle}" href="${rootURL}/${proj.lastBuildUrl}" >${proj.name}</a>
+                                    <a style="${jobNameStyle}" href="${rootURL}/${proj.searchUrl}" >${proj.name}</a>
                                 </td>
                                 <td>
                                     #${proj.buildNumber}
@@ -72,7 +73,7 @@ THE SOFTWARE.
                                 <td>
                                     <j:choose>
                                         <j:when test="${proj.claimWrapper.isClaimed()==true}">
-                                            <!-- Tooltip doesn't work with jQuery import -->
+                                             <!--Tooltip doesn't work with jQuery import--> 
                                             <div style="text-align:center;" 
                                                  title="${proj.claimWrapper.claimedByName} : ${proj.claimWrapper.reason} &#013;Date : ${proj.claimWrapper.date}">
                                                 <st:nbsp/>${proj.result}

@@ -36,10 +36,10 @@ $("side-panel").removeClass("col-md-7");
 $("side-panel").removeClass("col-lg-6");
 $("side-panel").removeClass("col-xlg-4");
 
-$("main-panel").removeClass("col-sm-15");
-$("main-panel").removeClass("col-md-17");
-$("main-panel").removeClass("col-lg-18");
-$("main-panel").removeClass("col-xlg-20");
+//$("main-panel").removeClass("col-sm-15");
+//$("main-panel").removeClass("col-md-17");
+//$("main-panel").removeClass("col-lg-18");
+//$("main-panel").removeClass("col-xlg-20");
 
 //alert("hello");
 //document.getElementsByTagName('body').defineProperties();

@@ -23,13 +23,35 @@
  */
 package fr.sap.viewer;
 
+import com.google.common.io.Files;
 import hudson.model.AbstractProject;
-import hudson.model.Hudson;
 import hudson.model.Result;
 import hudson.model.Run;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
+import org.apache.commons.codec.Charsets;
 import org.apache.commons.lang.StringUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -77,16 +99,16 @@ public class ProjectImpl {
         return abstractProject.getName();
     }
 
-    public String getLastBuildUrl() {
+    public String getSearchUrl() {
         return abstractProject.getSearchUrl();
     }
 
     public String getIconUrl() {
-        try {
-            return abstractProject.getLastCompletedBuild().getBuildStatusUrl();
-        } catch (Throwable t) {
-            return "Getting the build Status throws an exception:\n" + t.getMessage();
-        }
+//        try {
+        return abstractProject.getLastCompletedBuild().getBuildStatusUrl();
+//        } catch (Throwable t) {
+//            return "Getting the build Status throws an exception:\n" + t.getMessage();
+//        }
 
     }
 
@@ -103,14 +125,14 @@ public class ProjectImpl {
         //  3   unknown
         ClaimWrapper cw = getClaimWrapper();
 //        String latestJenkinsResult = this.getLatestBuildResult();
-        return (cw != null && (cw.isClaimed() == true)) ? "CLAIMED" : this.getLatestBuildResult();
+        return (cw != null && (cw.isClaimed() == true)) ? "CLAIMED" : this.getLatestBuildResult();//TODO
     }
 
     /**
      *
      * @return The build number.
      */
-    public int getBuildNumber() {
+    public int getBuildNumber() {//TODO latest
 //        return getLatestCompletedRun().getNumber();
         Run<?, ?> run = getLatestCompletedRun();
         return run != null ? run.getNumber() : 0;
@@ -140,16 +162,8 @@ public class ProjectImpl {
     //**************************************************************************
     // About CLAIM
     //**************************************************************************
-    /**
-     *
-     * @return true if the plugin is available in Jenkins
-     */
-    private boolean isClaimPluginAvailable() {
-        return (Hudson.getInstance().getPlugin("claim") == null) ? false : true;
-    }
-
     public ClaimWrapper getClaimWrapper() {
-        if (isClaimPluginAvailable()) {
+        if (ClaimWrapper.isClaimPluginAvailable()) {
             Run<?, ?> latestBuild = getLatestCompletedRun();
             if (latestBuild != null) {
                 String claim = "";
@@ -158,7 +172,8 @@ public class ProjectImpl {
 //                    MatrixBuild matrixBuild = (hudson.matrix.MatrixBuild) lastBuild;
 //                    claim = buildMatrixClaimString(matrixBuild, true);
                 } else {
-                    return ClaimWrapper.builder(latestBuild);
+                    return ClaimWrapper.builder(latestBuild);// TODO project
+//                    return new ClaimWrapper(latestBuild);
                 }
             }
         }
@@ -184,41 +199,37 @@ public class ProjectImpl {
                         return StringUtils.substringBefore(name, prefix);
                     }
                 }
-                return NO_PREFIX;
-            } else {
-                return NO_PREFIX;
             }
         }
         return NO_PREFIX;
     }
 
-    /**
-     * Get the time of the current build and check how much time this state is
-     * <p>
-     * @param state One of the Result's states
-     * <p>
-     * @return
-     */
-    public String getBuildStateDurationBetweenRuns() {
-
-        // If the latest build is failed
-        Run<?, ?> latestRun = getLatestCompletedRun();
-        if (latestRun != null) {
-            Run<?, ?> firstRun = null;
-            Run<?, ?> previousRun = null;
-            String state = latestRun.getResult().toString();
-
-            firstRun = latestRun;
-            do {
-                firstRun = previousRun != null ? previousRun : firstRun;
-                previousRun = firstRun.getPreviousBuild();
-            } while (previousRun != null && validateRunState(previousRun, state));
-            long timeEllapse = latestRun.getTimeInMillis() - firstRun.getTimeInMillis();
-            return convertMillisecondsToEquivalentDuration(new BigDecimal(String.valueOf(timeEllapse)));
-        }
-        return null;
-    }
-
+//    /**
+//     * Get the time of the current build and check how much time this state is
+//     * <p>
+//     * @param state One of the Result's states
+//     * <p>
+//     * @return
+//     */
+//    public String getBuildStateDurationBetweenRuns() {
+//
+//        // If the latest build is failed
+//        Run<?, ?> latestRun = getLatestCompletedRun();
+//        if (latestRun != null) {
+//            Run<?, ?> firstRun = null;
+//            Run<?, ?> previousRun = null;
+//            String state = latestRun.getResult().toString();
+//
+//            firstRun = latestRun;
+//            do {
+//                firstRun = previousRun != null ? previousRun : firstRun;
+//                previousRun = firstRun.getPreviousBuild();
+//            } while (previousRun != null && validateRunState(previousRun, state));
+//            long timeEllapse = latestRun.getTimeInMillis() - firstRun.getTimeInMillis();
+//            return convertMillisecondsToEquivalentDuration(new BigDecimal(String.valueOf(timeEllapse)));
+//        }
+//        return null;
+//    }
     /**
      * Get the time of the current build and check how much time this state is
      * <p>
@@ -233,11 +244,12 @@ public class ProjectImpl {
             Run<?, ?> previousRun = null;
             String state = latestRun.getResult().toString();
 
+//            for ( firstRun = latestRun; firstRun != null && firstRun.getResult().toString().equals(state); firstRun = firstRun.getPreviousBuild());
             firstRun = latestRun;
             do {
                 firstRun = previousRun != null ? previousRun : firstRun;
                 previousRun = firstRun.getPreviousBuild();
-            } while (previousRun != null && validateRunState(previousRun, state));
+            } while (previousRun != null && previousRun.getResult().toString().equals(state));
             long timeEllapse = System.currentTimeMillis() - firstRun.getTimeInMillis();
             return convertMillisecondsToEquivalentDuration(new BigDecimal(String.valueOf(timeEllapse)));
         }
@@ -262,19 +274,179 @@ public class ProjectImpl {
     //**************************************************************************
     // Security
     //**************************************************************************
-    /**
-     *
-     * @param run   run to check
-     * @param state desired native Jenkins state to check ("SUCCESS",
-     *              "UNSTABLE", "FAILURE", "NOT_BUILT", "ABORTED")<br/>
-     * For instance state = Result.FAILURE.toString()
-     * <p>
-     * @return
-     */
-    private boolean validateRunState(Run<?, ?> run, String state) {
-        return run.getResult().toString().equals(state);
+//    /**
+//     *
+//     * @param run   run to check
+//     * @param state desired native Jenkins state to check ("SUCCESS",
+//     *              "UNSTABLE", "FAILURE", "NOT_BUILT", "ABORTED")<br/>
+//     * For instance state = Result.FAILURE.toString()
+//     * <p>
+//     * @return
+//     */
+//    private boolean validateRunState(Run<?, ?> run, String state) {
+//        return run.getResult().toString().equals(state);
+//    }
+    public String test() {
+
+        // Find test-result.xml (where is stored the defect.xml)
+//
+//        String path = "C:\\Users\\I310911\\perforce\\testWRKSPC\\testPlugin\\appexample5\\work\\jobs\\mavenTest\\" + "modules\\utilitaires$mavenTest.artifactid\\builds\\";
+//        File f = new File(path);
+//        //s=f.list().toString();
+//
+//        //get folder item
+//        String[] tab = f.list();
+//        String content = "";
+//        for ( String tab1 : tab ) {
+//            //s += "1: " + tab[i] + "   _|_   ";
+//            f = new File(path + tab1);
+//            if (f.isDirectory()) {
+//                // Get xml
+//                f = new File(path + tab1 + "\\junitResult.xml");
+//                try {
+//                    content = Files.toString(f, Charsets.UTF_8);
+//                } catch (IOException ex) {
+//                    Logger.getLogger(ProjectImpl.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//                break;
+//            }
+//        }
+//        if (!"".equals(content)) {
+//            this.setTextContentInFile(true, content, "monFichierXml.xml");
+//            return content;
+//        }
+//        return "Fail to access file";
+//        setTextContentInFile(true, build_Info(), "build_Info_"+getName()+".txt");
+//        setTextContentInFile(true, abstractProject_Info(), "abstractProject_Info_"+getName()+".txt");
+//        setTextContentInFile(true, run_Info(), "run_Info_"+getName()+".txt");
+        String[] fileNameArray = {"junitResult.xml", "test-defects.xml"};
+
+        for ( int i = 0; i < fileNameArray.length; i++ ) {
+            searchForXml(new File(this.abstractProject.getBuildDir().getPath()), fileNameArray[i]);
+        }
+
+        return "";
+
     }
 
+    /**
+     *
+     * @param root
+     */
+    private void searchForXml(File root, String filename) {
+        if (root.isDirectory()) {
+            File[] files = root.listFiles();
+            for ( File file : files ) {
+                searchForXml(file, filename);
+//                String content = root.listFiles().toString() + "\n";
+//                setTextContentInFile(false, content, filename.substring(0,filename.length()-4) + "_#_" + getName() + ".txt");
+            }
+        } else if (root.isFile() && root.getName().equals(filename)) {
+            try {
+                File f = new File(root.getPath());
+                String content = Files.toString(f, Charsets.UTF_8);
+
+                //Xpath objects initialization
+                StringBuilder sb = new StringBuilder();
+                DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+                DocumentBuilder builder = builderFactory.newDocumentBuilder();
+                Document document = builder.parse(new FileInputStream(new File(root.getPath())));
+                XPath xPath = XPathFactory.newInstance().newXPath();
+
+                if (filename.equals("test-defects.xml")) {
+                    String expression = "/testcases/testcase[@actualStatus='failed'][@status='passed']/defect[@type='jira']";
+                    String[] defectAttributes = {"expectedMessage", "link", "status", "type"};
+
+                    NodeList nodeList = (NodeList) xPath.compile(expression).evaluate(document, XPathConstants.NODESET);
+                    Node n;
+                    if (nodeList.getLength() > 0) {
+                        for ( int i = 0; i < nodeList.getLength(); i++ ) {
+                            n = nodeList.item(i);
+                            if (n.getNodeType() == Node.ELEMENT_NODE) {
+                                Element e = (Element) n;
+                                for ( String s : defectAttributes ) {
+                                    sb.append(s + " : " + e.getAttribute(s) + "\n");
+                                }
+                                sb.append("name : " + ((Element) e.getParentNode()).getAttribute("name") + "\n");
+                            }
+                        }
+                    }
+                    sb.append(root.getPath());
+                    setTextContentInFile(false, sb.toString(), filename.substring(0, filename.length() - 4) + ".ExtractedValues" + getName() + ".xml");
+
+                } else if (filename.equals("junitResult.xml")) {
+
+                    String expression = "/result/suites/suite/cases/case";
+                    NodeList nodeList = (NodeList) xPath.compile(expression).evaluate(document, XPathConstants.NODESET);
+                    Node n;
+
+                    if (nodeList.getLength() > 0) {
+                        for ( int i = 0; i < nodeList.getLength(); i++ ) {
+                            n = nodeList.item(i);
+                            if (n.getNodeType() == Node.ELEMENT_NODE) {
+                                Element e = (Element) n;
+                                sb.append(e.getElementsByTagName("className").item(0).getTextContent())
+                                        .append(e.getElementsByTagName("testName").item(0).getTextContent());
+                            }
+                        }
+                    } else {
+                    }
+                    sb.append(root.getPath());
+                    setTextContentInFile(false, sb.toString(), filename.substring(0, filename.length() - 4) + ".ExtractedValues" + getName() + ".xml");
+
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(ProjectImpl.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (XPathExpressionException ex) {
+                Logger.getLogger(ProjectImpl.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SAXException ex) {
+                Logger.getLogger(ProjectImpl.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ParserConfigurationException ex) {
+                Logger.getLogger(ProjectImpl.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+    }
+
+    public void setTextContentInFile(boolean setHeader, String content, String filename) {
+        // source folder --> c:\\Program files (x86)\Jenkins\
+        String pathstr = "C:\\Users\\I310911\\jenkinsNetBeans\\" + filename;
+        // Créer et écrire dans un fichier
+        BufferedWriter out;
+        try {
+            File f = new File(pathstr);
+            f.createNewFile();
+            out = new BufferedWriter(new FileWriter(pathstr, true));
+            if (setHeader == true) {
+                out.write("*********************** :-)  " + new SimpleDateFormat("E yyyy.MM.dd 'at' hh:mm:ss a zzz").format(new Date())
+                          + "  (-: ***********************\n");
+            }
+            out.write(content + "\n");
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+//    public String build_Info() {
+//        String s = "";
+//        File f = this.abstractProject.getBuildDir();
+//
+//        s += "getAbsolutePath : " + f.getAbsolutePath() + "\n";
+//        try {
+//            s += "getCanonicalPath : " + f.getCanonicalPath() + "\n";
+//        } catch (IOException ex) {
+//            Logger.getLogger(ProjectImpl.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        s += "getName : " + f.getName() + "\n";
+//        s += "getParent : " + f.getParent() + "\n";
+//        s += "getPath : " + f.getPath() + "\n";
+//
+//        return s;
+//    }
+    public String getWorkspaceURL() {
+        return "";
+    }
 //    private String buildMatrixClaimString(MatrixBuild matrixBuild, boolean includeClaimed) {
 //        StringBuilder claimed = new StringBuilder();
 //        StringBuilder unclaimed = new StringBuilder();
@@ -309,27 +481,26 @@ public class ProjectImpl {
 //        }
 //        return claims;
 //    }
-}
 
 //    public String abstractProject_Info() {
 //        String s = "";
 //        s += "getAbsoluteUrl : " + abstractProject.getAbsoluteUrl();
-//        s += "<br\\>getAssignedLabelString : " + abstractProject.getAssignedLabelString();
-//        s += "<br\\>getBuildNowText : " + abstractProject.getBuildNowText();
-//        s += "<br\\>getBuildStatusUrl : " + abstractProject.getBuildStatusUrl();
-//        s += "<br\\>getCustomWorkspace : " + abstractProject.getCustomWorkspace();
-//        s += "<br\\>getDescription : " + abstractProject.getDescription();
-//        s += "<br\\>getDisplayName : " + abstractProject.getDisplayName();
-//        s += "<br\\>getDisplayNameOrNull : " + abstractProject.getDisplayNameOrNull();
-//        s += "<br\\>getFullDisplayName : " + abstractProject.getFullDisplayName();
-//        s += "<br\\>getFullName : " + abstractProject.getFullName();
-//        s += "<br\\>getName : " + abstractProject.getName();
-//        s += "<br\\>getPronoun : " + abstractProject.getPronoun();
-//        s += "<br\\>getSearchName : " + abstractProject.getSearchName();
-//        s += "<br\\>getSearchUrl : " + abstractProject.getSearchUrl();
-//        s += "<br\\>getShortUrl : " + abstractProject.getShortUrl();
-//        s += "<br\\>getUrl : " + abstractProject.getUrl();
-//        s += "<br\\>getWhyBlocked : " + abstractProject.getWhyBlocked();
+//        s += "\ngetAssignedLabelString : " + abstractProject.getAssignedLabelString();
+//        s += "\ngetBuildNowText : " + abstractProject.getBuildNowText();
+//        s += "\ngetBuildStatusUrl : " + abstractProject.getBuildStatusUrl();
+//        s += "\ngetCustomWorkspace : " + abstractProject.getCustomWorkspace();
+//        s += "\ngetDescription : " + abstractProject.getDescription();
+//        s += "\ngetDisplayName : " + abstractProject.getDisplayName();
+//        s += "\ngetDisplayNameOrNull : " + abstractProject.getDisplayNameOrNull();
+//        s += "\ngetFullDisplayName : " + abstractProject.getFullDisplayName();
+//        s += "\ngetFullName : " + abstractProject.getFullName();
+//        s += "\ngetName : " + abstractProject.getName();
+//        s += "\ngetPronoun : " + abstractProject.getPronoun();
+//        s += "\ngetSearchName : " + abstractProject.getSearchName();
+//        s += "\ngetSearchUrl : " + abstractProject.getSearchUrl();
+//        s += "\ngetShortUrl : " + abstractProject.getShortUrl();
+//        s += "\ngetUrl : " + abstractProject.getUrl();
+//        s += "\ngetWhyBlocked : " + abstractProject.getWhyBlocked();
 //
 //        return s;
 //    }
@@ -361,74 +532,4 @@ public class ProjectImpl {
 //
 //        return s;
 //    }
-//
-//    public String build_Info() {
-//        String s = "";
-//        File f = this.abstractProject.getBuildDir();
-//
-//        s += "getAbsolutePath : " + f.getAbsolutePath() + "\n";
-//        try {
-//            s += "getCanonicalPath : " + f.getCanonicalPath() + "\n";
-//        } catch (IOException ex) {
-//            Logger.getLogger(ProjectImpl.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        s += "getName : " + f.getName() + "\n";
-//        s += "getParent : " + f.getParent() + "\n";
-//        s += "getPath : " + f.getPath() + "\n";
-//
-//        return s;
-//    }
-//
-//    public String test() {
-//        //String s = "";
-//
-//        String path = "C:\\Users\\I310911\\perforce\\testWRKSPC\\testPlugin\\appexample5\\work\\jobs\\mavenTest\\" + "modules\\utilitaires$mavenTest.artifactid\\builds\\";
-//        File f = new File(path);
-//        //s=f.list().toString();
-//
-//        //get folder item
-//        String[] tab = f.list();
-//        String content = "";
-//        for ( String tab1 : tab ) {
-//            //s += "1: " + tab[i] + "   _|_   ";
-//            f = new File(path + tab1);
-//            if (f.isDirectory()) {
-//                // Get xml
-//                f = new File(path + tab1 + "\\junitResult.xml");
-//                try {
-//                    content = Files.toString(f, Charsets.UTF_8);
-//                } catch (IOException ex) {
-//                    Logger.getLogger(ProjectImpl.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-//                break;
-//            }
-//        }
-//        if (!"".equals(content)) {
-//            this.setTextContentInFile(true, content, "monFichierXml.xml");
-//            return content;
-//        }
-//        return "Fail to access file";
-//
-//    }
-//
-//    public void setTextContentInFile(boolean setHeader, String content, String filename) {
-//        // source folder --> c:\\Program files (x86)\Jenkins\
-//        String pathstr = "C:\\Users\\I310911\\jenkinsNetBeans\\" + filename;
-//        // Créer et écrire dans un fichier
-//        BufferedWriter out;
-//        try {
-//            File f = new File(pathstr);
-//            f.createNewFile();
-//            out = new BufferedWriter(new FileWriter(pathstr, false));
-//            if (setHeader == true) {
-//                out.write("*********************** :-)  " + new SimpleDateFormat("E yyyy.MM.dd 'at' hh:mm:ss a zzz").format(new Date())
-//                          + "  (-: ***********************\n");
-//            }
-//            out.write(new SimpleDateFormat("hh:mm:ss a zzz").format(new Date()) + content + "\n");
-//            out.close();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//   
+}

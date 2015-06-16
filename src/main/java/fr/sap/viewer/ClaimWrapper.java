@@ -38,6 +38,24 @@ public class ClaimWrapper {
 
     private ClaimWrapper(ClaimBuildAction claimBuildAction) {
         this.claimBuildAction = claimBuildAction;
+        
+        
+                
+//         ClaimBuildAction claimAction = null;
+//        // Get all ClaimBuildAction actions
+//        List<ClaimBuildAction> claimActionList = run
+//                .getActions(ClaimBuildAction.class);
+//        if (claimActionList.size() == 1) {
+//            claimAction = claimActionList.get(0);
+//        } else if (claimActionList.size() > 1) {
+////            Log.warn("Multiple ClaimBuildActions found for job ");
+//        }
+//        if (claimAction == null) {
+//            
+//        }
+//        
+//        
+//        this.claimBuildAction = claimAction;
     }
 
     /**
@@ -83,5 +101,13 @@ public class ClaimWrapper {
 
     public String getVersion() {
         return Hudson.getInstance().getPlugin("claim").getWrapper().getVersion();
+    }
+    
+    /**
+     *
+     * @return true if the plugin is available in Jenkins
+     */
+    public static boolean isClaimPluginAvailable() {
+        return (Hudson.getInstance().getPlugin("claim") == null) ? false : true;
     }
 }
