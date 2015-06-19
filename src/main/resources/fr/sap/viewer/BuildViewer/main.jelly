@@ -25,7 +25,7 @@ THE SOFTWARE.
 <?jelly version="1.0" encoding="utf-8" ?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-    <script type="text/javascript" src="${rootURL}/plugin/viewer/js/javascript.js" />
+    <script type="text/javascript" src="${rootURL}/plugin/viewer/js/dashboardjs.js" />
    
     <style type="text/css" title="myInnerCSS">
 

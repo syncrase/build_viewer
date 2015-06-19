@@ -83,3 +83,7 @@ function addCSSRule() {
 }
 
 
+function mOverXmlExceptionMenu(obj){
+    
+    alert('salut');
+}
