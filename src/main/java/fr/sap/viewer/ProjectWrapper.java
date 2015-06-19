@@ -34,6 +34,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.logging.Level;
@@ -47,6 +48,7 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import org.apache.commons.codec.Charsets;
 import org.apache.commons.lang.StringUtils;
+import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -57,7 +59,7 @@ import org.xml.sax.SAXException;
  *
  * @author I310911
  */
-public class ProjectImpl {
+public class ProjectWrapper {
 
     public static final String NO_PREFIX = "";
 
@@ -67,7 +69,7 @@ public class ProjectImpl {
 //    private ClaimWrapper claimWrapper;
 //    private Map<String, String> buildStateDuration;
 
-    public ProjectImpl(BuildViewer bv, AbstractProject abstractProject) {
+    public ProjectWrapper(BuildViewer bv, AbstractProject abstractProject) {
         this.abstractProject = abstractProject;
         this.bv = bv;
         this.prefix = computePrefix(this.getName());
@@ -122,8 +124,20 @@ public class ProjectImpl {
         // Si j'ajoute des config de couleur c'est ici que je renvoie la bonne clé
         //  1   result job
         //  2   if claimed
-        //  3   unknown
+        //  3   if get xpath result return something
+        
+        
+        //TODO renvoi une liste contenant tous les états (jenkins, claim, XMLs)
+        // Jenkins result
+        String jenkinsResult = this.getLatestBuildResult();
+        
+        // Claim
         ClaimWrapper cw = getClaimWrapper();
+        
+        // Xml result
+//        XmlWrapper xmlWrap = new XmlWrapper();
+        
+        
 //        String latestJenkinsResult = this.getLatestBuildResult();
         return (cw != null && (cw.isClaimed() == true)) ? "CLAIMED" : this.getLatestBuildResult();//TODO
     }
@@ -306,7 +320,7 @@ public class ProjectImpl {
 //                try {
 //                    content = Files.toString(f, Charsets.UTF_8);
 //                } catch (IOException ex) {
-//                    Logger.getLogger(ProjectImpl.class.getName()).log(Level.SEVERE, null, ex);
+//                    Logger.getLogger(ProjectWrapper.class.getName()).log(Level.SEVERE, null, ex);
 //                }
 //                break;
 //            }
@@ -319,12 +333,6 @@ public class ProjectImpl {
 //        setTextContentInFile(true, build_Info(), "build_Info_"+getName()+".txt");
 //        setTextContentInFile(true, abstractProject_Info(), "abstractProject_Info_"+getName()+".txt");
 //        setTextContentInFile(true, run_Info(), "run_Info_"+getName()+".txt");
-        String[] fileNameArray = {"junitResult.xml", "test-defects.xml"};
-
-        for ( int i = 0; i < fileNameArray.length; i++ ) {
-            searchForXml(new File(this.abstractProject.getBuildDir().getPath()), fileNameArray[i]);
-        }
-
         return "";
 
     }
@@ -353,60 +361,90 @@ public class ProjectImpl {
                 Document document = builder.parse(new FileInputStream(new File(root.getPath())));
                 XPath xPath = XPathFactory.newInstance().newXPath();
 
-                if (filename.equals("test-defects.xml")) {
-                    String expression = "/testcases/testcase[@actualStatus='failed'][@status='passed']/defect[@type='jira']";
-                    String[] defectAttributes = {"expectedMessage", "link", "status", "type"};
+//                if (filename.equals("test-defects.xml")) {
+                    String expression = "/testcases/testcase[@actualStatus='failed'][@status='passed']/defect[@type='jira']/name";
+//                    String[] defectAttributes = {"expectedMessage", "link", "status", "type"};
+//
+//                    NodeList nodeList = (NodeList) xPath.compile(expression).evaluate(document, XPathConstants.NODESET);
+//                    Node n;
+//                    if (nodeList.getLength() > 0) {
+//                        for ( int i = 0; i < nodeList.getLength(); i++ ) {
+//                            n = nodeList.item(i);
+//                            if (n.getNodeType() == Node.ELEMENT_NODE) {
+//                                Element e = (Element) n;
+//                                for ( String s : defectAttributes ) {
+//                                    sb.append(s + " : " + e.getAttribute(s) + "\n");
+//                                }
+//                                sb.append("name : " + ((Element) e.getParentNode()).getAttribute("name") + "\n");
+//                            }
+//                        }
+//                    }
+////                    sb.append(root.getPath());
+//                    setTextContentInFile(false, sb.toString(), filename.substring(0, filename.length() - 4) + ".ExtractedValues" + getName() + ".xml");
+//
+//                } else 
+//                if (filename.equals("junitResult.xml")) {
+//                String expression = "/result/suites/suite/cases/case";
+                NodeList nodeList = (NodeList) xPath.compile(expression).evaluate(document, XPathConstants.NODESET);
+                Node n;
 
-                    NodeList nodeList = (NodeList) xPath.compile(expression).evaluate(document, XPathConstants.NODESET);
-                    Node n;
-                    if (nodeList.getLength() > 0) {
-                        for ( int i = 0; i < nodeList.getLength(); i++ ) {
-                            n = nodeList.item(i);
-                            if (n.getNodeType() == Node.ELEMENT_NODE) {
-                                Element e = (Element) n;
-                                for ( String s : defectAttributes ) {
-                                    sb.append(s + " : " + e.getAttribute(s) + "\n");
-                                }
-                                sb.append("name : " + ((Element) e.getParentNode()).getAttribute("name") + "\n");
-                            }
+                if (nodeList.getLength() > 0) {
+                    for ( int i = 0; i < nodeList.getLength(); i++ ) {
+                        n = nodeList.item(i);
+                        if (n.getNodeType() == Node.ELEMENT_NODE) {
+                            Element e = (Element) n;
+                            System.out.println(e.getTextContent());
+                            // System.out.println(e.getNodeValue());
+                            // System.out.println(e.getFirstChild().getNodeValue());
+                            // System.out.println(e.getFirstChild().getTextContent());
+                            // System.out.println(e.getNodeName());
+                            // System.out.println(e.getAttribute(e.get));
+                            // String s = e.getElementsByTagName("className").item(0).getTextContent();
+                            // sb.append(s);
+                            // System.out.println(s);
+//                            System.out.println(e.getAttribute("type"));
+                        } else if (n.getNodeType() == Node.ATTRIBUTE_NODE) {
+                            Attr attr = (Attr) n;
+                            System.out.println(attr.getValue());
                         }
                     }
-                    sb.append(root.getPath());
-                    setTextContentInFile(false, sb.toString(), filename.substring(0, filename.length() - 4) + ".ExtractedValues" + getName() + ".xml");
-
-                } else if (filename.equals("junitResult.xml")) {
-
-                    String expression = "/result/suites/suite/cases/case";
-                    NodeList nodeList = (NodeList) xPath.compile(expression).evaluate(document, XPathConstants.NODESET);
-                    Node n;
-
-                    if (nodeList.getLength() > 0) {
-                        for ( int i = 0; i < nodeList.getLength(); i++ ) {
-                            n = nodeList.item(i);
-                            if (n.getNodeType() == Node.ELEMENT_NODE) {
-                                Element e = (Element) n;
-                                sb.append(e.getElementsByTagName("className").item(0).getTextContent())
-                                        .append(e.getElementsByTagName("testName").item(0).getTextContent());
-                            }
-                        }
-                    } else {
-                    }
-                    sb.append(root.getPath());
-                    setTextContentInFile(false, sb.toString(), filename.substring(0, filename.length() - 4) + ".ExtractedValues" + getName() + ".xml");
-
                 }
+//                    sb.append(root.getPath());
+                setTextContentInFile(false, sb.toString(), filename.substring(0, filename.length() - 4) + ".ExtractedValues" + getName() + ".xml");
+
+//                }
             } catch (IOException ex) {
-                Logger.getLogger(ProjectImpl.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ProjectWrapper.class.getName()).log(Level.SEVERE, null, ex);
             } catch (XPathExpressionException ex) {
-                Logger.getLogger(ProjectImpl.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ProjectWrapper.class.getName()).log(Level.SEVERE, null, ex);
             } catch (SAXException ex) {
-                Logger.getLogger(ProjectImpl.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ProjectWrapper.class.getName()).log(Level.SEVERE, null, ex);
             } catch (ParserConfigurationException ex) {
-                Logger.getLogger(ProjectImpl.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ProjectWrapper.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 
     }
+
+    /**
+     * L'expression doit cibler soit un attribut soit un élément avec textcontent
+     */
+    private void checkXmlFiles() {
+        String expression = "/testcases/testcase[@actualStatus='failed'][@status='passed']/defect[@type='jira']/name";
+//String expression = "/result/suites/suite/cases/case[skipped='true']/className";
+        String[] fileNameArray = {"junitResult.xml", "test-defects.xml"};
+//        File xmlFile;
+//        for ( int i = 0; i < fileNameArray.length; i++ ) {
+//            xmlFile = getXmlFile(new File(this.abstractProject.getBuildDir().getPath()), fileNameArray[i]);
+//            applyXPtah(xmlFile, expression);
+////            searchForXml(new File(this.abstractProject.getBuildDir().getPath()), fileNameArray[i]);
+//        }
+//        XmlWrapper xmlWrap = new XmlWrapper();
+        // get xpath result(s), is there anything? If yes, save the state
+
+    }
+
+    
 
     public void setTextContentInFile(boolean setHeader, String content, String filename) {
         // source folder --> c:\\Program files (x86)\Jenkins\
@@ -436,7 +474,7 @@ public class ProjectImpl {
 //        try {
 //            s += "getCanonicalPath : " + f.getCanonicalPath() + "\n";
 //        } catch (IOException ex) {
-//            Logger.getLogger(ProjectImpl.class.getName()).log(Level.SEVERE, null, ex);
+//            Logger.getLogger(ProjectWrapper.class.getName()).log(Level.SEVERE, null, ex);
 //        }
 //        s += "getName : " + f.getName() + "\n";
 //        s += "getParent : " + f.getParent() + "\n";
@@ -520,7 +558,7 @@ public class ProjectImpl {
 //        try {
 //            s += "getLog : " + r.getLog() + "\n";
 //        } catch (IOException ex) {
-//            Logger.getLogger(ProjectImpl.class.getName()).log(Level.SEVERE, null, ex);
+//            Logger.getLogger(ProjectWrapper.class.getName()).log(Level.SEVERE, null, ex);
 //        }
 //        s += "getSearchName : " + r.getSearchName() + "\n";
 //        s += "getSearchUrl : " + r.getSearchUrl() + "\n";

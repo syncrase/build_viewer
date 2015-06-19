@@ -28,37 +28,37 @@ import java.util.Iterator;
 import org.apache.commons.lang.Validate;
 
 /**
- * Represent a set of jobs (ProjectImpl)
+ * Represent a set of jobs (ProjectWrapper)
  * <p>
  * @author I310911
  */
 public class ViewEntry {
 
-    private final HashSet<ProjectImpl> projects = new HashSet<ProjectImpl>();
-    private final String prefixe;
-    private ViewEntryColors currentState;
+    private final HashSet<ProjectWrapper> projects = new HashSet<ProjectWrapper>();
+    private final String prefix;
+    private ViewEntryColor currentState;
     private final BuildViewer bv;
 
-    ViewEntry(BuildViewer bv, ProjectImpl proj) {
+    ViewEntry(BuildViewer bv, ProjectWrapper proj) {
         this.bv = bv;
         projects.add(proj);
-        this.prefixe = (bv.getPrefixesSeparators() != null && bv.getPrefixesSeparators().size() >= 1) ? proj.getPrefix() : ProjectImpl.NO_PREFIX;
+        this.prefix = (bv.getPrefixesSeparators() != null && bv.getPrefixesSeparators().size() >= 1) ? proj.getPrefix() : ProjectWrapper.NO_PREFIX;
         this.refreshState();
     }
 
     //**************************************************************************
     // Getters/setters
     //**************************************************************************
-    public HashSet<ProjectImpl> getProjects() {
+    public HashSet<ProjectWrapper> getProjects() {
         return projects;
     }
 
     public String getPrefix() {
-        return this.prefixe;
+        return this.prefix;
     }
 
     public String getBackgroundColor() {
-        refreshState();
+        // TODO refresh
         return currentState.getVe_backgroundColor();
     }
 
@@ -74,9 +74,8 @@ public class ViewEntry {
      * <p>
      * @param entry
      */
-    public void addProject(ProjectImpl entry) {
-        Validate.notNull(entry);
-        if (entry.getPrefix().equals(this.prefixe)) {
+    public void addProject(ProjectWrapper entry) {
+        if (entry != null && entry.getPrefix().equals(this.prefix)) {
             projects.add(entry);
             this.refreshState();
         }
@@ -86,8 +85,8 @@ public class ViewEntry {
      *
      * @return The first job, if it exists
      */
-    public ProjectImpl getFirstJob() {
-        Iterator<ProjectImpl> it = projects.iterator();
+    public ProjectWrapper getFirstJob() {
+        Iterator<ProjectWrapper> it = projects.iterator();
         if (it.hasNext()) {
             return it.next();
         }
@@ -99,27 +98,26 @@ public class ViewEntry {
      * <p>
      * @return
      */
-    public void refreshState() {
+    private void refreshState() {
 
-        int maxRank = 0;
-        int index = 0;
-        String projectRes = "";
+        int highestPriority = 0;//TODO
+        int cursor = 0;
+        String projectResult = "";
 
-        for ( ProjectImpl p : projects ) {// Go trough projects in this view
-            projectRes = p.getResult();
-            lookForFavoriteColor:
-            for ( ViewEntryColors state : bv.getCOLOR_SETTINGS() ) {// Find the corresponding status
-                if (projectRes.equals(state.getVe_state())) {
+        for ( ProjectWrapper p : projects ) {// Go trough projects in this view
+            projectResult = p.getResult();
+            for ( ViewEntryColor state : bv.getViewEntryColors() ) {// Find the corresponding status
+                if (projectResult.equals(state.getVe_state())) {
 
-                    if (index >= maxRank) {
-                        maxRank = index;// Keep the index of the highest priority state. Highest it is, highest the priority is
+                    if (cursor >= highestPriority) {
+                        highestPriority = cursor;// Keep the index of the highest priority state. Highest it is, highest the priority is
                         currentState = state;
-                        break lookForFavoriteColor;
+                        break;
                     }
                 }
-                index++;
+                cursor++;
             }
-            index = 0;
+            cursor = 0;
         }
     }
 

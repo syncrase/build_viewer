@@ -25,7 +25,7 @@ THE SOFTWARE.
 <!--xmlns:g="glide"-->
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt" 
          trim="false" xmlns:g="glide" xmlns:j2="jelly:core" xmlns:g2="null">
-    <script type="text/javascript" src="${rootURL}/plugin/viewer/redips.js" />
+    <!--    <script type="text/javascript" src="${rootURL}/plugin/viewer/redips.js" />-->
     <style type="text/css" title="myInnerCSS">
         .redips-drag {
         cursor: move;
@@ -43,6 +43,8 @@ THE SOFTWARE.
         font-size: 10pt;
         }
         
+        
+        <!-- ######################  Statelist  ###################-->
         table#stateList {
         width=1920px;
         margin:auto;
@@ -71,7 +73,7 @@ THE SOFTWARE.
         width:300px;
         }
         
-        table#stateList tr td.redips-mark div div.colDrahNDropStyle {
+        table#stateList tr td.redips-mark div div.colDragNDropStyle {
         float:left;
         <!--margin-left:50px;-->
         }
@@ -91,7 +93,63 @@ THE SOFTWARE.
         width:300px;
         }
         
-        table#stateList tr td div.redips-drag div.colDrahNDropStyle {
+        table#stateList tr td div.redips-drag div.colDragNDropStyle {
+        float:left;
+        width:50px;
+        }
+        
+        
+        <!-- #################  xmlExceptionList  ####################-->
+        
+        table#xmlExceptionTable {
+        width=1920px;
+        margin:auto;
+        padding:10px;
+        }
+        
+        table#xmlExceptionTable tr td div div.headerStyle {
+        background:#9B9EA2;
+        line-height:30px;
+        font-weight:bold;
+        font-size:large;
+        }
+        
+        table#xmlExceptionTable tr td div div.colBackgroundStyle {
+        float:left;
+        width:300px;
+        }
+        
+        table#xmlExceptionTable tr td div div.colFontColorStyle {
+        float:left;
+        width:300px;
+        }
+        
+        table#xmlExceptionTable tr td div div.colStateStyle {
+        float:left;
+        width:300px;
+        }
+        
+        table#xmlExceptionTable tr td div div.colDragNDropStyle {
+        float:left;
+        <!--margin-left:50px;-->
+        }
+
+        table#xmlExceptionTable tr td div div.colBackgroundStyle {       
+        float:left;
+        width:300px;
+        }
+        
+        table#xmlExceptionTable tr td div div.colFontColorStyle {
+        float:left;
+        width:300px;
+        }
+        
+        table#xmlExceptionTable tr td div div.colStateStyle {
+        float:left;
+        width:300px;
+        }
+        
+        table#xmlExceptionTable tr td div div.colDragNDropStyle {
         float:left;
         width:50px;
         }
@@ -116,6 +174,28 @@ THE SOFTWARE.
         var row = table.insertRow(table.rows.length-2);
         var cell = row.insertCell(0);
         cell.innerHTML = "&lt;div class=\&quot;redips-drag\&quot;&gt;&lt;div class=\&quot;colStateStyle\&quot;&gt;&lt;input type=\&quot;text\&quot; name=\&quot;ve_state\&quot; value=\&quot;${from.DEFAULT_STATE_NAME}\&quot; /&gt;&lt;/div&gt;&lt;div class=\&quot;colBackgroundStyle\&quot;&gt;&lt;input type=\&quot;color\&quot; name=\&quot;ve_backgroundColor\&quot; value=\&quot;${from.DEFAULT_VE_BACKGROUND_COLOR}\&quot;  /&gt;&lt;/div&gt;&lt;div class=\&quot;colFontColorStyle\&quot;&gt;&lt;input type=\&quot;color\&quot; name=\&quot;ve_fontColor\&quot; value=\&quot;${from.DEFAULT_VE_FONT_COLOR}\&quot; /&gt;&lt;/div&gt;&lt;/div&gt;";
+        }
+        
+        function addXmlExceptionRow(tableId){
+        <!--alert('salut');-->
+        var table = document.getElementById(tableId);
+        var row = table.insertRow(table.rows.length);
+        var cell = row.insertCell(0);
+        cell.innerHTML = "&lt;div class=\&quot;\&quot;&gt; &lt;div class=\&quot;colStateStyle\&quot; style=\&quot;float:left;\&quot;&gt; &lt;input type=\&quot;text\&quot; name=\&quot;xmlex_filename\&quot; value=\&quot;${xmlException.filename}\&quot;/&gt; &lt;/div&gt; &lt;div class=\&quot;colBackgroundStyle\&quot; style=\&quot;float:left;\&quot;&gt; &lt;input type=\&quot;text\&quot; name=\&quot;xmlex_expression\&quot; value=\&quot;${xmlException.expression}\&quot; /&gt; &lt;/div&gt; &lt;table id=\&quot;xmlExceptionStatusTable\&quot; style=\&quot;float:left;\&quot; &gt; &lt;/table&gt; &lt;/div&gt;";
+        <!--&lt;div class=\&quot;\&quot;&gt; &lt;div class=\&quot;colStateStyle\&quot; style=\&quot;float:left;\&quot;&gt; &lt;input type=\&quot;text\&quot; name=\&quot;xmlex_filename\&quot; value=\&quot;${xmlException.filename}\&quot;/&gt; &lt;/div&gt; &lt;div class=\&quot;colBackgroundStyle\&quot; style=\&quot;float:left;\&quot;&gt; &lt;input type=\&quot;text\&quot; name=\&quot;xmlex_expression\&quot; value=\&quot;${xmlException.expression}\&quot; /&gt; &lt;/div&gt; &lt;table id=\&quot;xmlExceptionStatusTable\&quot; style=\&quot;float:left;\&quot; &gt; &lt;j:forEach var=\&quot;xmlExceptionItem\&quot; items=\&quot;${xmlException.statusPerReturnedValue}\&quot;&gt; &lt;tr&gt; &lt;td&gt; &lt;div class=\&quot;\&quot;&gt; &lt;div class=\&quot;\&quot; style=\&quot;float:left;\&quot;&gt; &lt;input type=\&quot;text\&quot; name=\&quot;xmlex_returnedValue#${xmlException.filename}#${xmlException.expression}\&quot; value=\&quot;${xmlExceptionItem.key}\&quot;/&gt; &lt;/div&gt; &lt;div class=\&quot;\&quot; style=\&quot;float:left;\&quot;&gt; &lt;input type=\&quot;text\&quot; name=\&quot;xmlex_status#${xmlException.filename}#${xmlException.expression}\&quot; value=\&quot;${xmlExceptionItem.value.ve_state}\&quot;/&gt; &lt;/div&gt; &lt;div class=\&quot;\&quot; style=\&quot;float:left;\&quot;&gt; &lt;input type=\&quot;color\&quot; name=\&quot;xmlex_backgroundColor#${xmlException.filename}#${xmlException.expression}\&quot; value=\&quot;${xmlExceptionItem.value.ve_backgroundColor}\&quot; /&gt; &lt;/div&gt; &lt;div class=\&quot;\&quot; style=\&quot;float:left;\&quot;&gt; &lt;input type=\&quot;color\&quot; name=\&quot;xmlex_fontColor#${xmlException.filename}#${xmlException.expression}\&quot; value=\&quot;${xmlExceptionItem.value.ve_fontColor}\&quot; /&gt; &lt;/div&gt; &lt;/div&gt; &lt;/td&gt; &lt;/tr&gt; &lt;/j:forEach&gt; &lt;/table&gt; &lt;/div&gt;";-->
+        <!--&lt;div class=\&quot;redips-drag\&quot;&gt;&lt;div class=\&quot;colStateStyle\&quot;&gt;&lt;input type=\&quot;text\&quot; name=\&quot;xmlex_filename\&quot; /&gt;&lt;/div&gt;&lt;div class=\&quot;colBackgroundStyle\&quot;&gt;&lt;input type=\&quot;text\&quot; name=\&quot;xmlex_expression\&quot; /&gt;&lt;/div&gt;&lt;/div&gt;";-->
+        <!-- xml staus and associated colors
+        &lt;tr&gt; &lt;td&gt; &lt;div class=\&quot;\&quot;&gt; &lt;div class=\&quot;\&quot; style=\&quot;float:left;\&quot;&gt; &lt;input type=\&quot;text\&quot; name=\&quot;xmlex_returnedValue#${xmlExceptionItem.filename}#${xmlExceptionItem.expression}\&quot; value=\&quot;returned value\&quot;/&gt; &lt;/div&gt; &lt;div class=\&quot;\&quot; style=\&quot;float:left;\&quot;&gt; &lt;input type=\&quot;text\&quot; name=\&quot;xmlex_status#${xmlExceptionItem.filename}#${xmlExceptionItem.expression}\&quot; value=\&quot;status\&quot;/&gt; &lt;/div&gt; &lt;div class=\&quot;\&quot; style=\&quot;float:left;\&quot;&gt; &lt;input type=\&quot;color\&quot; name=\&quot;xmlex_backgroundColor#${xmlExceptionItem.filename}#${xmlExceptionItem.expression}\&quot; value=\&quot;#FF00FF\&quot; /&gt; &lt;/div&gt; &lt;div class=\&quot;\&quot; style=\&quot;float:left;\&quot;&gt; &lt;input type=\&quot;color\&quot; name=\&quot;xmlex_fontColor#${xmlExceptionItem.filename}#${xmlExceptionItem.expression}\&quot; value=\&quot;#00FF00\&quot; /&gt; &lt;/div&gt; &lt;/div&gt; &lt;/td&gt; &lt;/tr&gt;-->
+        }
+        
+        function addXPATHReturnedRow(tableId, filename, xpath){
+        <!--alert('tableId');-->
+<!--        alert('filename : '+filename);
+        alert('xpath : '+xpath);-->
+        var table = document.getElementById(tableId);
+        var row = table.insertRow(table.rows.length);
+        var cell = row.insertCell(0);
+        cell.innerHTML = "&lt;div class=\&quot;\&quot;&gt; &lt;div class=\&quot;\&quot; style=\&quot;float:left;\&quot;&gt; &lt;input type=\&quot;text\&quot; name=\&quot;xmlex_returnedValue#"+filename+"#"+xpath+"\&quot; value=\&quot;${xmlExceptionItem.key}\&quot;/&gt; &lt;/div&gt; &lt;div class=\&quot;\&quot; style=\&quot;float:left;\&quot;&gt; &lt;input type=\&quot;text\&quot; name=\&quot;xmlex_status#"+filename+"#"+xpath+"\&quot; value=\&quot;${xmlExceptionItem.value.ve_state}\&quot;/&gt; &lt;/div&gt; &lt;div class=\&quot;\&quot; style=\&quot;float:left;\&quot;&gt; &lt;input type=\&quot;color\&quot; name=\&quot;xmlex_backgroundColor#"+filename+"#"+xpath+"\&quot; value=\&quot;${xmlExceptionItem.value.ve_backgroundColor}\&quot; /&gt; &lt;/div&gt; &lt;div class=\&quot;\&quot; style=\&quot;float:left;\&quot;&gt; &lt;input type=\&quot;color\&quot; name=\&quot;xmlex_fontColor#"+filename+"#"+xpath+"\&quot; value=\&quot;${xmlExceptionItem.value.ve_fontColor}\&quot; /&gt; &lt;/div&gt; &lt;/div&gt;";
         }
         
         function deleteRow(tableId, stateValue) {
@@ -167,7 +247,7 @@ THE SOFTWARE.
             </div>
         </f:entry>
 
-<!--        <f:optionalBlock name="useincluderegex" title="${%Use a regular expression to include jobs into the view}"
+        <!--        <f:optionalBlock name="useincluderegex" title="${%Use a regular expression to include jobs into the view}"
                          checked="${it.includeRegex != null}" help="/help/view-config/includeregex.html">
             <f:entry title="${%Regular expression}">
                 <f:textbox name="includeRegex" field="includeRegex" />
@@ -231,62 +311,62 @@ THE SOFTWARE.
             </f:entry>
         </f:optionalBlock>
         
-        <f:entry title="${%States}" field="COLOR_SETTINGS">
-            <j:if test="${from.COLOR_SETTINGS == null}">
+        <f:entry title="${%States}" field="viewEntryColorsField">
+            <j:if test="${from.viewEntryColors == null}">
                 <j:invoke on="${from}" method="setDefaultColorSettings">
                     <j:arg type="boolean" value="true" />
                 </j:invoke>
             </j:if>
-            <form>
-                <div >
-                    <div id="redips-drag" style="margin-bottom:20px;" >
-                        <table id="stateList"  style="width:976px;" >
+            <!--<form>-->
+            <div >
+                <div id="redips-drag" style="margin-bottom:20px;" >
+                    <table id="stateList"  style="width:976px;" >
+                        <tr>
+                            <td class="redips-mark">
+                                <div>
+                                    <div class="colStateStyle headerStyle" >${%State}</div>
+                                    <div class="colBackgroundStyle headerStyle">${%Background color}</div>
+                                    <div class="colFontColorStyle headerStyle">${%Font color}</div>
+                                    <div style="background:#FFFFFF" class="colDragNDropStyle" ></div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="redips-mark" style="height:30px;background:#FFFFFF"></td>
+                        </tr>
+                        <j:forEach var="state" items="${from.viewEntryColors}">
                             <tr>
-                                <td class="redips-mark">
-                                    <div>
-                                        <div class="colStateStyle headerStyle" >${%State}</div>
-                                        <div class="colBackgroundStyle headerStyle">${%Background color}</div>
-                                        <div class="colFontColorStyle headerStyle">${%Font color}</div>
-                                        <div style="background:#FFFFFF" class="colDrahNDropStyle" ></div>
+                                <td>
+                                    <div class="redips-drag">
+                                        <div class="colStateStyle">
+                                            <input type="text" name="ve_state" value="${state.ve_state}" />
+                                        </div>
+                                        <div class="colBackgroundStyle">
+                                            <input type="color" name="ve_backgroundColor" value="${state.ve_backgroundColor}" />
+                                        </div>
+                                        <div class="colFontColorStyle">
+                                            <input type="color" name="ve_fontColor" value="${state.ve_fontColor}" />
+                                        </div>
+                                        <div class="colDragNDropStyle" style="width:50px;" >
+                                            <img src="${myImagesURL}Cursor-Move2-512.png" type="image/png" alt="dragNdrop" tooltip="Drap and drop to change the priority" height="20" width="20" />
+                                        </div>
                                     </div>
                                 </td>
                             </tr>
-                            <tr>
-                                <td class="redips-mark" style="height:30px;background:#FFFFFF"></td>
-                            </tr>
-                            <j:forEach var="state" items="${from.COLOR_SETTINGS}">
-                                <tr>
-                                    <td>
-                                        <div class="redips-drag">
-                                            <div class="colStateStyle">
-                                                <input type="text" name="ve_state" value="${state.ve_state}" style=""/>
-                                            </div>
-                                            <div class="colBackgroundStyle">
-                                                <input type="color" name="ve_backgroundColor" value="${state.ve_backgroundColor}" style="" />
-                                            </div>
-                                            <div class="colFontColorStyle">
-                                                <input type="color" name="ve_fontColor" value="${state.ve_fontColor}" style="" />
-                                            </div>
-                                            <div class="colDrahNDropStyle" style="width:50px;" >
-                                                <img src="${myImagesURL}Cursor-Move2-512.png" type="image/png" alt="dragNdrop" tooltip="Drap and drop to change the priority" height="20" width="20" />
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </j:forEach>
-                            <tr>
-                                <td class="redips-mark" style="height:50px;background:#FFFFFF"></td>
-                            </tr>
-                            <tr>
-                                <td class="redips-trash"  title="Trash">Drag &amp; drop here to delete the row</td>
-                            </tr>
-                        </table>
-                    </div>		
-                    <div >
-                        <input  type="button" value="${%Add row}" onclick="addRow('stateList')" class="redips-trash" tooltip="Apply and refresh the page to priorize the new state" />  
-                    </div>
+                        </j:forEach>
+                        <tr>
+                            <td class="redips-mark" style="height:50px;background:#FFFFFF"></td>
+                        </tr>
+                        <tr>
+                            <td class="redips-trash"  title="Trash">Drag &amp; drop here to delete the row</td>
+                        </tr>
+                    </table>
+                </div>		
+                <div >
+                    <input  type="button" value="${%Add row}" onclick="addRow('stateList')" class="redips-trash" tooltip="Apply and refresh the page to priorize the new state" />  
                 </div>
-            </form>
+            </div>
+            <!--</form>-->
         </f:entry>
          
     </f:section>
@@ -301,6 +381,153 @@ THE SOFTWARE.
         </f:entry>
     </f:section>
   
+  
+    <!--Job gathering-->
+    <f:section title="${%Xml processing}">
+        
+        <f:entry title="${%xml check}" field="xmlExceptionListField">
+            <!--            <form>
+            <div >-->
+            <div id="" style="margin-bottom:20px;" >
+                <table id="xmlExceptionTable"  style="width:1008px;" >
+                    <tr>
+                        <td class="">
+                            <div>
+                                <div class="colStateStyle headerStyle" >${%File name}</div>
+                                <div class="colBackgroundStyle headerStyle">${%Xpath expression}</div>
+                                <!--<div class="colFontColorStyle headerStyle">${%Background color}</div>-->
+                                <div style="background:#FFFFFF" class="colDragNDropStyle" ></div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="redips-mark" style="height:30px;background:#FFFFFF"></td>
+                    </tr>
+                        
+                        
+                    <!--                    <tr>
+                        <td>
+                            <div class="redips-drag">
+                                <div class="colStateStyle">
+                                    <input type="text" name="xmlex_filename" value="filename.xml"/>
+                                </div>
+                                <div class="colBackgroundStyle">
+                                    <input type="text" name="xmlex_expression" value="expression" />
+                                </div>
+                                <div class="colDragNDropStyle" style="width:50px;" >
+                                    <img src="${myImagesURL}Cursor-Move2-512.png" type="image/png" alt="dragNdrop" tooltip="Drap and drop to change the priority" height="20" width="20" />
+                                </div>
+                            </div>
+                        </td>
+                    </tr>-->
+                                
+                                
+                    <j:forEach var="xmlException" items="${from.xmlExceptionList}">
+                        <tr>
+                            <td>
+                                <div class="">
+                                    <div class="colStateStyle"  style="float:left;">
+                                        <input type="text" name="xmlex_filename" value="${xmlException.filename}"/>
+                                    </div>
+                                    <div class="colBackgroundStyle" style="float:left;">
+                                        <input type="text" name="xmlex_expression" value="${xmlException.expression}" />
+                                    </div> 
+                                    <div style="float:left;">
+                                        
+                                        <j:set var="filename" value="${xmlException.escapedFilename}"/>
+                                        <j:set var="xpath" value="${xmlException.escapedExpression}"/>
+                                        file : "${filename}"
+                                        <table id="xmlExceptionStatusTable#${filename}#${xpath}"  style="width:100%;" >
+                                            <j:forEach var="xmlExceptionItem" items="${xmlException.statusPerReturnedValue}">
+                                                <tr>
+                                                    <td>
+                                                        <div class="">
+                                                            <div class="" style="float:left;">
+                                                                <input type="text" name="xmlex_returnedValue#${filename}#${xpath}" value="${xmlExceptionItem.key}"/>
+                                                            </div>
+                                                            <div class="" style="float:left;">
+                                                                <input type="text" name="xmlex_status#${filename}#${xpath}" value="${xmlExceptionItem.value.ve_state}"/>
+                                                            </div>
+                                                            <div class="" style="float:left;">
+                                                                <input type="color" name="xmlex_backgroundColor#${filename}#${xpath}" value="${xmlExceptionItem.value.ve_backgroundColor}" />
+                                                            </div>
+                                                            <div class="" style="float:left;">
+                                                                <input type="color" name="xmlex_fontColor#${filename}#${xpath}" value="${xmlExceptionItem.value.ve_fontColor}" />
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </j:forEach>
+                                        </table>
+                                        <div style="float:left;">
+                                            <input  type="button" value="${%Add return}" onclick="addXPATHReturnedRow('xmlExceptionStatusTable#${filename}#${xpath}', '${filename}', '${xpath}')" class="redips-trash" tooltip="?" />  
+                                        </div>
+                                    </div>
+            
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="redips-mark" style="height:30px;background:#FFFFFF"></td>
+                        </tr>
+                    </j:forEach>
+
+                </table>
+                                                
+                <!--                                        <j:forEach var="xmlException" items="${from.xmlExceptionList}">
+                    <tr>
+                        <td>
+                            <div class="">
+                                <div class="" style="float:left;">
+                                    <input type="text" name="xmlex_returnedValue" value="returned value"/>
+                                </div>
+                                <div class="" style="float:left;">
+                                    <input type="text" name="xmlex_status" value="status"/>
+                                </div>
+                                <div class="" style="float:left;">
+                                    <input type="color" name="xmlex_backgroundColor" value="#FF00FF" />
+                                </div>
+                                <div class="" style="float:left;">
+                                    <input type="color" name="xmlex_fontColor" value="#00FF00" />
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </j:forEach>-->
+                    
+                    
+                <!--                                        <tr>
+                    <td>
+                        <div class="">
+                            <div class="" style="float:left;">
+                                <input type="text" name="xmlex_returnedValue#${xmlException.filename}#${xmlException.expression}" value="returned value"/>
+                            </div>
+                            <div class="" style="float:left;">
+                                <input type="text" name="xmlex_status#${xmlException.filename}#${xmlException.expression}" value="status"/>
+                            </div>
+                            <div class="" style="float:left;">
+                                <input type="color" name="xmlex_backgroundColor#${xmlException.filename}#${xmlException.expression}" value="#FF00FF" />
+                            </div>
+                            <div class="" style="float:left;">
+                                <input type="color" name="xmlex_fontColor#${xmlException.filename}#${xmlException.expression}" value="#00FF00" />
+                            </div>
+                        </div>
+                    </td>
+                </tr>-->
+                                    
+                                    
+                                    
+                                    
+
+            </div>		
+            <div >
+                <input  type="button" value="${%Add row}" onclick="addXmlExceptionRow('xmlExceptionTable')" class="redips-trash" tooltip="?" />  
+            </div>
+            
+        </f:entry>
+            
+
+    </f:section>
     
     <script type="text/javascript">
         /*

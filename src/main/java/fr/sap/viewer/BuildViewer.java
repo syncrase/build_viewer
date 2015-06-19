@@ -32,6 +32,8 @@ import hudson.model.TopLevelItem;
 import hudson.model.ViewDescriptor;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -56,8 +58,9 @@ public class BuildViewer extends ListView {
 
     private String backgroundColor;
 
-    private LinkedHashSet<ViewEntryColors> COLOR_SETTINGS;
+    private LinkedHashSet<ViewEntryColor> viewEntryColors;//TODO
     private HashSet<String> prefixesSeparators;
+    private ArrayList<XmlExceptionItem> xmlExceptionList;
 
     private String captionText;
     private int captionSize;
@@ -66,43 +69,48 @@ public class BuildViewer extends ListView {
 
     @DataBoundConstructor
     public BuildViewer(String name, String backgroundColor, String captionColor, String captionTextColor,
-                       LinkedHashSet<ViewEntryColors> COLOR_SETTINGS, String captionText, int captionSize, HashSet<String> prefixesSeparators) {
+                       LinkedHashSet<ViewEntryColor> viewEntryColors, String captionText, int captionSize, HashSet<String> prefixesSeparators, ArrayList<XmlExceptionItem> xmlExceptionList) {
         super(name);
         this.backgroundColor = backgroundColor;
         this.captionColor = captionColor;
         this.captionTextColor = captionTextColor;
-        this.COLOR_SETTINGS = COLOR_SETTINGS;
+        this.viewEntryColors = viewEntryColors;
         this.captionText = captionText;
         this.captionSize = captionSize;
 //        if(prefixesSeparators == null){
 //            this.prefixesSeparators = new HashSet<String>();
 //        }
         this.prefixesSeparators = prefixesSeparators;
+        this.xmlExceptionList = xmlExceptionList;
 
     }
 
-    public LinkedHashSet<ViewEntryColors> getCOLOR_SETTINGS() {
-//        if (COLOR_SETTINGS == null) {
+    public LinkedHashSet<ViewEntryColor> getViewEntryColors() {//TODO
+//        if (viewEntryColors == null) {
 //            initializeColorSettings();
 //        }
-        return COLOR_SETTINGS;
+        return viewEntryColors;
     }
 
     public void setDefaultColorSettings(boolean b) {
         if (b == true) {
-            COLOR_SETTINGS = new LinkedHashSet<ViewEntryColors>();
-            COLOR_SETTINGS.add(new ViewEntryColors(Result.SUCCESS.toString(), "#32BA00", "#000000"));//green
-            COLOR_SETTINGS.add(new ViewEntryColors(Result.UNSTABLE.toString(), "#FFFF00", "#000000"));//yellow
-            COLOR_SETTINGS.add(new ViewEntryColors(Result.FAILURE.toString(), "#BA0000", "#000000"));//red
-            COLOR_SETTINGS.add(new ViewEntryColors(Result.NOT_BUILT.toString(), "#737373", "#000000"));//grey
-            COLOR_SETTINGS.add(new ViewEntryColors(Result.ABORTED.toString(), "#000000", "#000000"));//dark
-            COLOR_SETTINGS.add(new ViewEntryColors("CLAIMED", "#F2B32C", "#000000"));//dark
+            viewEntryColors = new LinkedHashSet<ViewEntryColor>();
+            viewEntryColors.add(new ViewEntryColor(Result.SUCCESS.toString(), "#32BA00", "#000000"));//green
+            viewEntryColors.add(new ViewEntryColor(Result.UNSTABLE.toString(), "#FFFF00", "#000000"));//yellow
+            viewEntryColors.add(new ViewEntryColor(Result.FAILURE.toString(), "#BA0000", "#000000"));//red
+            viewEntryColors.add(new ViewEntryColor(Result.NOT_BUILT.toString(), "#737373", "#000000"));//grey
+            viewEntryColors.add(new ViewEntryColor(Result.ABORTED.toString(), "#000000", "#000000"));//dark
+            viewEntryColors.add(new ViewEntryColor("CLAIMED", "#F2B32C", "#000000"));//dark
         }
 
     }
 
     public HashSet<String> getPrefixesSeparators() {
         return prefixesSeparators;
+    }
+
+    public ArrayList<XmlExceptionItem> getXmlExceptionList() {
+        return xmlExceptionList;
     }
 
     public String getCaptionText() {
@@ -125,13 +133,13 @@ public class BuildViewer extends ListView {
         return captionTextColor;
     }
 
-    public List<ProjectImpl> getContents() {
-        List<ProjectImpl> contents;
-        contents = new ArrayList<ProjectImpl>();
-        ProjectImpl project;
+    public List<ProjectWrapper> getContents() {
+        List<ProjectWrapper> contents;
+        contents = new ArrayList<ProjectWrapper>();
+        ProjectWrapper project;
         for ( TopLevelItem item : super.getItems() ) {
             if (item instanceof AbstractProject) {
-                project = new ProjectImpl(this, (AbstractProject) item);
+                project = new ProjectWrapper(this, (AbstractProject) item);
                 if (!project.getAbstractProject().isDisabled()) {
                     contents.add(project);
                 }
@@ -142,14 +150,7 @@ public class BuildViewer extends ListView {
 
     public Dashboard getDashboard() {
         Dashboard dashboard;
-        List<ProjectImpl> contents = getContents();
-        dashboard = new Dashboard(this, contents);
-        return dashboard;
-    }
-
-    public Dashboard getDashboard(Integer i1, Integer i2) {
-        Dashboard dashboard;
-        List<ProjectImpl> contents = getContents();
+        List<ProjectWrapper> contents = getContents();
         dashboard = new Dashboard(this, contents);
         return dashboard;
     }
@@ -186,25 +187,66 @@ public class BuildViewer extends ListView {
         String[] ves_backgroundColors = req.getParameterValues("ve_backgroundColor");
         String[] ves_fontColors = req.getParameterValues("ve_fontColor");
 
-        COLOR_SETTINGS = new LinkedHashSet<ViewEntryColors>();
+        viewEntryColors = new LinkedHashSet<ViewEntryColor>();
         for ( int i = 0; i < ves_states.length; i++ ) {
             if (!ves_states[i].equals(DEFAULT_STATE_NAME)) {
-                COLOR_SETTINGS.add(new ViewEntryColors(ves_states[i].toUpperCase(), ves_backgroundColors[i], ves_fontColors[i]));
+                viewEntryColors.add(new ViewEntryColor(ves_states[i].toUpperCase(), ves_backgroundColors[i], ves_fontColors[i]));
             }
         }
 
-        // Desired prefixs
-        String[] separatos = req.getParameter("prefixesSeparators").split(" ");
-        if (separatos.length >= 1) {
+        // Desired prefix
+        String[] separators = req.getParameter("prefixesSeparators").split(" ");
+        if (separators.length >= 1) {
             prefixesSeparators = new HashSet<String>();
-            for ( String s : separatos ) {
+            for ( String s : separators ) {
                 if (!s.equals("")) {
                     prefixesSeparators.add(s);
                 }
             }
         }
 
-        //        Enumeration en = req.getParameterNames();
+        Enumeration en = req.getParameterNames();
+
+        // xml exceptions
+        String[] xmlex_filenames = req.getParameterValues("xmlex_filename");
+        String[] xmlex_expressions = req.getParameterValues("xmlex_expression");
+//        String[] xmlex_colors = req.getParameterValues("xmlex_color");
+
+        String[] xmlex_returnedValues;
+        String[] xmlex_statuses;
+        String[] xmlex_backgroundColors;
+        String[] xmlex_fontColors;
+
+        xmlExceptionList = new ArrayList<XmlExceptionItem>();
+        XmlExceptionItem xmlExceptionItem;
+        HashMap<String, ViewEntryColor> propertiesMap;
+        String suffix;
+        for ( int i = 0; i < xmlex_filenames.length; i++ ) {
+            xmlExceptionItem = new XmlExceptionItem(xmlex_expressions[i], xmlex_filenames[i], new HashMap<String, ViewEntryColor>());
+            if (!contains(xmlExceptionList, xmlExceptionItem)) {//resticts doubled
+                suffix = "#" + xmlExceptionItem.getEscapedFilename() + "#" + xmlExceptionItem.getEscapedExpression();
+                xmlex_returnedValues = req.getParameterValues("xmlex_returnedValue"+suffix);
+                xmlex_statuses = req.getParameterValues("xmlex_status"+suffix);
+                xmlex_backgroundColors = req.getParameterValues("xmlex_backgroundColor"+suffix);
+                xmlex_fontColors = req.getParameterValues("xmlex_fontColor"+suffix);
+
+                // first step of the table completion provide no one of variables
+                if (xmlex_returnedValues != null && xmlex_statuses != null && xmlex_backgroundColors != null && xmlex_fontColors != null) {
+                    propertiesMap = new HashMap<String, ViewEntryColor>();
+
+                    for ( int j = 0; j < xmlex_returnedValues.length; j++ ) {
+                        propertiesMap.put(xmlex_returnedValues[j], new ViewEntryColor(xmlex_statuses[j], xmlex_backgroundColors[j], xmlex_fontColors[j]));
+                    }
+                    xmlExceptionItem.setStatusPerReturnedValue(propertiesMap);
+                }
+
+                xmlExceptionList.add(xmlExceptionItem);
+            } else {
+                // si doublon => vérifier si les xml exception sont les mêmes sinon ajouter au champ déjà existant les exceptions de la seconde
+            }
+        }
+
+        // TODO add new xml status to the list of status
 //        String test;
 //        String[] strarr;
 //        while (en.hasMoreElements()) {
@@ -214,6 +256,14 @@ public class BuildViewer extends ListView {
 //        }
     }
 
+    private boolean contains(ArrayList<XmlExceptionItem> xmlExceptionList, XmlExceptionItem xmlExceptionItem) {
+        for ( XmlExceptionItem x : xmlExceptionList ) {
+            if (x.getExpression().equals(xmlExceptionItem.getExpression()) && x.getFilename().equals(xmlExceptionItem.getFilename())) {
+                return true;
+            }
+        }
+        return false;
+    }
     /*
     
     
@@ -246,6 +296,7 @@ public class BuildViewer extends ListView {
     
     
      */
+
     /**
      *
      */

@@ -73,7 +73,7 @@ THE SOFTWARE.
                                 <td>
                                     <j:choose>
                                         <j:when test="${proj.claimWrapper.isClaimed()==true}">
-                                             <!--Tooltip doesn't work with jQuery import--> 
+                                            <!--Tooltip doesn't work with jQuery import--> 
                                             <div style="text-align:center;" 
                                                  title="${proj.claimWrapper.claimedByName} : ${proj.claimWrapper.reason} &#013;Date : ${proj.claimWrapper.date}">
                                                 <st:nbsp/>${proj.result}
@@ -86,6 +86,7 @@ THE SOFTWARE.
                                     </j:choose>
                                 </td>
                                 <td>
+                                    <!-- TODO handle time with javascript-->
                                     since ${proj.buildStateDurationUpToNow}
                                 </td>
                             </tr>

@@ -37,28 +37,23 @@ import java.util.List;
 public class Dashboard {
 
     private final BuildViewer bv;
-//    private final List<ProjectImpl> contents;
-    private Collection<ViewEntry> viewEntriesCol;
+    private Collection<ViewEntry> viewEntries;
 
-    Dashboard(BuildViewer bv, List<ProjectImpl> contents) {
+    Dashboard(BuildViewer bv, List<ProjectWrapper> contents) {
 //        this.contents = contents;
         this.bv = bv;
-        viewEntriesCol = this.toViewEntryCollection(contents);
+        viewEntries = this.toViewEntryCollection(contents);
     }
 
     //**************************************************************************
     // Getters / setters
     //**************************************************************************
-//    public List<ProjectImpl> getContents() {
-//        return contents;
-//    }
-
-    public Collection<ViewEntry> getViewEntriesCol() {
-        return Collections.unmodifiableCollection(viewEntriesCol);
+    public Collection<ViewEntry> getViewEntries() {//TODO
+        return Collections.unmodifiableCollection(viewEntries);
     }
 
-    public int getCountOfViews() {
-        return viewEntriesCol.size();
+    public int getViewsCount() {//TODO
+        return viewEntries.size();
     }
 
     /**
@@ -68,10 +63,10 @@ public class Dashboard {
      *                 <p>
      * @return
      */
-    private Collection<ViewEntry> toViewEntryCollection(List<ProjectImpl> contents) {
+    private Collection<ViewEntry> toViewEntryCollection(List<ProjectWrapper> contents) {
         Collection<ViewEntry> views = new ArrayList<ViewEntry>();
         goThroughProjects:
-        for ( ProjectImpl proj : contents ) {
+        for ( ProjectWrapper proj : contents ) {
             if (proj.getPrefix() != null) {// If the project has a prefix
                 for ( ViewEntry view : views ) {
                     if (proj.getPrefix().equals(view.getPrefix())) {// If a viewEntry with the same prefix already exists
@@ -83,7 +78,7 @@ public class Dashboard {
             }
             views.add(new ViewEntry(bv, proj));//Set the project (either the prefix is not yet available or it doesn't exists) in just one view
         }
-        this.viewEntriesCol = views;
+        this.viewEntries = views;
         return views;
     }
 

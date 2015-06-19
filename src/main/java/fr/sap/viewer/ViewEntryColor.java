@@ -30,18 +30,17 @@ import hudson.model.Result;
  * <p>
  * @author I310911
  */
-public class ViewEntryColors {
+public class ViewEntryColor {
 
     /**
      * These values are in the hudson.model.Result Object
      */
-    public final static String[] BUILD_STATE = {Result.SUCCESS.toString(), Result.UNSTABLE.toString(), Result.FAILURE.toString(), Result.NOT_BUILT.toString(), Result.ABORTED.toString()};
-
+//    public final static String[] BUILD_STATE = {Result.SUCCESS.toString(), Result.UNSTABLE.toString(), Result.FAILURE.toString(), Result.NOT_BUILT.toString(), Result.ABORTED.toString()};
     private final String ve_state;
     private final String ve_backgroundColor;
     private final String ve_fontColor;
 
-    public ViewEntryColors(String ve_state, String ve_backgroundColor, String ve_fontColor) {
+    public ViewEntryColor(String ve_state, String ve_backgroundColor, String ve_fontColor) {
         this.ve_state = ve_state;
         this.ve_backgroundColor = ve_backgroundColor;
         this.ve_fontColor = ve_fontColor;

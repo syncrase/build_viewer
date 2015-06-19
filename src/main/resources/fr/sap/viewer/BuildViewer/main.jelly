@@ -98,9 +98,9 @@ THE SOFTWARE.
                     <j:choose>
                         <j:invoke var="dashboard" on="${from}" method="getDashboard" />
                         <form action="#">
-                            <input id="hiddenCountOfViews" type="hidden" value="${dashboard.getCountOfViews()}" />
+                            <input id="hiddenCountOfViews" type="hidden" value="${dashboard.getViewsCount()}" />
                         </form>
-                        <j:invoke var="viewsEntries" on="${dashboard}" method="getViewEntriesCol" />
+                        <j:invoke var="viewsEntries" on="${dashboard}" method="getViewEntries" />
                         <j:forEach var="view" items="${viewsEntries}">
                             <j:set var="jobStyle" value="float: left; margin:5px; padding: 15px; border-radius: 5px; background:${view.backgroundColor};" />
                             <st:include page="viewEntry.jelly" />
