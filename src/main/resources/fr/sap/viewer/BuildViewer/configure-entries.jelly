@@ -176,26 +176,18 @@ THE SOFTWARE.
         cell.innerHTML = "&lt;div class=\&quot;redips-drag\&quot;&gt;&lt;div class=\&quot;colStateStyle\&quot;&gt;&lt;input type=\&quot;text\&quot; name=\&quot;ve_state\&quot; value=\&quot;${from.DEFAULT_STATE_NAME}\&quot; /&gt;&lt;/div&gt;&lt;div class=\&quot;colBackgroundStyle\&quot;&gt;&lt;input type=\&quot;color\&quot; name=\&quot;ve_backgroundColor\&quot; value=\&quot;${from.DEFAULT_VE_BACKGROUND_COLOR}\&quot;  /&gt;&lt;/div&gt;&lt;div class=\&quot;colFontColorStyle\&quot;&gt;&lt;input type=\&quot;color\&quot; name=\&quot;ve_fontColor\&quot; value=\&quot;${from.DEFAULT_VE_FONT_COLOR}\&quot; /&gt;&lt;/div&gt;&lt;/div&gt;";
         }
         
-        function addXmlExceptionRow(tableId){
-        <!--alert('salut');-->
+        function addXmlExceptionRow(tableId, id){
         var table = document.getElementById(tableId);
         var row = table.insertRow(table.rows.length);
         var cell = row.insertCell(0);
-        cell.innerHTML = "&lt;div class=\&quot;\&quot;&gt; &lt;div class=\&quot;colStateStyle\&quot; style=\&quot;float:left;\&quot;&gt; &lt;input type=\&quot;text\&quot; name=\&quot;xmlex_filename\&quot; value=\&quot;${xmlException.filename}\&quot;/&gt; &lt;/div&gt; &lt;div class=\&quot;colBackgroundStyle\&quot; style=\&quot;float:left;\&quot;&gt; &lt;input type=\&quot;text\&quot; name=\&quot;xmlex_expression\&quot; value=\&quot;${xmlException.expression}\&quot; /&gt; &lt;/div&gt; &lt;table id=\&quot;xmlExceptionStatusTable\&quot; style=\&quot;float:left;\&quot; &gt; &lt;/table&gt; &lt;/div&gt;";
-        <!--&lt;div class=\&quot;\&quot;&gt; &lt;div class=\&quot;colStateStyle\&quot; style=\&quot;float:left;\&quot;&gt; &lt;input type=\&quot;text\&quot; name=\&quot;xmlex_filename\&quot; value=\&quot;${xmlException.filename}\&quot;/&gt; &lt;/div&gt; &lt;div class=\&quot;colBackgroundStyle\&quot; style=\&quot;float:left;\&quot;&gt; &lt;input type=\&quot;text\&quot; name=\&quot;xmlex_expression\&quot; value=\&quot;${xmlException.expression}\&quot; /&gt; &lt;/div&gt; &lt;table id=\&quot;xmlExceptionStatusTable\&quot; style=\&quot;float:left;\&quot; &gt; &lt;j:forEach var=\&quot;xmlExceptionItem\&quot; items=\&quot;${xmlException.statusPerReturnedValue}\&quot;&gt; &lt;tr&gt; &lt;td&gt; &lt;div class=\&quot;\&quot;&gt; &lt;div class=\&quot;\&quot; style=\&quot;float:left;\&quot;&gt; &lt;input type=\&quot;text\&quot; name=\&quot;xmlex_returnedValue#${xmlException.filename}#${xmlException.expression}\&quot; value=\&quot;${xmlExceptionItem.key}\&quot;/&gt; &lt;/div&gt; &lt;div class=\&quot;\&quot; style=\&quot;float:left;\&quot;&gt; &lt;input type=\&quot;text\&quot; name=\&quot;xmlex_status#${xmlException.filename}#${xmlException.expression}\&quot; value=\&quot;${xmlExceptionItem.value.ve_state}\&quot;/&gt; &lt;/div&gt; &lt;div class=\&quot;\&quot; style=\&quot;float:left;\&quot;&gt; &lt;input type=\&quot;color\&quot; name=\&quot;xmlex_backgroundColor#${xmlException.filename}#${xmlException.expression}\&quot; value=\&quot;${xmlExceptionItem.value.ve_backgroundColor}\&quot; /&gt; &lt;/div&gt; &lt;div class=\&quot;\&quot; style=\&quot;float:left;\&quot;&gt; &lt;input type=\&quot;color\&quot; name=\&quot;xmlex_fontColor#${xmlException.filename}#${xmlException.expression}\&quot; value=\&quot;${xmlExceptionItem.value.ve_fontColor}\&quot; /&gt; &lt;/div&gt; &lt;/div&gt; &lt;/td&gt; &lt;/tr&gt; &lt;/j:forEach&gt; &lt;/table&gt; &lt;/div&gt;";-->
-        <!--&lt;div class=\&quot;redips-drag\&quot;&gt;&lt;div class=\&quot;colStateStyle\&quot;&gt;&lt;input type=\&quot;text\&quot; name=\&quot;xmlex_filename\&quot; /&gt;&lt;/div&gt;&lt;div class=\&quot;colBackgroundStyle\&quot;&gt;&lt;input type=\&quot;text\&quot; name=\&quot;xmlex_expression\&quot; /&gt;&lt;/div&gt;&lt;/div&gt;";-->
-        <!-- xml staus and associated colors
-        &lt;tr&gt; &lt;td&gt; &lt;div class=\&quot;\&quot;&gt; &lt;div class=\&quot;\&quot; style=\&quot;float:left;\&quot;&gt; &lt;input type=\&quot;text\&quot; name=\&quot;xmlex_returnedValue#${xmlExceptionItem.filename}#${xmlExceptionItem.expression}\&quot; value=\&quot;returned value\&quot;/&gt; &lt;/div&gt; &lt;div class=\&quot;\&quot; style=\&quot;float:left;\&quot;&gt; &lt;input type=\&quot;text\&quot; name=\&quot;xmlex_status#${xmlExceptionItem.filename}#${xmlExceptionItem.expression}\&quot; value=\&quot;status\&quot;/&gt; &lt;/div&gt; &lt;div class=\&quot;\&quot; style=\&quot;float:left;\&quot;&gt; &lt;input type=\&quot;color\&quot; name=\&quot;xmlex_backgroundColor#${xmlExceptionItem.filename}#${xmlExceptionItem.expression}\&quot; value=\&quot;#FF00FF\&quot; /&gt; &lt;/div&gt; &lt;div class=\&quot;\&quot; style=\&quot;float:left;\&quot;&gt; &lt;input type=\&quot;color\&quot; name=\&quot;xmlex_fontColor#${xmlExceptionItem.filename}#${xmlExceptionItem.expression}\&quot; value=\&quot;#00FF00\&quot; /&gt; &lt;/div&gt; &lt;/div&gt; &lt;/td&gt; &lt;/tr&gt;-->
+        cell.innerHTML = "&lt;div&gt; &lt;div&gt; &lt;input type=\&quot;hidden\&quot; name=\&quot;xmlex_id\&quot; value=\&quot;"+id+"\&quot;/&gt; &lt;/div&gt; &lt;div class=\&quot;colStateStyle\&quot; style=\&quot;float:left;\&quot;&gt; &lt;input type=\&quot;text\&quot; name=\&quot;xmlex_filename\&quot; value=\&quot;${xmlException.filename}\&quot;/&gt; &lt;/div&gt; &lt;div class=\&quot;colBackgroundStyle\&quot; style=\&quot;float:left;\&quot;&gt; &lt;input type=\&quot;text\&quot; name=\&quot;xmlex_expression\&quot; value=\&quot;${xmlException.expression}\&quot; /&gt; &lt;/div&gt; &lt;div style=\&quot;float:left;\&quot;&gt; &lt;table id=\&quot;xmlExceptionStatusTable#"+id+"\&quot; style=\&quot;width:100%;\&quot; &gt; &lt;tr&gt; &lt;td&gt; &lt;div&gt; &lt;div style=\&quot;float:left;\&quot;&gt; &lt;input type=\&quot;text\&quot; name=\&quot;xmlex_returnedValue#"+id+"\&quot; value=\&quot;${xmlExceptionItem.key}\&quot;/&gt; &lt;/div&gt; &lt;div style=\&quot;float:left;\&quot;&gt; &lt;input type=\&quot;text\&quot; name=\&quot;xmlex_status#"+id+"\&quot; value=\&quot;${xmlExceptionItem.value.ve_state}\&quot;/&gt; &lt;/div&gt; &lt;div style=\&quot;float:left;\&quot;&gt; &lt;input type=\&quot;color\&quot; name=\&quot;xmlex_backgroundColor#"+id+"\&quot; value=\&quot;${xmlExceptionItem.value.ve_backgroundColor}\&quot; /&gt; &lt;/div&gt; &lt;div style=\&quot;float:left;\&quot;&gt; &lt;input type=\&quot;color\&quot; name=\&quot;xmlex_fontColor#"+id+"\&quot; value=\&quot;${xmlExceptionItem.value.ve_fontColor}\&quot; /&gt; &lt;/div&gt; &lt;/div&gt; &lt;/td&gt; &lt;/tr&gt; &lt;/table&gt; &lt;div style=\&quot;float:left;\&quot;&gt; &lt;input type=\&quot;button\&quot; value=\&quot;${%Add return}\&quot; onclick=\&quot;addXPATHReturnedRow('xmlExceptionStatusTable#"+id+"', '"+id+"')\&quot; class=\&quot;redips-trash\&quot; tooltip=\&quot;?\&quot; /&gt; &lt;/div&gt; &lt;/div&gt; &lt;/div&gt;";
         }
         
-        function addXPATHReturnedRow(tableId, filename, xpath){
-        <!--alert('tableId');-->
-<!--        alert('filename : '+filename);
-        alert('xpath : '+xpath);-->
+        function addXPATHReturnedRow(tableId, id){
         var table = document.getElementById(tableId);
         var row = table.insertRow(table.rows.length);
         var cell = row.insertCell(0);
-        cell.innerHTML = "&lt;div class=\&quot;\&quot;&gt; &lt;div class=\&quot;\&quot; style=\&quot;float:left;\&quot;&gt; &lt;input type=\&quot;text\&quot; name=\&quot;xmlex_returnedValue#"+filename+"#"+xpath+"\&quot; value=\&quot;${xmlExceptionItem.key}\&quot;/&gt; &lt;/div&gt; &lt;div class=\&quot;\&quot; style=\&quot;float:left;\&quot;&gt; &lt;input type=\&quot;text\&quot; name=\&quot;xmlex_status#"+filename+"#"+xpath+"\&quot; value=\&quot;${xmlExceptionItem.value.ve_state}\&quot;/&gt; &lt;/div&gt; &lt;div class=\&quot;\&quot; style=\&quot;float:left;\&quot;&gt; &lt;input type=\&quot;color\&quot; name=\&quot;xmlex_backgroundColor#"+filename+"#"+xpath+"\&quot; value=\&quot;${xmlExceptionItem.value.ve_backgroundColor}\&quot; /&gt; &lt;/div&gt; &lt;div class=\&quot;\&quot; style=\&quot;float:left;\&quot;&gt; &lt;input type=\&quot;color\&quot; name=\&quot;xmlex_fontColor#"+filename+"#"+xpath+"\&quot; value=\&quot;${xmlExceptionItem.value.ve_fontColor}\&quot; /&gt; &lt;/div&gt; &lt;/div&gt;";
+        cell.innerHTML = "&lt;div&gt; &lt;div style=\&quot;float:left;\&quot;&gt; &lt;input type=\&quot;text\&quot; name=\&quot;xmlex_returnedValue#"+id+"\&quot; value=\&quot;${xmlExceptionItem.key}\&quot;/&gt; &lt;/div&gt; &lt;div style=\&quot;float:left;\&quot;&gt; &lt;input type=\&quot;text\&quot; name=\&quot;xmlex_status#"+id+"\&quot; value=\&quot;${xmlExceptionItem.value.ve_state}\&quot;/&gt; &lt;/div&gt; &lt;div style=\&quot;float:left;\&quot;&gt; &lt;input type=\&quot;color\&quot; name=\&quot;xmlex_backgroundColor#"+id+"\&quot; value=\&quot;${xmlExceptionItem.value.ve_backgroundColor}\&quot; /&gt; &lt;/div&gt; &lt;div style=\&quot;float:left;\&quot;&gt; &lt;input type=\&quot;color\&quot; name=\&quot;xmlex_fontColor#"+id+"\&quot; value=\&quot;${xmlExceptionItem.value.ve_fontColor}\&quot; /&gt; &lt;/div&gt; &lt;/div&gt;";
         }
         
         function deleteRow(tableId, stateValue) {
@@ -388,10 +380,10 @@ THE SOFTWARE.
         <f:entry title="${%xml check}" field="xmlExceptionListField">
             <!--            <form>
             <div >-->
-            <div id="" style="margin-bottom:20px;" >
+            <div style="margin-bottom:20px;" >
                 <table id="xmlExceptionTable"  style="width:1008px;" >
                     <tr>
-                        <td class="">
+                        <td>
                             <div>
                                 <div class="colStateStyle headerStyle" >${%File name}</div>
                                 <div class="colBackgroundStyle headerStyle">${%Xpath expression}</div>
@@ -402,30 +394,18 @@ THE SOFTWARE.
                     </tr>
                     <tr>
                         <td class="redips-mark" style="height:30px;background:#FFFFFF"></td>
-                    </tr>
-                        
-                        
-                    <!--                    <tr>
-                        <td>
-                            <div class="redips-drag">
-                                <div class="colStateStyle">
-                                    <input type="text" name="xmlex_filename" value="filename.xml"/>
-                                </div>
-                                <div class="colBackgroundStyle">
-                                    <input type="text" name="xmlex_expression" value="expression" />
-                                </div>
-                                <div class="colDragNDropStyle" style="width:50px;" >
-                                    <img src="${myImagesURL}Cursor-Move2-512.png" type="image/png" alt="dragNdrop" tooltip="Drap and drop to change the priority" height="20" width="20" />
-                                </div>
-                            </div>
-                        </td>
-                    </tr>-->
-                                
-                                
+                    </tr>      
+                    
+                    <j:set var="id" value="0"/>  
+                    
                     <j:forEach var="xmlException" items="${from.xmlExceptionList}">
+                        <j:set var="id" value="${id + 1}"/> 
                         <tr>
                             <td>
-                                <div class="">
+                                <div>
+                                    <div>
+                                        <input type="hidden" name="xmlex_id" value="${id}"/>
+                                    </div>
                                     <div class="colStateStyle"  style="float:left;">
                                         <input type="text" name="xmlex_filename" value="${xmlException.filename}"/>
                                     </div>
@@ -433,26 +413,22 @@ THE SOFTWARE.
                                         <input type="text" name="xmlex_expression" value="${xmlException.expression}" />
                                     </div> 
                                     <div style="float:left;">
-                                        
-                                        <j:set var="filename" value="${xmlException.escapedFilename}"/>
-                                        <j:set var="xpath" value="${xmlException.escapedExpression}"/>
-                                        file : "${filename}"
-                                        <table id="xmlExceptionStatusTable#${filename}#${xpath}"  style="width:100%;" >
+                                        <table id="xmlExceptionStatusTable#${id}"  style="width:100%;" >
                                             <j:forEach var="xmlExceptionItem" items="${xmlException.statusPerReturnedValue}">
                                                 <tr>
                                                     <td>
-                                                        <div class="">
-                                                            <div class="" style="float:left;">
-                                                                <input type="text" name="xmlex_returnedValue#${filename}#${xpath}" value="${xmlExceptionItem.key}"/>
+                                                        <div>
+                                                            <div style="float:left;">
+                                                                <input type="text" name="xmlex_returnedValue#${id}" value="${xmlExceptionItem.key}"/>
                                                             </div>
-                                                            <div class="" style="float:left;">
-                                                                <input type="text" name="xmlex_status#${filename}#${xpath}" value="${xmlExceptionItem.value.ve_state}"/>
+                                                            <div style="float:left;">
+                                                                <input type="text" name="xmlex_status#${id}" value="${xmlExceptionItem.value.ve_state}"/>
                                                             </div>
-                                                            <div class="" style="float:left;">
-                                                                <input type="color" name="xmlex_backgroundColor#${filename}#${xpath}" value="${xmlExceptionItem.value.ve_backgroundColor}" />
+                                                            <div style="float:left;">
+                                                                <input type="color" name="xmlex_backgroundColor#${id}" value="${xmlExceptionItem.value.ve_backgroundColor}" />
                                                             </div>
-                                                            <div class="" style="float:left;">
-                                                                <input type="color" name="xmlex_fontColor#${filename}#${xpath}" value="${xmlExceptionItem.value.ve_fontColor}" />
+                                                            <div style="float:left;">
+                                                                <input type="color" name="xmlex_fontColor#${id}" value="${xmlExceptionItem.value.ve_fontColor}" />
                                                             </div>
                                                         </div>
                                                     </td>
@@ -460,7 +436,7 @@ THE SOFTWARE.
                                             </j:forEach>
                                         </table>
                                         <div style="float:left;">
-                                            <input  type="button" value="${%Add return}" onclick="addXPATHReturnedRow('xmlExceptionStatusTable#${filename}#${xpath}', '${filename}', '${xpath}')" class="redips-trash" tooltip="?" />  
+                                            <input  type="button" value="${%Add return}" onclick="addXPATHReturnedRow('xmlExceptionStatusTable#${id}', '${id}')" class="redips-trash" tooltip="?" />  
                                         </div>
                                     </div>
             
@@ -521,7 +497,7 @@ THE SOFTWARE.
 
             </div>		
             <div >
-                <input  type="button" value="${%Add row}" onclick="addXmlExceptionRow('xmlExceptionTable')" class="redips-trash" tooltip="?" />  
+                <input  type="button" value="${%Add row}" onclick="addXmlExceptionRow('xmlExceptionTable', ${id+1});" class="redips-trash" tooltip="?" />  
             </div>
             
         </f:entry>

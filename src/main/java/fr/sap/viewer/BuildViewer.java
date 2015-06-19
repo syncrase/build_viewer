@@ -224,11 +224,11 @@ public class BuildViewer extends ListView {
         for ( int i = 0; i < xmlex_filenames.length; i++ ) {
             xmlExceptionItem = new XmlExceptionItem(xmlex_expressions[i], xmlex_filenames[i], new HashMap<String, ViewEntryColor>());
             if (!contains(xmlExceptionList, xmlExceptionItem)) {//resticts doubled
-                suffix = "#" + xmlExceptionItem.getEscapedFilename() + "#" + xmlExceptionItem.getEscapedExpression();
-                xmlex_returnedValues = req.getParameterValues("xmlex_returnedValue"+suffix);
-                xmlex_statuses = req.getParameterValues("xmlex_status"+suffix);
-                xmlex_backgroundColors = req.getParameterValues("xmlex_backgroundColor"+suffix);
-                xmlex_fontColors = req.getParameterValues("xmlex_fontColor"+suffix);
+                suffix = "#" + (i + 1);
+                xmlex_returnedValues = req.getParameterValues("xmlex_returnedValue" + suffix);
+                xmlex_statuses = req.getParameterValues("xmlex_status" + suffix);
+                xmlex_backgroundColors = req.getParameterValues("xmlex_backgroundColor" + suffix);
+                xmlex_fontColors = req.getParameterValues("xmlex_fontColor" + suffix);
 
                 // first step of the table completion provide no one of variables
                 if (xmlex_returnedValues != null && xmlex_statuses != null && xmlex_backgroundColors != null && xmlex_fontColors != null) {

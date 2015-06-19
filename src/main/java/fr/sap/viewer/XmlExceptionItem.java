@@ -65,11 +65,11 @@ public class XmlExceptionItem {
     }
 
     public String getEscapedFilename() {
-        return filename.replaceAll("\"", "").replaceAll("\'", "");
+        return filename.replaceAll("\"", "&doublequot;").replaceAll("\'", "&singlequot;");
     }
 
     public String getEscapedExpression() {
-        return expression.replaceAll("\"", "").replaceAll("\'", "");
+        return expression.replaceAll("\"", "&doublequot;").replaceAll("\'", "&singlequot;");
     }
     
     
